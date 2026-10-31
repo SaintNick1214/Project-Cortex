@@ -57,7 +57,7 @@ describe("genuine K6 successor V18 native registration", () => {
   it("keeps all historical proof objects and finite observed provenance, with unique successor policy rows", () => {
     expect(lookupDeploymentManifest(historical.manifestId, 17)).toBe(historical);
     expect(lookupDeploymentManifest(current.manifestId, 18)).toBe(current);
-    expect(lookupDeploymentManifest(current.manifestId, 19)).toBeUndefined();
+    expect(lookupDeploymentManifest(current.manifestId, 20)).toBeUndefined();
     expect(isTrustedDeploymentManifest(current)).toBe(true); expect(isTrustedDeploymentManifest({ ...current })).toBe(false);
     historical.qualifications.forEach((row, index) => expect(current.qualifications[index]).toBe(row));
     historical.dispatchEvidence.forEach((row, index) => expect(current.dispatchEvidence[index]).toBe(row));

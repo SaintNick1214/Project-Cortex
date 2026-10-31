@@ -5,10 +5,11 @@ import { getServiceToken } from 'convex/server';
 import { officialMediaFactory, processSubmissionHandler } from './runtimeMediaGateway';
 import type { MediaNativeFactory } from './runtimeMediaGateway';
 import { privateDiagnostic } from './imageDiagnosticMetadata';
-import { IMAGE_INPUT, IMAGE_MARKER } from './imageDiagnosticScope';
+import { IMAGE_INPUT, IMAGE_MARKER, IMAGE_MODEL } from './imageDiagnosticScope';
 
 export function observedFactory(report: (value: unknown) => void, factory: MediaNativeFactory = officialMediaFactory): MediaNativeFactory {
   return modelId => {
+    if (modelId !== IMAGE_MODEL) throw Error('UNEXPECTED_IMAGE_MODEL');
     const native = factory(modelId);
     return { ...native, image: async input => {
       try {
@@ -45,5 +46,6 @@ export const catalog = internalAction({ args: {}, handler: async () => {
     headers: { Authorization: `Bearer ${token}` }, signal: AbortSignal.timeout(30000), redirect: 'error',
   });
   const parsed = await response.json() as { data?: Array<{ id?: string }> };
-  return { checkedAt: Date.now(), status: response.status, imageModelPresent: parsed.data?.some(row => row.id === 'openai/gpt-image-1') === true };
+  return { checkedAt: Date.now(), modelId: IMAGE_MODEL, status: response.status,
+    imageModelPresent: parsed.data?.some(row => row.id === IMAGE_MODEL) === true };
 } });

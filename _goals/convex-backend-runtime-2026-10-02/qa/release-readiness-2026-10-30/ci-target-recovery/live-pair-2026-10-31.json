@@ -1,0 +1,115 @@
+{
+  "recordedAt": "2026-10-31T03:33:43.670083+00:00",
+  "repository": "SaintNick1214/Project-Cortex",
+  "visibility": "public",
+  "pairId": "0c8400e4-a8cf-46d7-969a-59c51c0e796c",
+  "status": "RETAINED_FINITE_RELEASE_CI_WINDOW",
+  "privatePairJournal": "/Users/SaintNick/.codex/tmp/cortex-release-ci-targets-20261031/0c8400e4-a8cf-46d7-969a-59c51c0e796c.json",
+  "privatePairJournalSha256": "e8a4a59394778d355943ca3277bd4d9db124dc409fdb2ebc1c22ba4617f23adc",
+  "targets": [
+    {
+      "id": 6632116,
+      "name": "befitting-wolf-58",
+      "kind": "cloud",
+      "teamId": 325340,
+      "projectId": 3200658,
+      "reference": "dev/cortex-sandbox-b898848b-3eef-4a68-aba6-34ceb39148a3",
+      "deploymentType": "dev",
+      "isDefault": false,
+      "expiresAt": 1794022327175,
+      "deploymentUrl": "https://befitting-wolf-58.convex.cloud",
+      "disposable": true,
+      "serverExpiryVerified": true
+    },
+    {
+      "id": 6632117,
+      "name": "enchanted-starfish-877",
+      "kind": "cloud",
+      "teamId": 325340,
+      "projectId": 3200658,
+      "reference": "dev/cortex-sandbox-1d50b60e-4bb5-474b-a70f-a57fda68cb95",
+      "deploymentType": "dev",
+      "isDefault": false,
+      "expiresAt": 1794022328054,
+      "deploymentUrl": "https://enchanted-starfish-877.convex.cloud",
+      "disposable": true,
+      "serverExpiryVerified": true
+    }
+  ],
+  "sessions": {
+    "sdk": "b898848b-3eef-4a68-aba6-34ceb39148a3",
+    "cli": "1d50b60e-4bb5-474b-a70f-a57fda68cb95"
+  },
+  "publication": {
+    "CORTEX_CI_CONVEX_DEPLOY_KEY": "confirmed",
+    "CORTEX_CI_CONVEX_URL": "confirmed",
+    "CORTEX_CI_CONVEX_DEPLOY_KEY_CLI": "confirmed",
+    "CORTEX_CI_CONVEX_URL_CLI": "confirmed",
+    "CORTEX_CI_DISPOSABLE_DEPLOYMENTS": "confirmed"
+  },
+  "expiresAt": 1794022327175,
+  "cleanupPlan": {
+    "sdk": {
+      "reference": "dev/cortex-sandbox-b898848b-3eef-4a68-aba6-34ceb39148a3",
+      "expiresAt": 1794022327175,
+      "keyName": "cortex-sandbox-b898848b-3eef-4a68-aba6-34ceb39148a3",
+      "target": {
+        "id": 6632116,
+        "name": "befitting-wolf-58",
+        "kind": "cloud",
+        "teamId": 325340,
+        "projectId": 3200658,
+        "reference": "dev/cortex-sandbox-b898848b-3eef-4a68-aba6-34ceb39148a3",
+        "deploymentType": "dev",
+        "isDefault": false,
+        "expiresAt": 1794022327175,
+        "deploymentUrl": "https://befitting-wolf-58.convex.cloud",
+        "disposable": true,
+        "serverExpiryVerified": true
+      },
+      "status": "created"
+    },
+    "cli": {
+      "reference": "dev/cortex-sandbox-1d50b60e-4bb5-474b-a70f-a57fda68cb95",
+      "expiresAt": 1794022328054,
+      "keyName": "cortex-sandbox-1d50b60e-4bb5-474b-a70f-a57fda68cb95",
+      "target": {
+        "id": 6632117,
+        "name": "enchanted-starfish-877",
+        "kind": "cloud",
+        "teamId": 325340,
+        "projectId": 3200658,
+        "reference": "dev/cortex-sandbox-1d50b60e-4bb5-474b-a70f-a57fda68cb95",
+        "deploymentType": "dev",
+        "isDefault": false,
+        "expiresAt": 1794022328054,
+        "deploymentUrl": "https://enchanted-starfish-877.convex.cloud",
+        "disposable": true,
+        "serverExpiryVerified": true
+      },
+      "status": "created"
+    }
+  },
+  "futureCleanup": {
+    "serverExpiresAt": [
+      {
+        "name": "befitting-wolf-58",
+        "expiresAt": 1794022327175
+      },
+      {
+        "name": "enchanted-starfish-877",
+        "expiresAt": 1794022328054
+      }
+    ],
+    "command": "node /Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-release-2026-10-30/_goals/convex-backend-runtime-2026-10-02/qa/release-readiness-2026-10-30/ci-target-recovery/recover.mjs cleanup 0c8400e4-a8cf-46d7-969a-59c51c0e796c --execute --review FILE",
+    "condition": "After approved replacement detaches both selectors and shared CI is idle; never delete selected targets",
+    "fixtureCleanupSeparate": true,
+    "fullCiRerunBlockedUntilGenuineModelRenewal": true
+  },
+  "selectedTargetsRemainPresent": true,
+  "credentialValuesPrinted": false,
+  "genuineNativeCasesObserved": 9,
+  "successor19CodeReview": "pending",
+  "fullServiceDispatch": "not yet requested",
+  "releaseReady": false
+}

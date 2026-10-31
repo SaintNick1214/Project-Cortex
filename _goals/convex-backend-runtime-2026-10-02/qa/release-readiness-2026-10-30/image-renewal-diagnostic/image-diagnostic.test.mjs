@@ -7,7 +7,8 @@ import { createHash } from 'node:crypto';
 import { createRequire } from 'node:module';
 import { pathToFileURL } from 'node:url';
 import { HERE, CANDIDATE, ENGINE, PRIVATE_ROOT, verifyInputs, fixedInput, commissioningManifest, publicDiagnostic,
-  oneImage, runImageDiagnostic, diagnosticJobSource, extractDiagnostics, validateNativeLock, durable } from './image-diagnostic.mjs';
+  oneImage, runImageDiagnostic, diagnosticJobSource, extractDiagnostics, validateNativeLock, durable,
+  IMAGE_MODEL, RETIRED_MODEL, IMAGE_BOUND, IMAGE_CONTRACT, imagePrice } from './image-diagnostic.mjs';
 const requireCandidate = createRequire(path.join(CANDIDATE, 'package.json'));
 const ts = requireCandidate('typescript');
 const review = 'a'.repeat(64);
@@ -27,7 +28,7 @@ async function fixtureModules() {
   const probe = loadTs(await fs.readFile(path.join(HERE, 'image-probe.ts'), 'utf8'), {
     './_generated/server': { internalAction: value => value, internalQuery: value => value }, 'convex/server': {},
     './runtimeMediaGateway': {}, './imageDiagnosticMetadata': diagnostic,
-    './imageDiagnosticScope': { IMAGE_INPUT: { prompt: syntheticPrompt }, IMAGE_MARKER: 'offline-marker' },
+    './imageDiagnosticScope': { IMAGE_INPUT: { prompt: syntheticPrompt }, IMAGE_MODEL, IMAGE_MARKER: 'offline-marker' },
   });
   return { diagnostic, probe };
 }
@@ -37,6 +38,7 @@ test('current source equivalence preserves old8/2.7M and fixes the new scope to 
   assert.equal(inputs.originalAttempts, 8); assert.equal(inputs.originalPossibleLiabilityUnits, 2700000);
   assert.equal(inputs.maximumNewImageSubmissions, 1); assert.equal(inputs.cumulativePossibleLiabilityAfterThis, 4800000);
   assert.equal(inputs.existingV1.retainedUnknownUnits, 100000); assert.equal(inputs.priorAttempts, 9);
+  assert.equal(inputs.modelId, IMAGE_MODEL); assert.equal(inputs.oldModelExecutionBlocked, true); assert.equal(inputs.evidenceRenewsRetiredModel, false);
   assert.equal(inputs.nativeContract.convexRequested, '^1.46.0'); assert.equal(inputs.nativeContract.convexLocked, '1.46.0');
   assert.ok(!PRIVATE_ROOT.startsWith(CANDIDATE + path.sep));
   const input = await fixedInput(); assert.equal(digest(input.prompt), inputs.promptSha256);
@@ -96,29 +98,73 @@ test('trusted wrapper calls the same official factory once, retains metadata bef
   const { probe } = await fixtureModules(), original = new Error('offline image rejection');
   let calls = 0; const captured = [];
   const native = { image: async input => { calls++; assert.equal(input.prompt, syntheticPrompt); throw original; } };
-  const wrapped = probe.observedFactory(value => captured.push(value), modelId => { assert.equal(modelId, 'openai/gpt-image-1'); return native; })('openai/gpt-image-1');
+  const wrapped = probe.observedFactory(value => captured.push(value), modelId => { assert.equal(modelId, IMAGE_MODEL); return native; })(IMAGE_MODEL);
   await assert.rejects(wrapped.image({ prompt: syntheticPrompt, signal: new AbortController().signal }), error => error === original);
   assert.equal(calls, 1); assert.equal(captured.length, 1); assert.equal(captured[0].phase, 'native-image-threw');
-  const brokenLog = probe.observedFactory(() => { throw Error('logging unavailable'); }, () => native)('openai/gpt-image-1');
+  const brokenLog = probe.observedFactory(() => { throw Error('logging unavailable'); }, () => native)(IMAGE_MODEL);
   await assert.rejects(brokenLog.image({ prompt: syntheticPrompt }), error => error === original); assert.equal(calls, 2);
   const output = { data: 'offline-only', mimeType: 'image/png' };
-  const success = probe.observedFactory(() => { throw Error('logging unavailable'); }, () => ({ image: async () => output }))('openai/gpt-image-1');
+  const success = probe.observedFactory(() => { throw Error('logging unavailable'); }, () => ({ image: async () => output }))(IMAGE_MODEL);
   assert.equal(await success.image({}), output);
+  assert.throws(() => probe.observedFactory(() => {}, () => { throw Error('retired factory must never be constructed'); })(RETIRED_MODEL), /UNEXPECTED_IMAGE_MODEL/);
 });
 
 test('synthetic commissioning uses actual image governor contract and leaves prior application budgets unchanged', async () => {
   const inputs = await verifyInputs();
   const manifest = await commissioningManifest({ id: '11111111-1111-4111-8111-111111111111', target: { expiresAt: Date.now() + 86400000 } }, inputs,
-    { observedAt: Date.now(), maximumPublishedUnits: 1000000 }, review);
+    { modelId: IMAGE_MODEL, observedAt: Date.now(), maximumPublishedUnits: 1000000 }, review);
   const previous = await import(pathToFileURL(path.join(HERE, '../qualification-renewal/renewal.mjs'))), domain = previous.contracts().domain;
   const scope = { tenantId: 'offline', memorySpaceId: 'offline', principalId: 'offline', principalVersion: 1, membershipId: 'offline', membershipVersion: 1, grantId: 'offline', grantVersion: 1, tenantEpoch: 1, memorySpaceEpoch: 1 };
   for (const operationKey of ['agent.respond', 'media.image.generate']) {
     const snapshot = domain.resolveModelPolicy({ context: { scope, operationKey, runBudgetId: 'offline', authorizedOverrides: [] },
       policies: manifest.policies.filter(row => !row.operationKey || row.operationKey === operationKey), qualifications: manifest.qualifications });
-    if (operationKey === 'media.image.generate') { assert.equal(snapshot.modelId, 'openai/gpt-image-1'); assert.equal(snapshot.costBound.maximumCostUnits, 2000000); assert.equal(snapshot.limits.runBudgetUnits, 3000000); }
+    if (operationKey === 'media.image.generate') { assert.equal(snapshot.modelId, IMAGE_MODEL); assert.equal(snapshot.pins.boundRevision, IMAGE_BOUND);
+      assert.equal(snapshot.costBound.maximumCostUnits, 2000000); assert.equal(snapshot.limits.runBudgetUnits, 3000000); }
   }
+  assert.equal(manifest.qualifications[1].modelId, IMAGE_MODEL); assert.equal(manifest.dispatchEvidence[1].modelId, IMAGE_MODEL);
+  assert.deepEqual(manifest.dispatchEvidence[1].mediaContract, IMAGE_CONTRACT);
+  assert.ok(manifest.policies.every(row => row.rules.modelId !== RETIRED_MODEL && !row.rules.allowedModels?.includes(RETIRED_MODEL)));
   await assert.rejects(commissioningManifest({ id: 'offline', target: { expiresAt: Date.now() + 1000 } }, inputs,
-    { observedAt: Date.now(), maximumPublishedUnits: 2000001 }, review));
+    { modelId: IMAGE_MODEL, observedAt: Date.now(), maximumPublishedUnits: 2000001 }, review));
+  await assert.rejects(commissioningManifest({ id: 'offline', target: { expiresAt: Date.now() + 1000 } }, { ...inputs, modelId: RETIRED_MODEL },
+    { modelId: IMAGE_MODEL, observedAt: Date.now(), maximumPublishedUnits: 1 }, review));
+});
+
+test('replacement price check selects only the exact new model and denies stale-model or over-ceiling quotes', async () => {
+  let fetched;
+  const quote = id => ({ fetch: async url => { fetched = url; return new Response(JSON.stringify({ data: { id,
+    pricing: { prompt: '0.0000001', image_output: '0.000001' } } }), { status: 200 }); } });
+  const price = await imagePrice(quote(IMAGE_MODEL));
+  assert.equal(fetched, 'https://openrouter.ai/api/v1/model/' + IMAGE_MODEL); assert.equal(price.modelId, IMAGE_MODEL);
+  assert.equal(price.fullUnknownCeilingUnits, 2000000); assert.ok(price.maximumPublishedUnits <= 2000000);
+  await assert.rejects(imagePrice(quote(RETIRED_MODEL)));
+  await assert.rejects(imagePrice({ fetch: async () => new Response(JSON.stringify({ data: { id: IMAGE_MODEL,
+    pricing: { prompt: '1', image_output: '1' } } }), { status: 200 }) }));
+});
+
+test('unchanged official factory plus installed compatible adapter emits only the replacement model change in native wire bytes', async () => {
+  const source = await fs.readFile(path.join(CANDIDATE, 'convex-dev/runtimeMediaGateway.ts'), 'utf8');
+  const ast = ts.createSourceFile('runtimeMediaGateway.ts', source, ts.ScriptTarget.Latest, true);
+  const declaration = ast.statements.filter(ts.isVariableStatement).flatMap(row => [...row.declarationList.declarations])
+    .find(row => row.name.getText(ast) === 'officialMediaFactory');
+  assert.ok(declaration?.initializer);
+  const code = ts.transpileModule('module.exports=' + declaration.initializer.getText(ast) + ';', {
+    compilerOptions: { target: ts.ScriptTarget.ES2022, module: ts.ModuleKind.CommonJS },
+  }).outputText;
+  const { createOpenAICompatible } = await import(pathToFileURL(requireCandidate.resolve('@ai-sdk/openai-compatible')));
+  let wire, requests = 0;
+  const compatible = createOpenAICompatible({ name: 'convexGateway', baseURL: 'https://ai-gateway.convex.dev/v1', fetch: async (url, init) => {
+    requests++; assert.equal(String(url), 'https://ai-gateway.convex.dev/v1/images/generations'); wire = JSON.parse(init.body);
+    return new Response(JSON.stringify({ data: [{ b64_json: 'AA==' }] }), { status: 200 });
+  } });
+  const module = { exports: {} };
+  new Function('convexGateway', 'module', code)({ imageModel: model => { assert.equal(model, IMAGE_MODEL); return compatible.imageModel(model); }, videoModel: () => ({}) }, module);
+  const input = await fixedInput(); await module.exports(IMAGE_MODEL).image({ prompt: input.prompt, signal: new AbortController().signal });
+  assert.equal(requests, 1); assert.equal(wire.model, IMAGE_MODEL); assert.ok(!('response_format' in wire));
+  assert.deepEqual(Object.keys(wire).sort(), ['model', 'n', 'output_format', 'prompt', 'quality', 'size']);
+  assert.equal(wire.n, 1); assert.equal(wire.size, '1024x1024'); assert.equal(wire.quality, 'low'); assert.equal(wire.output_format, 'png');
+  assert.equal(digest(wire.prompt), input.promptSha256);
+  assert.equal(digest(JSON.stringify(wire)), input.wireSha256);
 });
 
 test('one-image entrypoint writes exclusive durable intent before governed submit and never resubmits failed or UNKNOWN job', async t => {
@@ -129,7 +175,7 @@ test('one-image entrypoint writes exclusive durable intent before governed submi
   const cloud = { verifyCloud: async () => {}, privateWrite: async (file, value, options) => {
     assert.equal(options.exclusive, true); await fs.writeFile(file, JSON.stringify(value), { flag: 'wx', mode: 0o600 });
   } };
-  const prepared = { prompt: syntheticPrompt, price: { observedAt: Date.now() }, scope: {}, client: { mutation: async (name, args) => {
+  const prepared = { modelId: IMAGE_MODEL, prompt: syntheticPrompt, price: { modelId: IMAGE_MODEL, observedAt: Date.now() }, scope: {}, client: { mutation: async (name, args) => {
     if (name === 'runtimeMediaJobs:submit') {
       submits++; assert.equal(session.imageIssued, true); assert.ok(saved.includes('synced-issued-image-only.json'));
       assert.equal(saved.at(-1), 'persist');
@@ -179,7 +225,7 @@ test('temporary diagnostic fixture compiles against the actual backend without w
   const base = path.join(CANDIDATE, 'convex-dev'), probeName = path.join(base, 'imageDiagnosticProbe.ts'), metadataName = path.join(base, 'imageDiagnosticMetadata.ts'), scopeName = path.join(base, 'imageDiagnosticScope.ts');
   const sources = new Map([[probeName, await fs.readFile(path.join(HERE, 'image-probe.ts'), 'utf8')],
     [metadataName, (await fs.readFile(path.join(HERE, 'diagnostic.ts'), 'utf8')).replace('./_cortex/shared/domain/profile', '../src/domain/profile')],
-    [scopeName, 'export const IMAGE_INPUT={prompt:"offline-fixture"}; export const IMAGE_MARKER="offline-marker";']]);
+    [scopeName, 'export const IMAGE_INPUT={prompt:"offline-fixture"}; export const IMAGE_MODEL="openai/gpt-image-2.5-flare"; export const IMAGE_MARKER="offline-marker";']]);
   const jobName = path.join(base, 'runtimeMediaJobs.ts');
   sources.set(jobName, diagnosticJobSource(await fs.readFile(jobName, 'utf8')));
   const options = { target: ts.ScriptTarget.ES2022, module: ts.ModuleKind.ESNext, moduleResolution: ts.ModuleResolutionKind.Bundler,

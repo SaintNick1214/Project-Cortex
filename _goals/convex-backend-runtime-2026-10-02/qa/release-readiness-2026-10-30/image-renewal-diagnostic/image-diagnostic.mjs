@@ -11,6 +11,11 @@ export const CANDIDATE = path.resolve(HERE, '../../../../..');
 export const ENGINE = '/Users/SaintNick/Documents/Cortex/Project-Cortex-Proofs/sandbox-env';
 export const PRIVATE_ROOT = '/Users/SaintNick/.codex/tmp/cortex-image-diagnostic-20261031';
 export const ORIGINAL = '/Users/SaintNick/.codex/tmp/cortex-release-qualification-20261031/.sandbox-env-runs/5f2ac3f2-b2a6-4918-8379-f2487e6fb6f8';
+export const IMAGE_MODEL = 'openai/gpt-image-2.5-flare';
+export const RETIRED_MODEL = 'openai/gpt-image-1';
+export const IMAGE_BOUND = 'image25-flare-1024-low-png-v1';
+export const IMAGE_CONTRACT = Object.freeze({ version: 1, options: { kind: 'image', n: 1, size: '1024x1024', quality: 'low', outputFormat: 'png' },
+  inputProtocol: 'none', maximumInputAssetBytes: 0, maximumResultBytes: 20000000, callbacks: false, terminalIdentity: 'requested-only', usage: 'optional' });
 const NODE = '/Users/SaintNick/.codex/tmp/cortex-runtime-toolchain-20261005/node_modules/.bin/node';
 const FROZEN = path.join(HERE, '../qualification-renewal');
 const requireCandidate = createRequire(path.join(CANDIDATE, 'package.json'));
@@ -45,7 +50,7 @@ export async function fixedInput() {
   assert.ok(item && ts.isStringLiteral(item.initializer));
   const prompt = item.initializer.text;
   assert.ok(Buffer.byteLength(prompt) > 0 && Buffer.byteLength(prompt) <= 1024);
-  return { prompt, promptSha256: sha(prompt), wireSha256: sha({ model: 'openai/gpt-image-1', prompt, n: 1, size: '1024x1024', quality: 'low', output_format: 'png' }) };
+  return { prompt, promptSha256: sha(prompt), wireSha256: sha({ model: IMAGE_MODEL, prompt, n: 1, size: '1024x1024', quality: 'low', output_format: 'png' }) };
 }
 
 export async function inspectInputs() {
@@ -83,7 +88,13 @@ export async function inspectInputs() {
     nativeLock: await fileRow(path.join(ENGINE, 'templates/native-package-lock.json')),
     officialLogSource: await fileRow(path.join(CANDIDATE, 'node_modules/convex/src/cli/lib/logs.ts')),
     promptSha256: input.promptSha256, wireSha256: input.wireSha256,
-    modelId: 'openai/gpt-image-1', maximumNewImageSubmissions: 1, maximumNewUnknownLiabilityUnits: 2000000,
+    modelId: IMAGE_MODEL, boundRevision: IMAGE_BOUND,
+    mediaContractSha256: sha({ modelId: IMAGE_MODEL, contract: IMAGE_CONTRACT }),
+    compatibilityFinding: await fileRow(path.join(HERE, '../image-model-retirement-findings.md')),
+    oldModelSourceReview: await fileRow(path.join(HERE, 'retired-model-source-review.json')),
+    retiredModelIdHistoryOnly: RETIRED_MODEL, evidenceRenewsRetiredModel: false,
+    oldModelProcedureAtCommit: '7204cd2e13b90530dc01e6fb417b9d1c6dfcc074', oldModelExecutionBlocked: true,
+    maximumNewImageSubmissions: 1, maximumNewUnknownLiabilityUnits: 2000000,
     originalAttempts: 8, originalPossibleLiabilityUnits: 2700000,
     existingV1: { receipt: await fileRow(v1Receipt), attempts: 1, retainedUnknownUnits: 100000, cleanup: 'ABSENT' },
     priorAttempts: 9, priorPossibleLiabilityUnits: 2800000, cumulativeAttemptsAfterThis: 10,
@@ -101,20 +112,21 @@ export function diagnosticJobSource(source) {
     'handler: processSubmissionHandler });', 'handler: instrumentedSubmission });');
 }
 
-async function imagePrice(ctx) {
-  const response = await ctx.fetch('https://openrouter.ai/api/v1/model/openai/gpt-image-1', { redirect: 'error', signal: AbortSignal.timeout(15000) });
+export async function imagePrice(ctx) {
+  const response = await ctx.fetch('https://openrouter.ai/api/v1/model/' + IMAGE_MODEL, { redirect: 'error', signal: AbortSignal.timeout(15000) });
   assert.equal(response.status, 200, 'Current image price unavailable');
   const raw = await boundedText(response, 65536), parsed = JSON.parse(raw), value = parsed.data ?? parsed;
-  assert.equal(value.id, 'openai/gpt-image-1');
+  assert.equal(value.id, IMAGE_MODEL);
   const prompt = Number(value.pricing?.prompt), output = Number(value.pricing?.image_output);
   assert.ok(Number.isFinite(prompt) && prompt >= 0 && Number.isFinite(output) && output >= 0);
   const maximumPublishedUnits = (8192 * prompt + 16384 * output) * 1000000;
   assert.ok(maximumPublishedUnits <= 2000000, 'Image price exceeds unchanged ceiling');
-  return { observedAt: Date.now(), responseSha256: sha(raw), maximumPublishedUnits, fullUnknownCeilingUnits: 2000000 };
+  return { modelId: IMAGE_MODEL, observedAt: Date.now(), responseSha256: sha(raw), maximumPublishedUnits, fullUnknownCeilingUnits: 2000000 };
 }
 
 export async function commissioningManifest(session, inputs, price, reviewSha256) {
   assert.match(reviewSha256, /^[a-f0-9]{64}$/);
+  assert.equal(inputs.modelId, IMAGE_MODEL); assert.equal(price.modelId, IMAGE_MODEL);
   assert.ok(price.observedAt <= Date.now() && Date.now() - price.observedAt < 3600000 && price.maximumPublishedUnits <= 2000000);
   const template = await json(path.join(ENGINE, 'templates/qualification-envelopes.json'));
   const policies = [template.policies.find(row => !row.operationKey), template.policies.find(row => row.operationKey === 'media.image.generate')].map(row => structuredClone(row));
@@ -122,6 +134,13 @@ export async function commissioningManifest(session, inputs, price, reviewSha256
   // A noncalled synthetic text lane satisfies that validator; no chat observer is installed or invoked.
   const qualifications = [template.qualifications[0], template.qualifications[5]].map(row => structuredClone(row));
   const dispatchEvidence = [template.dispatchEvidence[0], template.dispatchEvidence[5]].map(row => structuredClone(row));
+  assert.equal(qualifications[1].modelId, RETIRED_MODEL);
+  assert.deepEqual(dispatchEvidence[1].mediaContract, IMAGE_CONTRACT, 'The replacement must fit the existing generic image contract exactly');
+  policies[0].rules.allowedModels = policies[0].rules.allowedModels.map(model => model === RETIRED_MODEL ? IMAGE_MODEL : model);
+  policies[1].rules.modelId = IMAGE_MODEL; policies[1].rules.pins.boundRevision = IMAGE_BOUND;
+  qualifications[1].modelId = IMAGE_MODEL; qualifications[1].boundRevision = IMAGE_BOUND;
+  dispatchEvidence[1].modelId = IMAGE_MODEL; dispatchEvidence[1].boundRevision = IMAGE_BOUND;
+  dispatchEvidence[1].mediaContract = structuredClone(IMAGE_CONTRACT);
   const id = 'image-diagnostic-' + session.id, priceRevision = id + '-price', now = Date.now();
   const evidenceHash = sha({ prospectiveOnly: true, id, inputs: sha(inputs), price, reviewSha256 });
   policies[0].rules.allowedTools = []; policies[0].rules.fallbackModels = [];
@@ -133,10 +152,14 @@ export async function commissioningManifest(session, inputs, price, reviewSha256
       ? `Prospective image only; review=${reviewSha256}; UNKNOWN2000000; retries0; actual pending.`
       : 'Fixture bootstrap validator only; no text dispatch permitted by this procedure; not actual evidence.';
     Object.assign(proof, { receiptId, evidenceHash, priceRevision, checkedAt: now, expiresAt: Math.min(now + 3600000, session.target.expiresAt) });
-    Object.assign(proof.inputBound, { proofHash: evidenceHash, nativeTransformHash: inputs.sourceEquivalenceSha256, documentHash: sha(price) });
+    Object.assign(proof.inputBound, { proofHash: evidenceHash,
+      nativeTransformHash: index === 1 ? sha({ nativeInputSha256: inputs.sourceEquivalenceSha256, modelId: IMAGE_MODEL,
+        boundRevision: IMAGE_BOUND, wireSha256: inputs.wireSha256, mediaContractSha256: inputs.mediaContractSha256 }) : inputs.sourceEquivalenceSha256,
+      documentHash: sha(price) });
     proof.resultBound.proofHash = evidenceHash;
   }
   assert.equal(qualifications[1].costBound.maximumCostUnits, 2000000);
+  assert.ok(!policies.some(row => row.rules.modelId === RETIRED_MODEL || row.rules.allowedModels?.includes(RETIRED_MODEL)));
   return { manifestId: id, revision: 1, classification: 'fixture-synthetic', artifactRevision: inputs.backendManifestSha256,
     evidenceHash, acceptanceHash: reviewSha256, budgetWindowMs: 86400000, policies, qualifications, dispatchEvidence };
 }
@@ -214,7 +237,8 @@ async function prepareHost(session, ctx, inputs, reviewSha256) {
   assert.equal(authority.tenantId, identity.tenantId); assert.equal(authority.memorySpaceId, identity.memorySpaceId);
   await admin.mutation('runtimeModelPolicy:installDeploymentPolicy', { manifestId: manifest.manifestId, expectedRevision: 1 });
   const marker = 'CORTEX_IMAGE_DIAGNOSTIC_' + session.id + ':';
-  await cloud.privateWrite(path.join(functions, 'imageDiagnosticScope.ts'), 'export const IMAGE_INPUT=' + JSON.stringify({ prompt: input.prompt }) + ';\nexport const IMAGE_MARKER=' + JSON.stringify(marker) + ';\n', { exclusive: true });
+  await cloud.privateWrite(path.join(functions, 'imageDiagnosticScope.ts'), 'export const IMAGE_INPUT=' + JSON.stringify({ prompt: input.prompt })
+    + ';\nexport const IMAGE_MODEL=' + JSON.stringify(IMAGE_MODEL) + ';\nexport const IMAGE_MARKER=' + JSON.stringify(marker) + ';\n', { exclusive: true });
   await cloud.privateWrite(path.join(functions, 'imageDiagnosticMetadata.ts'), await fs.readFile(path.join(HERE, 'diagnostic.ts')), { exclusive: true });
   await cloud.privateWrite(path.join(functions, 'imageDiagnosticProbe.ts'), await fs.readFile(path.join(HERE, 'image-probe.ts')), { exclusive: true });
   const jobPath = path.join(functions, 'runtimeMediaJobs.ts'), jobSource = await fs.readFile(jobPath, 'utf8');
@@ -222,14 +246,14 @@ async function prepareHost(session, ctx, inputs, reviewSha256) {
   await cloud.privateWrite(jobPath, diagnosticJobSource(jobSource));
   await cloud.verifyCloud(session, ctx); await deploy('image-diagnostic-fixture-deploy');
   const catalog = await admin.action('imageDiagnosticProbe:catalog', {}); await ctx.receipt('image-native-catalog', catalog);
-  assert.equal(catalog.status, 200); assert.equal(catalog.imageModelPresent, true);
+  assert.equal(catalog.status, 200); assert.equal(catalog.modelId, IMAGE_MODEL); assert.equal(catalog.imageModelPresent, true);
   const before = await admin.query('imageDiagnosticProbe:snapshot', {}); assert.equal(before.attempts.length, 0); assert.equal(before.jobs.length, 0);
   await ctx.receipt('image-before', before);
   const fetchToken = () => signJwt(session, ctx, identity, privateKey);
   const client = serviceClient(session, ctx); client.setAuth(fetchToken());
   const scopeArgs = { tenantId: identity.tenantId, memorySpaceId: identity.memorySpaceId };
   await client.mutation('runtimeClient:session', scopeArgs);
-  return { key, marker, client, admin, scope: scopeArgs, prompt: input.prompt, fetchToken, price, functions };
+  return { key, marker, client, admin, scope: scopeArgs, modelId: IMAGE_MODEL, prompt: input.prompt, fetchToken, price, functions };
 }
 
 export function publicDiagnostic(value) {
@@ -290,10 +314,12 @@ async function collectPrivateEvidence(session, ctx, prepared) {
 export async function oneImage(session, ctx, prepared, inputs, cloudOverride, sync = durable) {
   const cloud = cloudOverride ?? await engine('cloud');
   await verifyInputs(); ctx.signal?.throwIfAborted(); await cloud.verifyCloud(session, ctx);
+  assert.equal(inputs.modelId, IMAGE_MODEL); assert.equal(prepared.modelId, IMAGE_MODEL); assert.equal(prepared.price.modelId, IMAGE_MODEL);
   assert.ok(Date.now() - prepared.price.observedAt < 3600000);
   const intent = { issuedAt: Date.now(), target: session.target, maximumNewSubmissions: 1, maximumNewUnknownLiabilityUnits: 2000000,
     originalPossibleLiabilityUnits: 2700000, existingV1UnknownUnits: 100000, cumulativePossibleLiabilityUnits: 4800000,
-    promptSha256: inputs.promptSha256, wireSha256: inputs.wireSha256, noAutomaticPaidRetry: true };
+    modelId: IMAGE_MODEL, boundRevision: IMAGE_BOUND, evidenceRenewsRetiredModel: false,
+    mediaContractSha256: inputs.mediaContractSha256, promptSha256: inputs.promptSha256, wireSha256: inputs.wireSha256, noAutomaticPaidRetry: true };
   const issuedFile = path.join(session.receiptDir, 'issued-image-only.json');
   await cloud.privateWrite(issuedFile, intent, { exclusive: true }); await sync(issuedFile);
   session.imageIssued = true; await ctx.persist();
@@ -313,15 +339,22 @@ export async function oneImage(session, ctx, prepared, inputs, cloudOverride, sy
   const sdk = new runtime.CortexRuntimeClient({ deploymentUrl: session.target.deploymentUrl,
     assetHttpUrl: session.target.deploymentUrl.replace('.cloud', '.site'), scope: prepared.scope, fetchToken: prepared.fetchToken });
   try {
+    assert.equal(job.asset.mimeType, 'image/png');
     const blob = await sdk.fetchAsset({ assetId: job.asset.assetId, version: job.asset.assetVersion }), bytes = Buffer.from(await blob.arrayBuffer());
     assert.ok(bytes.length > 0 && bytes.length <= 20000000); assert.equal(bytes.length, job.asset.sizeBytes); assert.equal(sha(bytes), job.asset.contentHash);
     assert.deepEqual([...bytes.subarray(0, 8)], [137, 80, 78, 71, 13, 10, 26, 10]); assert.equal(bytes.readUInt32BE(16), 1024); assert.equal(bytes.readUInt32BE(20), 1024);
     await (await engine('cloud')).privateWrite(path.join(session.receiptDir, 'actual-image.png'), bytes, { exclusive: true });
     const ledger = await prepared.admin.query('imageDiagnosticProbe:snapshot', {}); assert.equal(ledger.attempts.length, 1);
+    assert.equal(ledger.operations.length, 1); assert.equal(ledger.jobs.length, 1);
+    const snapshot = JSON.parse(ledger.operations[0].snapshotCanonical), proof = JSON.parse(ledger.jobs[0].proofCanonical);
+    assert.equal(snapshot.modelId, IMAGE_MODEL); assert.equal(snapshot.pins.boundRevision, IMAGE_BOUND);
+    assert.equal(proof.modelId, IMAGE_MODEL); assert.equal(proof.boundRevision, IMAGE_BOUND); assert.deepEqual(proof.mediaContract, IMAGE_CONTRACT);
     const attempt = ledger.attempts[0]; assert.equal(attempt.reservationUnits, 2000000); assert.equal(attempt.state, 'uncertain'); assert.equal(attempt.slotReleased, true);
     assert.ok(ledger.accounts.every(row => row.activeConcurrency === 0 && row.reservedUnits === 0 && row.uncertainUnits === 2000000));
-    await ctx.receipt('image-actual-success', { observedAt: Date.now(), bytes: bytes.length, sha256: sha(bytes), privateDeliveryVerified: true, ledger, actualAcceptedByIndependentReview: false });
-    return { status: 'IMAGE_READY_PENDING_REVIEW', state: job.state, failureCode: null, actualSuccess: true, imageSha256: sha(bytes) };
+    await ctx.receipt('image-actual-success', { modelId: IMAGE_MODEL, boundRevision: IMAGE_BOUND, observedAt: Date.now(),
+      bytes: bytes.length, sha256: sha(bytes), privateDeliveryVerified: true, ledger, evidenceRenewsRetiredModel: false, actualAcceptedByIndependentReview: false });
+    return { status: 'IMAGE_READY_PENDING_REVIEW', modelId: IMAGE_MODEL, evidenceRenewsRetiredModel: false,
+      state: job.state, failureCode: null, actualSuccess: true, imageSha256: sha(bytes) };
   } finally { await sdk.close(); }
 }
 
@@ -385,7 +418,8 @@ async function exactRecovery(session, ctx) {
 
 async function approval(file) {
   const raw = await fs.readFile(file), value = JSON.parse(raw);
-  assert.equal(value.verdict, 'APPROVED'); assert.equal(value.scope, 'one-additional-governed-image-diagnostic');
+  assert.equal(value.verdict, 'APPROVED'); assert.equal(value.scope, 'one-additional-governed-image-replacement');
+  assert.equal(value.modelId, IMAGE_MODEL); assert.equal(value.boundRevision, IMAGE_BOUND); assert.equal(value.evidenceRenewsRetiredModel, false);
   assert.equal(value.maximumNewImageSubmissions, 1); assert.equal(value.maximumNewUnknownLiabilityUnits, 2000000);
   assert.equal(value.originalPossibleLiabilityUnits, 2700000); assert.equal(value.existingV1UnknownUnits, 100000);
   assert.equal(value.cumulativeMaximumPossibleLiabilityUnits, 4800000);
@@ -395,6 +429,7 @@ async function approval(file) {
 async function main(args) {
   if (!args.length || args.length === 1 && args[0] === '--dry-run') { const inputs = await verifyInputs(); return { status: 'OFFLINE_ONLY', networkCalls: 0, modelCalls: 0,
     resourceCreations: 0, materialSources: inputs.materialSources, nativeFiles: inputs.nativeFiles,
+    modelId: IMAGE_MODEL, boundRevision: IMAGE_BOUND, evidenceRenewsRetiredModel: false,
     maximumNewImageSubmissions: 1, maximumNewUnknownLiabilityUnits: 2000000, priorAttempts: 9,
     priorPossibleLiabilityUnits: 2800000, cumulativeMaximumPossibleLiabilityUnits: 4800000 }; }
   if (args.length === 2 && args[0] === '--execute') {

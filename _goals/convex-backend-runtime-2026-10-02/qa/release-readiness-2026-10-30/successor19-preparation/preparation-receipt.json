@@ -1,0 +1,127 @@
+{
+  "recordedAt": "2026-10-31T03:22:49.410Z",
+  "status": "OFFLINE_PREPARATION_ONLY",
+  "preparationHead": "7204cd2e13b90530dc01e6fb417b9d1c6dfcc074",
+  "syntaxCheck": {
+    "node": "v24.15.0",
+    "exit": 0
+  },
+  "tests": {
+    "passed": 4,
+    "failed": 0,
+    "skipped": 0,
+    "positiveCompleteBundle": "synthetic-fixture only",
+    "actualInputs": "8 native methods read/hash-checked; image absent",
+    "prospectiveResolver": {
+      "nonvideoDefaults": 12,
+      "supportedV16Aliases": 9,
+      "historicalRoots": 8
+    }
+  },
+  "defaultReadOnlyCommand": {
+    "status": "BLOCKED_MISSING_GENUINE_IMAGE",
+    "actualPassingMethods": 8,
+    "availableActualGroups": [
+      "plain",
+      "title",
+      "small",
+      "large",
+      "v2",
+      "jsonExtract",
+      "v1"
+    ],
+    "missingGroups": [
+      "image"
+    ],
+    "requiredSupportedV16Aliases": 9,
+    "historicalRootsUnchanged": [
+      {
+        "revision": 3,
+        "sha256": "dedafd99b33607abc788ad9ea27d795bcae320822db80a7593cbe348cf33047d"
+      },
+      {
+        "revision": 5,
+        "sha256": "d77d10459fd5d0a8a185dafc986f97240a88fd902e05531a328245cdea8b7908"
+      },
+      {
+        "revision": 9,
+        "sha256": "1a0b8c91551f62a78da6be6e017e8a11ec4fd1ec08f4f0b0a22414223032da70"
+      },
+      {
+        "revision": 14,
+        "sha256": "3d6ddaf15b0607f8d98dc0f6b37974c79d84d0cb99cbc2eb544774cc527585cc"
+      },
+      {
+        "revision": 15,
+        "sha256": "991b3c5ada3e1849b7a06db29c0be1412b0040a7fef216f9e80ee3b2fd07cf65"
+      },
+      {
+        "revision": 16,
+        "sha256": "9181f182ff0fb32fdea1bd26d54e66b3c7bd0ed6e9198f5fee8a926e2a6fe789"
+      },
+      {
+        "revision": 17,
+        "sha256": "0842d04789d0e7f606c04af0275852570f76957f1316f0029d4442b764c3b380"
+      },
+      {
+        "revision": 18,
+        "sha256": "3beff8df35710f1f258e63564a092a1fecfef2e945f990120b4d5c9ea98d8a45"
+      }
+    ],
+    "prospectiveImageModel": "openai/gpt-image-2.5-flare",
+    "prospectiveImageBound": "image25-flare-1024-low-png-v1",
+    "retiredModelRenewed": false,
+    "materialSourcesMatched": 18,
+    "nativeFilesMatched": 19,
+    "reviewedActualManifestCreated": false,
+    "candidateManifestCreated": false,
+    "serviceCalls": 0,
+    "productEdits": 0
+  },
+  "files": {
+    "assemble.mjs": {
+      "sha256": "d7d7d00ff19e874289f92f614329eba0d49fffba59cf3007155ee22b9ffb488e",
+      "bytes": 21691
+    },
+    "assemble.test.mjs": {
+      "sha256": "2b53ffd0af0919f01f41b17f62de76bdb6629599cee8cef0a64891fdd8bf9450",
+      "bytes": 7137
+    },
+    "plan.md": {
+      "sha256": "f04b9574d8c407adb7c9bbc18895a2a41cc02a440dc5305053de15df561b0fc2",
+      "bytes": 4963
+    },
+    "../qualification-renewal/renewal.mjs": {
+      "sha256": "988d9aaf382520df021645602bb33fe7ecf0452d6cfb63b6c5e42e351d8746e0",
+      "bytes": 35832
+    },
+    "../qualification-renewal/source-inputs.json": {
+      "sha256": "656598258d000ac0bd7c939facc00f9e8aa7746ededc23faae52d54c3961b371",
+      "bytes": 52933
+    },
+    "../qualification-renewal/live-attempt-2026-10-31.json": {
+      "sha256": "26942b5505b1e0e29a74aeda770e886117004f99c2ed7c2f91acf884f057070e",
+      "bytes": 6711
+    },
+    "../v1-renewal-only/live-attempt-2026-10-31.json": {
+      "sha256": "18a0a20876caec9ed8c3fcb1b775f75b2d8dbc896a926305f7e86f0418c85e8b",
+      "bytes": 3372
+    },
+    "../image-model-retirement-findings.md": {
+      "sha256": "25a82999d14c8290fdc453db3f0ef337851f9ca2dc3a2a71a727bc1fa1b11777",
+      "bytes": 2281
+    }
+  },
+  "trackedGitDiffCheck": {
+    "exit": 0
+  },
+  "newFileWhitespaceCheck": {
+    "exit": 0
+  },
+  "rootProductEdits": 0,
+  "serviceCalls": 0,
+  "reviewedActualRootCreated": false,
+  "actualImageConsumed": false,
+  "independentReview": "PENDING",
+  "nextStep": "Wait for genuine flare image output/delivery/cleanup, then assign actual image receipt validation and final manifest wiring/review as one coherent batch."
+}
