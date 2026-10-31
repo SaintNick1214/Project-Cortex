@@ -1,0 +1,20 @@
+{
+  "reviewer": "/root/release_service_renewal_review",
+  "verdict": "SOURCE_PASS_EXECUTION_BLOCKED",
+  "sourceScore": 4,
+  "breakingSourceFindings": 0,
+  "scope": "one-additional-governed-image-diagnostic",
+  "maximumNewImageSubmissions": 1,
+  "maximumNewUnknownLiabilityUnits": 2000000,
+  "originalPossibleLiabilityUnits": 2700000,
+  "existingV1UnknownUnits": 100000,
+  "cumulativeMaximumPossibleLiabilityUnits": 4800000,
+  "files": {
+    "image-diagnostic.mjs": "c57b38ede3dc8426e13b1cfd586f308f18f9b6ae7bad66822d04d73627893646",
+    "image-probe.ts": "082f5769fe5728a8ebcc8806761e6c22d722d44354eff9a982ad5d7c9e6bb1dd",
+    "diagnostic.ts": "d3d8593f7d0428e70e081ca412c62daa12f8ab104e28db72faf7e8a9adde888c",
+    "inputs.json": "cb1b2d691df4cc355f1cf4817a952158825b8c091f9fc990a7fb028f3b14d648"
+  },
+  "executionGoAhead": false,
+  "reason": "Coordinator verified upstream model retirement after source review; do not dispatch gpt-image-1 under this review."
+}

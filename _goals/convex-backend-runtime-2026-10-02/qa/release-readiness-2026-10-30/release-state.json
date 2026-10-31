@@ -1,5 +1,5 @@
 {
-  "recordedAt": "2026-10-31T03:05:59.134263+00:00",
+  "recordedAt": "2026-10-31T03:14:03.916420+00:00",
   "repository": "SaintNick1214/Project-Cortex",
   "visibility": "public",
   "baseBranch": "dev",
@@ -142,7 +142,7 @@
     "warnings": 240,
     "log": "final-lint-pass.log"
   },
-  "currentHead": "e7149387d66ffe15215d7f39193986ed4338c76e",
+  "currentHead": "3959e009f70faea078e280c76e91f40d9a9408b7",
   "completeOffline": {
     "command": "node scripts/ci-contract.mjs offline-unit",
     "cwd": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-release-2026-10-30",
@@ -167,13 +167,13 @@
     "head": "e7149387d66ffe15215d7f39193986ed4338c76e"
   },
   "currentRuns": {
-    "candidate": "e7149387d66ffe15215d7f39193986ed4338c76e",
-    "pullRequestChecks": 41161208742,
-    "pullRequestConclusion": "success",
-    "draftServiceJobs": "skipped; not success",
-    "security": 41161208834,
-    "securityState": "in_progress",
-    "pendingSecurityJob": "CodeQL repository checkout",
+    "candidate": "3959e009f70faea078e280c76e91f40d9a9408b7",
+    "pullRequestChecks": 41163093431,
+    "pullRequestState": "in_progress",
+    "security": 41163093308,
+    "securityState": "pending",
+    "supersededSecurity41161208834": "cancellation requested; not current acceptance",
+    "previousE714PullRequestChecks41161208742": "success, historical after QA-only successor",
     "previousFullServiceWorkflowDispatch": 41160021145,
     "previousFullServiceConclusion": "failure retained; no unchanged rerun"
   },
@@ -209,19 +209,21 @@
     "sha": "e7149387d66ffe15215d7f39193986ed4338c76e"
   },
   "qualificationRenewal": {
-    "status": "INCOMPLETE_IMAGE_UNKNOWN_V1_NOT_ATTEMPTED",
+    "status": "IMAGE_UNKNOWN_V1_ACTUAL_STREAM_OBSERVED",
     "receipt": "qualification-renewal/live-attempt-2026-10-31.json",
     "actualMethodProgress": {
-      "metric": "renewal native method cases; not goal or release acceptance",
-      "passed": 7,
+      "metric": "renewal native method cases; not full release gate",
+      "passed": 8,
       "planned": 9,
-      "percent": 77.78,
-      "unknown": 1,
-      "notAttempted": 1
+      "percent": 88.89,
+      "unknownImage": 1
     },
-    "attempts": 8,
-    "possibleLiabilityUnits": 2700000,
-    "cleanup": "ABSENT; credentials removed; upstream image remains UNKNOWN",
-    "successor19Activated": false
-  }
+    "attempts": 9,
+    "possibleLiabilityUnits": 2800000,
+    "cleanup": "Both completed owned sessions ABSENT; credentials removed; first image upstream terminal UNKNOWN",
+    "successor19Activated": false,
+    "v1Receipt": "v1-renewal-only/live-attempt-2026-10-31.json",
+    "nextImageDiagnostic": "Independent prospective review in progress; one additional image/2M ceiling, no automatic retry"
+  },
+  "latestDeliveryCommit": "3959e009f70faea078e280c76e91f40d9a9408b7"
 }

@@ -1,0 +1,11 @@
+# Image model compatibility finding — 2026-10-31
+
+The fresh disposable qualification observed seven successful native methods, then an image job became `submission_unknown`. Its original Gateway exception was discarded. The retained diagnostic hashes a later local ready assertion, so the exact original cause remains unproved. No additional image call was made.
+
+OpenAI now documents `gpt-image-1` as shut down on October23,2026, with GPTImage2.5 replacements. The official SDK source repeats this status. [OpenAI deprecations](https://developers.openai.com/api/docs/deprecations), [official image endpoint](https://developers.openai.com/api/reference/resources/images/methods/generate), [official SDK](https://github.com/openai/openai-node/blob/master/src/resources/images.ts).
+
+Convex's current public catalog includes `openai/gpt-image-2.5-flare` and `openai/gpt-image-2.5-sunburst`, while its example still names the retired model. Catalog presence is not successful serving proof. [Convex catalog](https://docs.convex.dev/ai-gateway/models), [Convex image contract](https://docs.convex.dev/ai-gateway/api#post-v1imagesgenerations). OpenAI supports1024x1024, low quality and PNG for the replacement family. [OpenAI image guide](https://developers.openai.com/api/docs/guides/image-generation).
+
+The planned old-model diagnostic is stopped before resource creation/inference. Its independently accepted source remains historical preparation, not execution authorization or current availability evidence. A bounded model replacement must retain the official Gateway/native contract, existing2M UNKNOWN operation ceiling/3M image run, exact byte/output caps and all prior2.8M liability. Qualify a new model explicitly; never relabel old-model evidence, route to a different model under an old modelId, alter expired proof dates or repeat the seven successful methods. Old model history remains expired/fail-closed. Any actual replacement requires non-author review and genuine observed output, delivery and cleanup before successor activation.
+
+Standalone V1 renewal has since observed one genuine stream with the original V1 descriptor,100k UNKNOWN retained,2M run and exact cleanup. Native case progress is8/9; image remains incomplete. No successor19 or CI selector changed.
