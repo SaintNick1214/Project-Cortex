@@ -1,0 +1,313 @@
+{
+  "recordedAt": "2026-10-31T02:53:06.783Z",
+  "status": "LOCAL_PREPARATION_ONLY_NOT_EXECUTED",
+  "cwd": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-release-2026-10-30",
+  "head": "e7149387d66ffe15215d7f39193986ed4338c76e",
+  "node": "24.15.0",
+  "npm": "12.2.0",
+  "files": {
+    "renewal.mjs": {
+      "sha256": "988d9aaf382520df021645602bb33fe7ecf0452d6cfb63b6c5e42e351d8746e0",
+      "bytes": 35832
+    },
+    "supplemental-v1-probe.ts": {
+      "sha256": "a9222b08f588dd2c1964a5a46128175315f526ede1c525d45e4ce18e6679a2fc",
+      "bytes": 5208
+    },
+    "source-inputs.json": {
+      "sha256": "656598258d000ac0bd7c939facc00f9e8aa7746ededc23faae52d54c3961b371",
+      "bytes": 52933
+    },
+    "renewal.test.mjs": {
+      "sha256": "11ddf1aeacb2ad086c232ccb84f73dc03b0d105e667f860478d860b334f0fcf2",
+      "bytes": 15575
+    },
+    "plan.md": {
+      "sha256": "35e83a0f331fc450ec4e1315c8550b8efef11087dd07956527e434802ba7c6f6",
+      "bytes": 8449
+    }
+  },
+  "checks": [
+    {
+      "command": "node --test _goals/convex-backend-runtime-2026-10-02/qa/release-readiness-2026-10-30/qualification-renewal/renewal.test.mjs",
+      "exit": 0,
+      "tests": 9,
+      "passed": 9,
+      "failed": 0,
+      "skipped": 0,
+      "durationMs": 8867.798584,
+      "coverage": "Offline synthetic financial, UNKNOWN, replay, cancellation, cleanup and actual-backend virtual typecheck only; not native/runtime success"
+    },
+    {
+      "command": "ESLint Node API, local recommended JavaScript config, renewal.mjs and renewal.test.mjs",
+      "exit": 0,
+      "files": 2,
+      "errors": 0,
+      "warnings": 0
+    },
+    {
+      "command": "node renewal.mjs --dry-run",
+      "exit": 0,
+      "networkCalls": 0,
+      "resourceCreations": 0,
+      "modelCalls": 0,
+      "materialSources": 18,
+      "nativeFiles": 19,
+      "descriptorMappings": 10
+    }
+  ],
+  "preservedProcedureApprovalSha256": "b9dae67dc95cb6e86bd7ad7ee00e8a948438250ee1383aab845c7a800092698c",
+  "maximumPaidRequests": 9,
+  "maximumUnknownLiabilityUnits": 2800000,
+  "oldRunCapsPreserved": true,
+  "privateLiveRoot": "/Users/SaintNick/.codex/tmp/cortex-release-qualification-20261031",
+  "prospectiveDescriptorCoverage": {
+    "status": "PROSPECTIVE_DESCRIPTOR_MAPPING_ONLY",
+    "descriptorRows": [
+      {
+        "modelId": "openai/gpt-4o-mini",
+        "nativeInterface": "chat",
+        "preservedBoundAlias": "text-8192-512-schema-v2",
+        "prospectiveFreshGroup": "manual-plain-8192-512",
+        "operationKey": "artifact.text",
+        "oldEnvelope": "plain-chat-v1",
+        "freshEnvelope": "plain-chat-v1",
+        "preservedLimits": {
+          "inputTokens": 8192,
+          "contextTokens": 16384,
+          "outputTokens": 512,
+          "toolSteps": 0,
+          "timeoutMs": 60000,
+          "operationBudgetUnits": 200000,
+          "runBudgetUnits": 2000000,
+          "tenantBudgetUnits": 10000000,
+          "concurrency": 2
+        },
+        "preservedOptions": [],
+        "pureResolverEquivalent": true,
+        "actualRenewalObserved": false
+      },
+      {
+        "modelId": "openai/gpt-4o",
+        "nativeInterface": "chat",
+        "preservedBoundAlias": "text-8192-512-schema-v2",
+        "prospectiveFreshGroup": "manual-title-8192-512",
+        "operationKey": "artifact.text",
+        "oldEnvelope": "plain-chat-v1",
+        "freshEnvelope": "plain-chat-v1",
+        "preservedLimits": {
+          "inputTokens": 8192,
+          "contextTokens": 16384,
+          "outputTokens": 512,
+          "toolSteps": 0,
+          "timeoutMs": 60000,
+          "operationBudgetUnits": 200000,
+          "runBudgetUnits": 2000000,
+          "tenantBudgetUnits": 10000000,
+          "concurrency": 2
+        },
+        "preservedOptions": [],
+        "pureResolverEquivalent": true,
+        "actualRenewalObserved": false
+      },
+      {
+        "modelId": "openai/text-embedding-3-small",
+        "nativeInterface": "embedding",
+        "preservedBoundAlias": "text-8192-512-schema-v2",
+        "prospectiveFreshGroup": "manual-small-8192-1536",
+        "operationKey": "embedding.query",
+        "oldEnvelope": "default-embedding-v1",
+        "freshEnvelope": "default-embedding-v1",
+        "preservedLimits": {
+          "inputTokens": 8192,
+          "contextTokens": 16384,
+          "outputTokens": 512,
+          "toolSteps": 0,
+          "timeoutMs": 60000,
+          "operationBudgetUnits": 200000,
+          "runBudgetUnits": 2000000,
+          "tenantBudgetUnits": 10000000,
+          "concurrency": 2
+        },
+        "preservedOptions": [],
+        "pureResolverEquivalent": true,
+        "actualRenewalObserved": false
+      },
+      {
+        "modelId": "openai/gpt-4o-mini",
+        "nativeInterface": "chat",
+        "preservedBoundAlias": "agent-tools-32768-512-v1",
+        "prospectiveFreshGroup": "agent-tools-32768-512-v1",
+        "operationKey": "agent.respond",
+        "oldEnvelope": "agent-tools-chat-v1",
+        "freshEnvelope": "agent-tools-chat-v1",
+        "preservedLimits": {
+          "inputTokens": 32768,
+          "contextTokens": 65536,
+          "outputTokens": 512,
+          "toolSteps": 4,
+          "timeoutMs": 60000,
+          "operationBudgetUnits": 200000,
+          "runBudgetUnits": 2000000,
+          "tenantBudgetUnits": 10000000,
+          "concurrency": 2
+        },
+        "preservedOptions": [],
+        "pureResolverEquivalent": true,
+        "actualRenewalObserved": false
+      },
+      {
+        "modelId": "openai/text-embedding-3-large",
+        "nativeInterface": "embedding",
+        "preservedBoundAlias": "task10-large-8192-3072-v1",
+        "prospectiveFreshGroup": "manual-large-8192-3072",
+        "operationKey": "embedding.query",
+        "oldEnvelope": "profile-embedding-v1",
+        "freshEnvelope": "profile-embedding-v1",
+        "preservedLimits": {
+          "inputTokens": 8192,
+          "contextTokens": 16384,
+          "outputTokens": 512,
+          "toolSteps": 0,
+          "timeoutMs": 60000,
+          "operationBudgetUnits": 200000,
+          "runBudgetUnits": 2000000,
+          "tenantBudgetUnits": 10000000,
+          "concurrency": 2
+        },
+        "preservedOptions": [],
+        "pureResolverEquivalent": true,
+        "actualRenewalObserved": false
+      },
+      {
+        "modelId": "openai/gpt-4o-mini",
+        "nativeInterface": "chat",
+        "preservedBoundAlias": "agent-tools-v2-32768-256-shared3m-v1",
+        "prospectiveFreshGroup": "manual-agent-v2-32768-256",
+        "operationKey": "agent.respond",
+        "oldEnvelope": "agent-tools-chat-v2",
+        "freshEnvelope": "agent-tools-chat-v2",
+        "preservedLimits": {
+          "inputTokens": 32768,
+          "contextTokens": 65536,
+          "outputTokens": 256,
+          "toolSteps": 1,
+          "timeoutMs": 60000,
+          "operationBudgetUnits": 100000,
+          "runBudgetUnits": 3000000,
+          "tenantBudgetUnits": 10000000,
+          "concurrency": 2
+        },
+        "preservedOptions": [],
+        "pureResolverEquivalent": true,
+        "actualRenewalObserved": false
+      },
+      {
+        "modelId": "openai/gpt-image-1",
+        "nativeInterface": "image",
+        "preservedBoundAlias": "media-image-1024-low-png-shared3m-v1",
+        "prospectiveFreshGroup": "manual-image-1024-low-png",
+        "operationKey": "media.image.generate",
+        "oldEnvelope": "media-image-v1",
+        "freshEnvelope": "media-image-v1",
+        "preservedLimits": {
+          "inputTokens": 8192,
+          "contextTokens": 16384,
+          "outputTokens": 1,
+          "toolSteps": 0,
+          "timeoutMs": 60000,
+          "operationBudgetUnits": 2000000,
+          "runBudgetUnits": 3000000,
+          "tenantBudgetUnits": 10000000,
+          "concurrency": 2
+        },
+        "preservedOptions": [],
+        "pureResolverEquivalent": true,
+        "actualRenewalObserved": false
+      },
+      {
+        "modelId": "openai/gpt-4o-mini",
+        "nativeInterface": "chat",
+        "preservedBoundAlias": "text-8192-512-schema-observed-20261009",
+        "prospectiveFreshGroup": "manual-plain-8192-512",
+        "operationKey": "artifact.text",
+        "oldEnvelope": "plain-chat-v1",
+        "freshEnvelope": "plain-chat-v1",
+        "preservedLimits": {
+          "inputTokens": 8192,
+          "contextTokens": 16384,
+          "outputTokens": 512,
+          "toolSteps": 0,
+          "timeoutMs": 60000,
+          "operationBudgetUnits": 200000,
+          "runBudgetUnits": 2000000,
+          "tenantBudgetUnits": 10000000,
+          "concurrency": 2
+        },
+        "preservedOptions": [],
+        "pureResolverEquivalent": true,
+        "actualRenewalObserved": false
+      },
+      {
+        "modelId": "openai/text-embedding-3-small",
+        "nativeInterface": "embedding",
+        "preservedBoundAlias": "small-8192-1536-observed-20261009",
+        "prospectiveFreshGroup": "manual-small-8192-1536",
+        "operationKey": "embedding.query",
+        "oldEnvelope": "default-embedding-v1",
+        "freshEnvelope": "default-embedding-v1",
+        "preservedLimits": {
+          "inputTokens": 8192,
+          "contextTokens": 16384,
+          "outputTokens": 512,
+          "toolSteps": 0,
+          "timeoutMs": 60000,
+          "operationBudgetUnits": 200000,
+          "runBudgetUnits": 2000000,
+          "tenantBudgetUnits": 10000000,
+          "concurrency": 2
+        },
+        "preservedOptions": [],
+        "pureResolverEquivalent": true,
+        "actualRenewalObserved": false
+      },
+      {
+        "modelId": "openai/gpt-4o",
+        "nativeInterface": "chat",
+        "preservedBoundAlias": "title-8192-512-observed-20261009",
+        "prospectiveFreshGroup": "manual-title-8192-512",
+        "operationKey": "artifact.text",
+        "oldEnvelope": "plain-chat-v1",
+        "freshEnvelope": "plain-chat-v1",
+        "preservedLimits": {
+          "inputTokens": 8192,
+          "contextTokens": 16384,
+          "outputTokens": 512,
+          "toolSteps": 0,
+          "timeoutMs": 60000,
+          "operationBudgetUnits": 200000,
+          "runBudgetUnits": 2000000,
+          "tenantBudgetUnits": 10000000,
+          "concurrency": 2
+        },
+        "preservedOptions": [],
+        "pureResolverEquivalent": true,
+        "actualRenewalObserved": false
+      }
+    ],
+    "noQualifiedJsonObjectDescriptorInV16": true,
+    "strictJsonIsAdditionalFreshGroup": true,
+    "freshProofGroupsAfterV1": 8,
+    "maximumNewPaidRequests": 9,
+    "note": "Aliases must bind real fresh evidence with original limits, old roots retained. No dates or receipts are renewed by this comparison."
+  },
+  "actualFreshObservations": 0,
+  "manifest19Created": false,
+  "manifest19Activated": false,
+  "pending": [
+    "Independent prospective procedure review",
+    "Explicit actual execution",
+    "Actual outcome and exact-target cleanup receipts",
+    "Independent genuine successor manifest19 review and activation"
+  ]
+}

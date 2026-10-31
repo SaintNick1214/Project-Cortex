@@ -1,5 +1,5 @@
 {
-  "recordedAt": "2026-10-31T02:42:15.421507+00:00",
+  "recordedAt": "2026-10-31T03:05:59.134263+00:00",
   "repository": "SaintNick1214/Project-Cortex",
   "visibility": "public",
   "baseBranch": "dev",
@@ -67,10 +67,11 @@
     }
   ],
   "remaining": [
-    "Verify repaired exact-head PR checks",
-    "Fresh scoped CI deployment pair and keys in approved test project; verify identity/type/expiry and cleanup intent before creation, no production/default targets",
-    "Actual Gateway proof renewal preserving existing2M run caps and reachable V1 descriptor; no forged date extension",
-    "Rerun full service gate only after these actual prerequisites are corrected; retain previous failures"
+    "Complete current-head security including actual uploads",
+    "Diagnose original UNKNOWN image via separately reviewed one-image instrumentation; preserve seven genuine successes and original UNKNOWN liability",
+    "Observe reachable V1 tool descriptor without rerunning successful cases; independently review genuine successor preserving existing caps",
+    "Create and verify fresh scoped CI deployment pair and credentials in approved project with finite expiry/cleanup intent",
+    "Required full exact-head real-service/cleanup gate after prerequisites are corrected; draft skips are not success"
   ],
   "receipts": [
     {
@@ -141,7 +142,7 @@
     "warnings": 240,
     "log": "final-lint-pass.log"
   },
-  "currentHead": "4722e1339d2b6bf6ad7e2260cd112bbc03074173",
+  "currentHead": "e7149387d66ffe15215d7f39193986ed4338c76e",
   "completeOffline": {
     "command": "node scripts/ci-contract.mjs offline-unit",
     "cwd": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-release-2026-10-30",
@@ -163,13 +164,18 @@
     "state": "OPEN",
     "draft": true,
     "base": "dev",
-    "head": "4722e1339d2b6bf6ad7e2260cd112bbc03074173"
+    "head": "e7149387d66ffe15215d7f39193986ed4338c76e"
   },
   "currentRuns": {
-    "pullRequestChecks": 41159944198,
-    "fullServiceWorkflowDispatch": 41160021145,
-    "candidate": "4722e1339d2b6bf6ad7e2260cd112bbc03074173",
-    "state": "previous exact-head full service run failed; bounded corrections accepted; new source pending push"
+    "candidate": "e7149387d66ffe15215d7f39193986ed4338c76e",
+    "pullRequestChecks": 41161208742,
+    "pullRequestConclusion": "success",
+    "draftServiceJobs": "skipped; not success",
+    "security": 41161208834,
+    "securityState": "in_progress",
+    "pendingSecurityJob": "CodeQL repository checkout",
+    "previousFullServiceWorkflowDispatch": 41160021145,
+    "previousFullServiceConclusion": "failure retained; no unchanged rerun"
   },
   "monitor": {
     "automationId": "monitor-cortex-release-pr",
@@ -195,5 +201,27 @@
     "deployKey": "CI401invalid",
     "cleanup": "failed, preserved",
     "managementLogin": "read-only project access verified, no secrets printed"
+  },
+  "latestRepairCommit": "e7149387d66ffe15215d7f39193986ed4338c76e",
+  "latestRepairPush": {
+    "github": "success",
+    "entire": "success",
+    "sha": "e7149387d66ffe15215d7f39193986ed4338c76e"
+  },
+  "qualificationRenewal": {
+    "status": "INCOMPLETE_IMAGE_UNKNOWN_V1_NOT_ATTEMPTED",
+    "receipt": "qualification-renewal/live-attempt-2026-10-31.json",
+    "actualMethodProgress": {
+      "metric": "renewal native method cases; not goal or release acceptance",
+      "passed": 7,
+      "planned": 9,
+      "percent": 77.78,
+      "unknown": 1,
+      "notAttempted": 1
+    },
+    "attempts": 8,
+    "possibleLiabilityUnits": 2700000,
+    "cleanup": "ABSENT; credentials removed; upstream image remains UNKNOWN",
+    "successor19Activated": false
   }
 }
