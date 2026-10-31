@@ -1,0 +1,84 @@
+  console.error
+    ◇ injected env (0) from .env.test
+
+      15 |
+      16 | // CI/actual qualification selectors must not be redirected by a developer's .env.local.
+    > 17 | const explicitEnvironment = process.env.CORTEX_TEST_ENV_MODE === "explicit" || process.env.CI === "true";
+         |            ^
+      18 | if (!explicitEnvironment) {
+      19 |   dotenv.config({ path: resolve(process.cwd(), ".env.test") });
+      20 |   dotenv.config({ path: resolve(process.cwd(), ".env.local"), override: true });
+
+      at se (node_modules/dotenv/dist/index.cjs:7:155)
+      at Object.ce [as configDotenv] (node_modules/dotenv/dist/index.cjs:7:1059)
+      at Object.ae [as config] (node_modules/dotenv/dist/index.cjs:7:1168)
+      at tests/env.ts:17:12
+
+  console.error
+    ◇ injected env (0) from .env.local
+
+      16 | // CI/actual qualification selectors must not be redirected by a developer's .env.local.
+      17 | const explicitEnvironment = process.env.CORTEX_TEST_ENV_MODE === "explicit" || process.env.CI === "true";
+    > 18 | if (!explicitEnvironment) {
+         |            ^
+      19 |   dotenv.config({ path: resolve(process.cwd(), ".env.test") });
+      20 |   dotenv.config({ path: resolve(process.cwd(), ".env.local"), override: true });
+      21 | }
+
+      at se (node_modules/dotenv/dist/index.cjs:7:155)
+      at Object.ce [as configDotenv] (node_modules/dotenv/dist/index.cjs:7:1059)
+      at Object.ae [as config] (node_modules/dotenv/dist/index.cjs:7:1168)
+      at tests/env.ts:18:12
+
+  console.error
+    ⚠️  CONVEX_URL not configured
+
+      78 |     // Both configs present - should not happen if using test-runner.mjs
+      79 |     // Default to local for backward compatibility if run directly
+    > 80 |     if (process.env.LOCAL_CONVEX_URL) {
+         |             ^
+      81 |       process.env.CONVEX_URL = process.env.LOCAL_CONVEX_URL;
+      82 |     }
+      83 |     console.log(`\n⚠️  Both local and managed configs detected in auto mode`);
+
+      at tests/env.ts:80:13
+
+  console.error
+    Configure either:
+
+      79 |     // Default to local for backward compatibility if run directly
+      80 |     if (process.env.LOCAL_CONVEX_URL) {
+    > 81 |       process.env.CONVEX_URL = process.env.LOCAL_CONVEX_URL;
+         |             ^
+      82 |     }
+      83 |     console.log(`\n⚠️  Both local and managed configs detected in auto mode`);
+      84 |     console.log(
+
+      at tests/env.ts:81:13
+
+  console.error
+      - LOCAL_CONVEX_URL for local testing
+
+      80 |     if (process.env.LOCAL_CONVEX_URL) {
+      81 |       process.env.CONVEX_URL = process.env.LOCAL_CONVEX_URL;
+    > 82 |     }
+         |      ^
+      83 |     console.log(`\n⚠️  Both local and managed configs detected in auto mode`);
+      84 |     console.log(
+      85 |       `   Using LOCAL by default. Use 'npm test' to run both suites.`,
+
+      at tests/env.ts:82:13
+
+  console.error
+      - CONVEX_URL for managed testing
+
+      81 |       process.env.CONVEX_URL = process.env.LOCAL_CONVEX_URL;
+      82 |     }
+    > 83 |     console.log(`\n⚠️  Both local and managed configs detected in auto mode`);
+         |             ^
+      84 |     console.log(
+      85 |       `   Using LOCAL by default. Use 'npm test' to run both suites.`,
+      86 |     );
+
+      at tests/env.ts:83:13
+

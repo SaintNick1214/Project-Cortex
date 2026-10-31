@@ -1,0 +1,9 @@
+# Release repair independent acceptance
+
+These are scoped source-and-test verdicts by the non-author `/root/release_fixture_review` under the retained goal acceptance policy v2. They do not certify full release readiness. All five dimensions score4/5 for each accepted batch; zero actionable or breaking findings.
+
+1. Portable historical parity fixtures: verified all original Git blobs reconstruct exactly after reversing44 import-root rewrites and stripping exactly3 documented non-executable ESLint annotations. All52 control imports resolve; every parity/rollback/negative assertion unchanged.9/9 focused tests, full types and lint0errors240warnings.
+2. Export dispositions and context test setup:7 new tables explicitly unsupported for legacy user export, original independent schema equality preserved, runtime scope refused before profile reads.124/124 export-related and56/56 context tests. Context fix only orders the mock before the Agent dependency loads.
+3. Media test DB and import closure: descriptors match genuine Convex object-literal reader methods; method bodies and all original assertions unchanged. New resolve/revocation cases prove fresh denial and zero native/ledger effects.108passing cases plus corrected import-order3/3. Root closure361/361 after the required backend build. No actual video acceptance.
+
+Initial failures and corrected-command failures are retained in named raw logs. The first ad-hoc parity invocation incorrectly loaded live test environment setup and is invalid offline evidence; the corrected command uses the same empty setup arrays as functional CI, and passes naturally. The initial whole-discovery diagnostic invocation omitted `build:backend`; its closure failure is a missing local prerequisite, corrected by the ordinary required build. CI already includes that build step.

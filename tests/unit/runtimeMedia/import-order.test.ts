@@ -16,7 +16,7 @@ test.each(["media-jobs", "model-policy", "transcript"])("fresh native ESM evalua
   await symlink(resolve("node_modules"), join(root, "node_modules"), "dir");
   // Transpile separate modules, retaining native import order and module cycles.
   // Jest's already-loaded module graph cannot exercise this initialization boundary.
-  for (const name of ["media-jobs", "media-schemas", "model-policy", "transcript", "assets", "profile"]) {
+  for (const name of ["media-jobs", "media-schemas", "model-policy", "transcript", "assets", "profile", "extraction", "memory-effort"]) {
     const source = await readFile(resolve(`src/domain/${name}.ts`), "utf8");
     const emitted = ts.transpileModule(source, { compilerOptions: { module: ts.ModuleKind.ESNext, target: ts.ScriptTarget.ES2021 } });
     await writeFile(join(root, `${name}.js`), emitted.outputText);

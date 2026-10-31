@@ -1,0 +1,62 @@
+(node:14951) ExperimentalWarning: VM Modules is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+PASS tests/unit/runtimeMedia/recovery.test.ts
+PASS tests/unit/runtimeAssets/lifecycle.test.ts
+PASS tests/unit/runtimeMedia/artifact-context.test.ts
+PASS tests/unit/runtimeMedia/jobs.test.ts
+PASS tests/unit/runtimeAssets/action-delivery.test.ts
+PASS tests/unit/runtimeMedia/native-cost.test.ts
+PASS tests/unit/runtimeAssets/distribution.test.ts
+FAIL tests/unit/runtimeMedia/import-order.test.ts
+  ● fresh native ESM evaluation from media-jobs initializes the exact media schemas
+
+    Command failed: /Users/SaintNick/.codex/tmp/cortex-runtime-toolchain-20261005/node_modules/node/bin/node /var/folders/xh/sddkg7sx0gdcdqsps6w1qy780000gn/T/cortex-media-import-IFpb8P/probe.mjs
+    node:internal/modules/esm/resolve:271
+        throw new ERR_MODULE_NOT_FOUND(
+              ^
+
+    Error [ERR_MODULE_NOT_FOUND]: Cannot find module '/private/var/folders/xh/sddkg7sx0gdcdqsps6w1qy780000gn/T/cortex-media-import-IFpb8P/extraction.js' imported from /private/var/folders/xh/sddkg7sx0gdcdqsps6w1qy780000gn/T/cortex-media-import-IFpb8P/model-policy.js
+
+      at ModuleJob.link (node:internal/modules/esm/module_job:252:17) {
+        code: 'ERR_MODULE_NOT_FOUND',
+        url: 'file:///private/var/folders/xh/sddkg7sx0gdcdqsps6w1qy780000gn/T/cortex-media-import-IFpb8P/extraction.js'
+      }
+      Node.js v24.15.0
+
+  ● fresh native ESM evaluation from model-policy initializes the exact media schemas
+
+    Command failed: /Users/SaintNick/.codex/tmp/cortex-runtime-toolchain-20261005/node_modules/node/bin/node /var/folders/xh/sddkg7sx0gdcdqsps6w1qy780000gn/T/cortex-media-import-m63ybg/probe.mjs
+    node:internal/modules/esm/resolve:271
+        throw new ERR_MODULE_NOT_FOUND(
+              ^
+
+    Error [ERR_MODULE_NOT_FOUND]: Cannot find module '/private/var/folders/xh/sddkg7sx0gdcdqsps6w1qy780000gn/T/cortex-media-import-m63ybg/extraction.js' imported from /private/var/folders/xh/sddkg7sx0gdcdqsps6w1qy780000gn/T/cortex-media-import-m63ybg/model-policy.js
+
+      at ModuleJob.link (node:internal/modules/esm/module_job:252:17) {
+        code: 'ERR_MODULE_NOT_FOUND',
+        url: 'file:///private/var/folders/xh/sddkg7sx0gdcdqsps6w1qy780000gn/T/cortex-media-import-m63ybg/extraction.js'
+      }
+      Node.js v24.15.0
+
+  ● fresh native ESM evaluation from transcript initializes the exact media schemas
+
+    Command failed: /Users/SaintNick/.codex/tmp/cortex-runtime-toolchain-20261005/node_modules/node/bin/node /var/folders/xh/sddkg7sx0gdcdqsps6w1qy780000gn/T/cortex-media-import-9QCPAK/probe.mjs
+    node:internal/modules/esm/resolve:271
+        throw new ERR_MODULE_NOT_FOUND(
+              ^
+
+    Error [ERR_MODULE_NOT_FOUND]: Cannot find module '/private/var/folders/xh/sddkg7sx0gdcdqsps6w1qy780000gn/T/cortex-media-import-9QCPAK/memory-effort.js' imported from /private/var/folders/xh/sddkg7sx0gdcdqsps6w1qy780000gn/T/cortex-media-import-9QCPAK/transcript.js
+
+      at ModuleJob.link (node:internal/modules/esm/module_job:252:17) {
+        code: 'ERR_MODULE_NOT_FOUND',
+        url: 'file:///private/var/folders/xh/sddkg7sx0gdcdqsps6w1qy780000gn/T/cortex-media-import-9QCPAK/memory-effort.js'
+      }
+      Node.js v24.15.0
+
+PASS tests/unit/runtimeMedia/submission-port.test.ts
+
+Test Suites: 1 failed, 8 passed, 9 total
+Tests:       3 failed, 108 passed, 111 total
+Snapshots:   0 total
+Time:        15.273 s
+Ran all test suites within paths "tests/unit/runtimeMedia/artifact-context.test.ts", "tests/unit/runtimeMedia/import-order.test.ts", "tests/unit/runtimeMedia/jobs.test.ts", "tests/unit/runtimeMedia/native-cost.test.ts", "tests/unit/runtimeMedia/recovery.test.ts", "tests/unit/runtimeMedia/submission-port.test.ts", "tests/unit/runtimeAssets/action-delivery.test.ts", "tests/unit/runtimeAssets/distribution.test.ts", "tests/unit/runtimeAssets/lifecycle.test.ts".

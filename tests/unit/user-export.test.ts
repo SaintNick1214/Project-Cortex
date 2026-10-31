@@ -2004,6 +2004,7 @@ function registeredShareFixture(tenantId?: string, incoming = false) {
     ],
   };
   const operations: { operation: string; args: unknown }[] = [];
+  const queriedDomains: string[] = [];
   const context = {
     db: {
       normalizeId: (domain: string, id: string) =>
@@ -2016,6 +2017,7 @@ function registeredShareFixture(tenantId?: string, incoming = false) {
           .flat()
           .find((row) => row._id === id) ?? null,
       query: (domain: string) => {
+        queriedDomains.push(domain);
         let matches = rows[domain] ?? [];
         return {
           withIndex: (
@@ -2058,8 +2060,38 @@ function registeredShareFixture(tenantId?: string, incoming = false) {
       },
     ]),
   ) as unknown as UserExportTransport;
-  return { selected, rows, transport, operations };
+  return { selected, rows, transport, operations, queriedDomains };
 }
+it("actual legacy inspection discloses runtime capture and progress tables as unsupported without reading them", async () => {
+  const fixture = registeredShareFixture("A");
+  const result = await fixture.transport.inspect(fixture.selected);
+  expect(result.runtimeUnsupported).toMatchObject({
+    runtimeIngestionForegroundPriority: "durableStageAndProfileWatermarksHaveNoLegacyProjection",
+    runtimeIngestionSequenceHeads: "durableStageAndProfileWatermarksHaveNoLegacyProjection",
+    runtimeMemoryCaptureConversations: "canonicalCaptureAttributionRequiresRuntimeExportProtocol",
+    runtimeMemoryCaptureMessages: "canonicalCaptureAttributionRequiresRuntimeExportProtocol",
+    runtimeMemoryCaptures: "canonicalCaptureAttributionRequiresRuntimeExportProtocol",
+    runtimeMemoryFactEntities: "canonicalSourceAndProfileProvenanceRequiresRuntimeExportProtocol",
+    runtimeRunMemoryProgress: "durableStageAndProfileWatermarksHaveNoLegacyProjection",
+  });
+  expect(result.supportedDomains).toEqual([...USER_EXPORT_DOMAINS]);
+  expect(fixture.queriedDomains).toEqual(["runtimeAuthScopes", "immutable"]);
+});
+it.each([undefined, 1])(
+  "actual legacy inspection refuses a runtime tenant before reading its profile, deletedAt=%s",
+  async (deletedAt) => {
+    const fixture = registeredShareFixture("A");
+    fixture.rows.runtimeAuthScopes = [{
+      tenantId: "A",
+      memorySpaceId: "runtime-space",
+      ...(deletedAt === undefined ? {} : { deletedAt }),
+    }];
+    await expect(fixture.transport.inspect(fixture.selected)).rejects.toMatchObject({
+      data: { code: "UNSUPPORTED_OPERATION", outcome: "not_dispatched" },
+    });
+    expect(fixture.queriedDomains).toEqual(["runtimeAuthScopes"]);
+  },
+);
 it.each([undefined, "A", "B"])(
   "actual registered handlers release outgoing share-only space projection in scope %s",
   async (tenantId) => {

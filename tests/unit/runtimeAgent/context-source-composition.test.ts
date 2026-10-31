@@ -15,7 +15,8 @@ const embed = jest.fn<MemoryModel["embed"]>(async request => ({ profile: request
 jest.unstable_mockModule("@convex-dev/workflow", () => ({ WorkflowManager: class {
   define(value: { handler: unknown }) { return { _handler: value.handler }; } async start() { return "workflow:source-context"; }
 } }));
-const { ingestionFixture, ingestion, installIngestionMockRoot, invoke } = await import("../runtimeIngestion/fixture");
+// Install the policy fixture before loading the real Gateway factory, then
+// register the transport override before ingestion loads its Agent dependency.
 const { clone } = await import("../runtimeTranscript/fixture");
 const { ConvexMemoryRepository, memoryScope } = await import("../../../convex-dev/runtimeMemoryRepository");
 const nativeMemoryModel = await import("../../../convex-dev/runtimeMemoryGateway");
@@ -23,6 +24,7 @@ const nativeMemoryModel = await import("../../../convex-dev/runtimeMemoryGateway
 // transport/result is controlled; no native model billing is claimed here.
 jest.unstable_mockModule("../../../convex-dev/runtimeMemoryGateway", () => ({ ...nativeMemoryModel,
   createGatewayMemoryModel: (...args: Parameters<typeof nativeMemoryModel.createGatewayMemoryModel>) => ({ ...nativeMemoryModel.createGatewayMemoryModel(...args), embed }) }));
+const { ingestionFixture, ingestion, installIngestionMockRoot, invoke } = await import("../runtimeIngestion/fixture");
 const runtime = await import("../../../convex-dev/runtimeAgent");
 const memory = await import("../../../convex-dev/runtimeMemory");
 const context = await import("../../../convex-dev/runtimeMemoryContext");

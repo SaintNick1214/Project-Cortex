@@ -1,0 +1,122 @@
+{
+  "recordedAt": "2026-10-31T02:21:59.371063+00:00",
+  "repository": "SaintNick1214/Project-Cortex",
+  "visibility": "public",
+  "baseBranch": "dev",
+  "baseSHA": "443148c1d8a63ed820bafe7d87bf21c7e0a2fd21",
+  "auditedHead": "8b1ab46051a884e653e34ea26afd473bfabab825",
+  "isolatedRepairCheckout": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-release-2026-10-30",
+  "originalContinuationPreserved": true,
+  "node": "24.15.0",
+  "npm": "12.2.0",
+  "ciNode": "24.21.0",
+  "packages": {
+    "sdk": "0.39.0",
+    "cli": "0.39.0",
+    "provider": "0.39.0",
+    "catalog": "1.4.1"
+  },
+  "functionalMilestonePreviouslyAccepted": true,
+  "functionalMilestones": {
+    "accepted": 6,
+    "total": 6,
+    "percent": 100
+  },
+  "releaseRepairBatches": {
+    "independentlyAccepted": 3,
+    "total": 4,
+    "percent": 75
+  },
+  "releaseReady": false,
+  "initialCurrentCI": {
+    "run": 41157739267,
+    "head": "8b1ab46051a884e653e34ea26afd473bfabab825",
+    "sdkShardsFailed": 4,
+    "cause": "QA parity fixture excluded by functional sparse checkout; TS2307",
+    "overallRun": "cancelled",
+    "allChecksPassed": "failure"
+  },
+  "independentReviews": [
+    {
+      "batch": "portable parity controls",
+      "reviewer": "/root/release_fixture_review",
+      "verdict": "PASS",
+      "score": 4,
+      "breakingFindings": 0
+    },
+    {
+      "batch": "export dispositions and context test setup",
+      "reviewer": "/root/release_fixture_review",
+      "verdict": "PASS",
+      "score": 4,
+      "breakingFindings": 0
+    },
+    {
+      "batch": "media DB descriptors and native import closure",
+      "reviewer": "/root/release_fixture_review",
+      "verdict": "PASS",
+      "score": 4,
+      "breakingFindings": 0
+    }
+  ],
+  "remaining": [
+    "Final Agent fixture batch and independent review",
+    "Fresh complete offline run at coherent source (initial diagnostic discovery still running and retains observed failures)",
+    "Fresh exact-SHA GitHub functional/security checks",
+    "Actual current model qualification: configured revision16 all10 dispatch proofs expired October9-10; no date extension or expired-proof acceptance"
+  ],
+  "receipts": [
+    {
+      "path": "initial-relocated-fixture-lint.log",
+      "bytes": 41280,
+      "sha256": "c130253078b3bb0d54e71a1e9d43f2c9950d48af880381948550516eb81924ea"
+    },
+    {
+      "path": "fixture-lint-pass.log",
+      "bytes": 40750,
+      "sha256": "30ad051392bdbdb35747d74a0b8b4c58ceae82b90badd3aae9c4b96566950dca"
+    },
+    {
+      "path": "initial-parity-invalid-live-loader.log",
+      "bytes": 3329,
+      "sha256": "342e0b448aec7ddd52982d5ea2cf40db80da2da6320844e5b2253f9f811207ff"
+    },
+    {
+      "path": "fixture-offline-parity-pass.log",
+      "bytes": 1941,
+      "sha256": "db0dc0ce1c3f0cf25387c28a3a540b04721f6d1a95b65d7b5c6267f2e43d1d7d"
+    },
+    {
+      "path": "context-offline-pass.log",
+      "bytes": 5721,
+      "sha256": "a7ac6d16fec13504b23b2c8e185f220e5252d749254a8416b43794eb49611300"
+    },
+    {
+      "path": "export-offline-pass.log",
+      "bytes": 882,
+      "sha256": "b1550a2bbeacba8ecc12f047261644bae73630107dd5dbfae08fbd23d66f1007"
+    },
+    {
+      "path": "media-initial-import-closure-failure.log",
+      "bytes": 3951,
+      "sha256": "4dd79abb9e079e2dc1816fd1ef2d6220e894840c6fdee61232fc1d08c032ff14"
+    },
+    {
+      "path": "media-import-closure-pass.log",
+      "bytes": 695,
+      "sha256": "1e6a5cbce31b6ae6f3c53fa33e95d2b2596d3cb6c1e9312438a54326575ceb1c"
+    },
+    {
+      "path": "closure-after-required-build-pass.log",
+      "bytes": 28296,
+      "sha256": "fa48acfb4fb8cf20607919b04ee7b7fd7258dd6bf16e886856c0de0f405da950"
+    }
+  ],
+  "exclusions": [
+    "No merge",
+    "No package publication",
+    "No production deployment",
+    "Async video remains deferred; controlled unit cases are not actual video success",
+    "Historical C7 missing content/custody remains unqualified"
+  ]
+}

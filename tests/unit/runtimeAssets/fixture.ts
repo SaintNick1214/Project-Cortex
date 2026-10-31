@@ -13,9 +13,10 @@ export const transcript = await import("../../../convex-dev/runtimeTranscript");
 export async function assetFixture() {
   const f = await transcriptFixture();
   const originalGet = f.db.get.bind(f.db);
-  Object.defineProperty(f.db, "get", { value: (table: string, id?: string) => originalGet(id === undefined ? table.split(":")[0] : table, id ?? table) });
+  // Match Convex's ordinary database methods so read scopes can wrap them.
+  Object.defineProperty(f.db, "get", { configurable: true, enumerable: true, writable: true, value: (table: string, id?: string) => originalGet(id === undefined ? table.split(":")[0] : table, id ?? table) });
   const originalQuery = f.db.query.bind(f.db);
-  Object.defineProperty(f.db, "query", { value: (table: string) => {
+  Object.defineProperty(f.db, "query", { configurable: true, enumerable: true, writable: true, value: (table: string) => {
     const query = originalQuery(table); const filter = query.filter;
     query.filter = callback => filter(q => { const operators = { ...q, neq: (a: unknown, b: unknown) => (row: Parameters<ReturnType<typeof q.eq>>[0]) => !q.eq(a, b)(row) }; return callback(operators); });
     return query;

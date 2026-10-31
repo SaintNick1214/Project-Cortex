@@ -13,7 +13,7 @@ const runtime = await import("../../../convex-dev/runtimeAgent");
 const runs = await import("../../../convex-dev/runs");
 const memory = await import("../../../convex-dev/runtimeMemory");
 // Deliberate original source controls built by the recorded TypeScript transform.
-const legacy: typeof runtime = await import("../../../_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/native-transcript-read-original-runtimeAgent.mjs");
+const legacy: typeof runtime = await import("../../fixtures/runtimeAgent/native-transcript-read-original-runtimeAgent.mjs");
 beforeEach(() => installIngestionMockRoot()); afterEach(() => { jest.restoreAllMocks(); });
 async function fixture() {
   const f = await ingestionFixture(), query = f.ctx.runQuery.bind(f.ctx), mutation = f.ctx.runMutation.bind(f.ctx), calls: string[] = [];
