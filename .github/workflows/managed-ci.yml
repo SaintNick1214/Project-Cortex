@@ -1,0 +1,470 @@
+# One exact-candidate managed lifecycle owns the shared lock through guarded preparation, scoped consumers and cleanup.
+name: Managed CI lifecycle
+'on':
+  workflow_call:
+    inputs:
+      candidate-sha:
+        type: string
+        required: true
+      selection:
+        type: string
+        default: ''
+      queue_probe:
+        type: boolean
+        default: false
+    secrets:
+      CORTEX_CI_AUTH_PRIVATE_KEY:
+        required: false
+      CORTEX_CI_CONVEX_URL:
+        required: false
+      CORTEX_CI_CONVEX_URL_CLI:
+        required: false
+      CORTEX_CI_CONVEX_DEPLOY_KEY:
+        required: false
+      CORTEX_CI_CONVEX_DEPLOY_KEY_CLI:
+        required: false
+    outputs:
+      receipt:
+        description: Exact-SHA managed leaf outcomes; queue probes emit no functional receipt
+        value: '${{ jobs.managed-outcomes.outputs.receipt }}'
+concurrency:
+  group: cortex-shared-ci-backends
+  cancel-in-progress: false
+  queue: max
+permissions:
+  contents: read
+  pull-requests: read
+jobs:
+  queue-probe:
+    name: Queue-only lifecycle probe (no functional proof)
+    if: inputs.queue_probe == true
+    runs-on: ubuntu-latest
+    timeout-minutes: 2
+    permissions: {}
+    steps:
+      - name: Hold the real lifecycle lock without secrets or service operations
+        run: |
+          date -u '+lock-start %Y-%m-%dT%H:%M:%SZ'
+          sleep 25
+          date -u '+lock-end %Y-%m-%dT%H:%M:%SZ'
+          echo 'Queue-only receipt: no functional, service or delivery proof.' >> "$GITHUB_STEP_SUMMARY"
+  setup-and-purge:
+    timeout-minutes: 15
+    env:
+      CORTEX_CI_RUN_ID: '${{ github.run_id }}-${{ github.run_attempt }}'
+      CORTEX_CI_AUTH_ISSUER: '${{ vars.CORTEX_CI_AUTH_ISSUER }}'
+      CORTEX_CI_AUTH_AUDIENCE: '${{ vars.CORTEX_CI_AUTH_AUDIENCE }}'
+      CORTEX_CI_AUTH_PRIVATE_KEY: '${{ secrets.CORTEX_CI_AUTH_PRIVATE_KEY }}'
+      CORTEX_CI_DISPOSABLE_DEPLOYMENTS: '${{ vars.CORTEX_CI_DISPOSABLE_DEPLOYMENTS }}'
+      CONVEX_URL: '${{ secrets.CORTEX_CI_CONVEX_URL }}'
+      CONVEX_URL_CLI: '${{ secrets.CORTEX_CI_CONVEX_URL_CLI }}'
+      CONVEX_DEPLOY_KEY: '${{ secrets.CORTEX_CI_CONVEX_DEPLOY_KEY }}'
+      CONVEX_DEPLOY_KEY_CLI: '${{ secrets.CORTEX_CI_CONVEX_DEPLOY_KEY_CLI }}'
+      CORTEX_CI_MODEL_MANIFEST_ID: '${{ vars.CORTEX_CI_MODEL_MANIFEST_ID }}'
+      CORTEX_CI_MODEL_MANIFEST_REVISION: '${{ vars.CORTEX_CI_MODEL_MANIFEST_REVISION }}'
+    name: Deploy & Provision Scoped Runtime Fixtures
+    runs-on: ubuntu-latest
+    if: |
+      inputs.queue_probe != true && contains(fromJSON(inputs.selection).selected, 'setup-and-purge') &&
+      (github.event_name == 'push' ||
+       (!endsWith(github.actor, '[bot]') &&
+        !startsWith(github.actor, 'dependabot') &&
+        !startsWith(github.actor, 'renovate') &&
+        github.event.sender.type != 'Bot' &&
+        (github.event_name == 'workflow_dispatch' ||
+         (github.event.pull_request.head.repo.full_name == github.repository &&
+          github.event.pull_request.user.type != 'Bot' &&
+          !endsWith(github.event.pull_request.user.login, '[bot]') &&
+          github.event.pull_request.draft == false))))
+    permissions:
+      contents: read
+      pull-requests: read
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          ref: '${{ inputs.candidate-sha }}'
+          persist-credentials: false
+          sparse-checkout: |
+            /*
+            !/_goals/
+            !/work/
+          sparse-checkout-cone-mode: false
+      - uses: ./.github/actions/cortex-setup
+      - name: Install dependencies
+        run: npm ci
+      - name: Refuse stale candidates before any shared preparation
+        env:
+          GITHUB_TOKEN: '${{ github.token }}'
+          CI_CANDIDATE_SHA: '${{ inputs.candidate-sha }}'
+        run: node scripts/ci-managed.mjs freshness
+      - name: Require explicitly approved disposable development targets
+        run: node scripts/ci/verify-disposable-targets.mjs
+      - name: Write public CI JWT verification config (preserve existing host auth)
+        run: node scripts/ci/runtime-fixtures.mjs auth-config
+      - name: Deploy SDK Convex backend to guarded dev target
+        run: npx convex deploy --yes
+      - name: Deploy CLI Convex backend to guarded distinct dev target
+        run: npx convex deploy --yes
+        env:
+          CONVEX_URL: '${{ secrets.CORTEX_CI_CONVEX_URL_CLI }}'
+          CONVEX_DEPLOY_KEY: '${{ secrets.CORTEX_CI_CONVEX_DEPLOY_KEY_CLI }}'
+      - name: 'Install the pinned compiled policy (unknown, synthetic or expired qualification fails closed)'
+        run: |
+          node scripts/ci/runtime-fixtures.mjs install-policy sdk > ci-sdk-policy.json
+          node scripts/ci/runtime-fixtures.mjs install-policy cli > ci-cli-policy.json
+      - name: Provision exact scoped JWT fixture identities through the internal operator API
+        run: |
+          node scripts/ci/runtime-fixtures.mjs provision sdk > ci-sdk-fixtures.json
+          node scripts/ci/runtime-fixtures.mjs provision cli > ci-cli-fixtures.json
+      - uses: actions/upload-artifact@v4
+        with:
+          name: ci-runtime-fixture-receipts
+          path: |
+            ci-*-fixtures.json
+            ci-*-policy.json
+          retention-days: 14
+  test-typescript:
+    timeout-minutes: 15
+    env:
+      CORTEX_CI_RUN_ID: '${{ github.run_id }}-${{ github.run_attempt }}'
+      CORTEX_CI_AUTH_ISSUER: '${{ vars.CORTEX_CI_AUTH_ISSUER }}'
+      CORTEX_CI_AUTH_AUDIENCE: '${{ vars.CORTEX_CI_AUTH_AUDIENCE }}'
+      CORTEX_CI_AUTH_PRIVATE_KEY: '${{ secrets.CORTEX_CI_AUTH_PRIVATE_KEY }}'
+      CORTEX_CI_DISPOSABLE_DEPLOYMENTS: '${{ vars.CORTEX_CI_DISPOSABLE_DEPLOYMENTS }}'
+      CONVEX_URL: '${{ secrets.CORTEX_CI_CONVEX_URL }}'
+      CONVEX_URL_CLI: '${{ secrets.CORTEX_CI_CONVEX_URL_CLI }}'
+    name: 'Test TypeScript SDK (Shard ${{ matrix.shard }}/5)'
+    runs-on: ubuntu-latest
+    needs: setup-and-purge
+    if: |
+      always() &&
+      needs.setup-and-purge.result == 'success' &&
+      (github.event_name == 'push' ||
+       (!endsWith(github.actor, '[bot]') &&
+        !startsWith(github.actor, 'dependabot') &&
+        !startsWith(github.actor, 'renovate') &&
+        github.event.sender.type != 'Bot' &&
+        (github.event_name == 'workflow_dispatch' ||
+         (github.event.pull_request.head.repo.full_name == github.repository &&
+          github.event.pull_request.user.type != 'Bot' &&
+          !endsWith(github.event.pull_request.user.login, '[bot]') &&
+          github.event.pull_request.draft == false)))) &&
+      inputs.queue_probe != true && contains(fromJSON(inputs.selection).selected, 'test-typescript')
+    permissions:
+      contents: read
+    strategy:
+      matrix:
+        shard:
+          - 1
+          - 2
+          - 3
+          - 4
+          - 5
+      max-parallel: 1
+      fail-fast: false
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          ref: '${{ inputs.candidate-sha }}'
+          persist-credentials: false
+          sparse-checkout: |
+            /*
+            !/_goals/
+            !/work/
+          sparse-checkout-cone-mode: false
+      - uses: ./.github/actions/cortex-setup
+      - name: Install dependencies
+        run: npm ci
+      - name: Preserve complete SDK test discovery (legacy live tests are not current runtime acceptance)
+        run: node --experimental-vm-modules node_modules/jest/bin/jest.js --listTests --runInBand --json > ci-sdk-discovery.json
+        env:
+          CONVEX_URL: 'https://unit.invalid'
+          CONVEX_URL_CLI: 'https://unit.invalid'
+      - name: Build current backend distribution for installed catalog contracts
+        run: 'npm run build:backend'
+      - name: 'Run every current SDK unit suite (shard ${{ matrix.shard }}/5)'
+        run: |
+          node --experimental-vm-modules node_modules/jest/bin/jest.js \
+            --testPathPatterns=tests/unit/ \
+            --shard=${{ matrix.shard }}/5 \
+            --runInBand --forceExit=false
+        env:
+          CONVEX_URL: 'https://unit.invalid'
+          CONVEX_URL_CLI: 'https://unit.invalid'
+          CORTEX_CI_AUTH_PRIVATE_KEY: ''
+      - name: Issue scoped verified-host JWTs for the single SDK actual suite
+        if: matrix.shard == 1
+        run: node scripts/ci/runtime-fixtures.mjs tokens sdk
+      - name: Run authenticated registered SDK runtime integration (no legacy app-side model loop)
+        if: matrix.shard == 1
+        run: timeout --signal=TERM --kill-after=5s 240s node --experimental-vm-modules node_modules/jest/bin/jest.js --runTestsByPath tests/integration/runtime-ci.test.ts --runInBand --forceExit=false --json --outputFile=ci-sdk-runtime-results.json
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: 'ci-sdk-discovery-and-runtime-${{ matrix.shard }}'
+          path: |
+            ci-sdk-discovery.json
+            ci-sdk-runtime-results.json
+          retention-days: 14
+      - name: Build package
+        if: matrix.shard == 1
+        run: npm run build
+  test-vercel-ai-provider:
+    timeout-minutes: 15
+    env:
+      CORTEX_CI_RUN_ID: '${{ github.run_id }}-${{ github.run_attempt }}'
+      CORTEX_CI_AUTH_ISSUER: '${{ vars.CORTEX_CI_AUTH_ISSUER }}'
+      CORTEX_CI_AUTH_AUDIENCE: '${{ vars.CORTEX_CI_AUTH_AUDIENCE }}'
+      CORTEX_CI_AUTH_PRIVATE_KEY: '${{ secrets.CORTEX_CI_AUTH_PRIVATE_KEY }}'
+      CORTEX_CI_DISPOSABLE_DEPLOYMENTS: '${{ vars.CORTEX_CI_DISPOSABLE_DEPLOYMENTS }}'
+      CONVEX_URL: '${{ secrets.CORTEX_CI_CONVEX_URL }}'
+      CONVEX_URL_CLI: '${{ secrets.CORTEX_CI_CONVEX_URL_CLI }}'
+    name: Test Vercel AI Provider
+    runs-on: ubuntu-latest
+    needs:
+      - setup-and-purge
+      - test-typescript
+    if: |
+      always() &&
+      needs.setup-and-purge.result == 'success' &&
+      (github.event_name == 'push' ||
+       (!endsWith(github.actor, '[bot]') &&
+        !startsWith(github.actor, 'dependabot') &&
+        !startsWith(github.actor, 'renovate') &&
+        github.event.sender.type != 'Bot' &&
+        (github.event_name == 'workflow_dispatch' ||
+         (github.event.pull_request.head.repo.full_name == github.repository &&
+          github.event.pull_request.user.type != 'Bot' &&
+          !endsWith(github.event.pull_request.user.login, '[bot]') &&
+          github.event.pull_request.draft == false)))) &&
+      inputs.queue_probe != true && contains(fromJSON(inputs.selection).selected, 'test-vercel-ai-provider') &&
+      (needs.test-typescript.result == 'success' ||
+       (!contains(fromJSON(inputs.selection).selected, 'test-typescript') && needs.test-typescript.result == 'skipped'))
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          ref: '${{ inputs.candidate-sha }}'
+          persist-credentials: false
+          sparse-checkout: |
+            /*
+            !/_goals/
+            !/work/
+          sparse-checkout-cone-mode: false
+      - uses: ./.github/actions/cortex-setup
+      - name: Install dependencies
+        run: npm ci
+      - name: Issue scoped verified-host JWTs into private runner environment
+        run: node scripts/ci/runtime-fixtures.mjs tokens sdk
+      - name: Build main SDK first
+        run: npm run build
+      - name: Preserve complete provider discovery (legacy direct-provider E2E is not selected)
+        working-directory: packages/vercel-ai-provider
+        run: node --experimental-vm-modules ../../node_modules/jest/bin/jest.js --listTests --runInBand --json > ci-provider-discovery.json
+        env:
+          CONVEX_URL: 'https://unit.invalid'
+          CONVEX_URL_CLI: 'https://unit.invalid'
+      - name: 'Run provider unit, React, remote and mocked integration contracts'
+        run: |
+          npm run test:unit --workspace=@cortexmemory/vercel-ai-provider -- --runInBand --forceExit=false
+          npm run test:integration --workspace=@cortexmemory/vercel-ai-provider -- --runInBand --forceExit=false
+        env:
+          CONVEX_URL: 'https://unit.invalid'
+          CONVEX_URL_CLI: 'https://unit.invalid'
+          CORTEX_CI_AUTH_PRIVATE_KEY: ''
+          CORTEX_TEST_FIXTURE: ''
+          CORTEX_TEST_AUTH_TOKEN: ''
+          CORTEX_TEST_READER_TOKEN: ''
+          CORTEX_TEST_OUTSIDER_TOKEN: ''
+      - name: Build Vercel AI Provider declared package exports
+        run: npm run build --workspace=@cortexmemory/vercel-ai-provider
+      - name: Publish and verify the observed qualified V2 remote Agent with scoped owner authority
+        run: timeout --signal=TERM --kill-after=5s 30s node scripts/ci/remote-agent.mjs > ci-provider-agent.json
+        env:
+          CORTEX_CI_AUTH_PRIVATE_KEY: ''
+      - name: Exercise one actual backend remote request through the official AI SDK7 parser
+        working-directory: packages/vercel-ai-provider
+        run: timeout --signal=TERM --kill-after=5s 210s node --experimental-vm-modules ../../node_modules/jest/bin/jest.js --selectProjects e2e-remote --runTestsByPath tests/e2e/remote-runtime.test.ts --runInBand --forceExit=false --watchman=false --json --outputFile=ci-provider-remote-results.json
+        env:
+          CORTEX_CI_AUTH_PRIVATE_KEY: ''
+          DEBUG: 'true'
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: ci-provider-discovery-and-runtime
+          path: |
+            ci-provider-agent.json
+            packages/vercel-ai-provider/ci-provider-discovery.json
+            packages/vercel-ai-provider/ci-provider-remote-results.json
+          retention-days: 14
+      - name: Lint Vercel AI Provider
+        run: npm run lint --workspace=@cortexmemory/vercel-ai-provider
+      - name: Verify package contents
+        run: npm pack --dry-run --workspace=@cortexmemory/vercel-ai-provider
+  test-cli:
+    timeout-minutes: 15
+    env:
+      CORTEX_CI_RUN_ID: '${{ github.run_id }}-${{ github.run_attempt }}'
+      CORTEX_CI_AUTH_ISSUER: '${{ vars.CORTEX_CI_AUTH_ISSUER }}'
+      CORTEX_CI_AUTH_AUDIENCE: '${{ vars.CORTEX_CI_AUTH_AUDIENCE }}'
+      CORTEX_CI_AUTH_PRIVATE_KEY: '${{ secrets.CORTEX_CI_AUTH_PRIVATE_KEY }}'
+      CORTEX_CI_DISPOSABLE_DEPLOYMENTS: '${{ vars.CORTEX_CI_DISPOSABLE_DEPLOYMENTS }}'
+      CONVEX_URL: '${{ secrets.CORTEX_CI_CONVEX_URL }}'
+      CONVEX_URL_CLI: '${{ secrets.CORTEX_CI_CONVEX_URL_CLI }}'
+    name: Test Cortex CLI
+    runs-on: ubuntu-latest
+    needs: setup-and-purge
+    if: |
+      always() &&
+      needs.setup-and-purge.result == 'success' &&
+      (github.event_name == 'push' ||
+       (!endsWith(github.actor, '[bot]') &&
+        !startsWith(github.actor, 'dependabot') &&
+        !startsWith(github.actor, 'renovate') &&
+        github.event.sender.type != 'Bot' &&
+        (github.event_name == 'workflow_dispatch' ||
+         (github.event.pull_request.head.repo.full_name == github.repository &&
+          github.event.pull_request.user.type != 'Bot' &&
+          !endsWith(github.event.pull_request.user.login, '[bot]') &&
+          github.event.pull_request.draft == false)))) &&
+      inputs.queue_probe != true && contains(fromJSON(inputs.selection).selected, 'test-cli')
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          ref: '${{ inputs.candidate-sha }}'
+          persist-credentials: false
+          sparse-checkout: |
+            /*
+            !/_goals/
+            !/work/
+          sparse-checkout-cone-mode: false
+      - uses: ./.github/actions/cortex-setup
+      - name: Install dependencies
+        run: npm ci
+      - name: Build main SDK first
+        run: npm run build
+      - name: Preserve complete CLI test discovery (legacy unauthenticated workflows are not selected)
+        working-directory: packages/cortex-cli
+        run: node --experimental-vm-modules ../../node_modules/jest/bin/jest.js --listTests --runInBand --json > ci-cli-discovery.json
+        env:
+          CONVEX_URL: 'https://unit.invalid'
+          CONVEX_URL_CLI: 'https://unit.invalid'
+      - name: Build the CLI executable before command contracts
+        run: npm run build --workspace=@cortexmemory/cli
+      - name: Install supported completion shells for command contracts
+        run: |
+          sudo apt-get update
+          sudo apt-get install --yes zsh fish
+      - name: Prepare isolated command fixtures from current built dependencies
+        run: node -- scripts/ci/command-fixtures.mjs prepare --directory "$RUNNER_TEMP/cortex-cli-command-fixtures" --env-file "$GITHUB_ENV"
+        env:
+          CORTEX_CI_AUTH_PRIVATE_KEY: ''
+      - name: Run CLI unit and command contracts without live credentials
+        run: 'npm run test:fast --workspace=@cortexmemory/cli -- --runInBand'
+        env:
+          CONVEX_URL: 'https://unit.invalid'
+          CONVEX_URL_CLI: 'https://unit.invalid'
+          CORTEX_CI_AUTH_PRIVATE_KEY: ''
+      - name: Remove owned offline command fixtures after success or failure
+        if: always()
+        run: node scripts/ci/command-fixtures.mjs cleanup --directory "$RUNNER_TEMP/cortex-cli-command-fixtures"
+        env:
+          CORTEX_CI_AUTH_PRIVATE_KEY: ''
+      - name: Issue scoped verified-host JWTs into private runner environment
+        run: node scripts/ci/runtime-fixtures.mjs tokens cli
+      - name: Run authenticated registered runtime integration on the distinct CLI target
+        run: timeout --signal=TERM --kill-after=5s 240s node --experimental-vm-modules node_modules/jest/bin/jest.js --runTestsByPath tests/integration/runtime-ci.test.ts --runInBand --forceExit=false --json --outputFile=ci-cli-runtime-results.json
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: ci-cli-discovery-and-runtime
+          path: |
+            packages/cortex-cli/ci-cli-discovery.json
+            ci-cli-runtime-results.json
+          retention-days: 14
+      - name: Lint CLI
+        run: npm run lint --workspace=@cortexmemory/cli
+      - name: Verify CLI version matches package.json
+        run: "echo \"\U0001F50D Verifying CLI version synchronization...\"\nPACKAGE_VERSION=$(node -p \"require('./packages/cortex-cli/package.json').version\")\nCLI_VERSION=$(node packages/cortex-cli/dist/index.js --version)\necho \"  package.json version: $PACKAGE_VERSION\"\necho \"  CLI --version output:  $CLI_VERSION\"\nif [[ \"$PACKAGE_VERSION\" != \"$CLI_VERSION\" ]]; then\n  echo \"\"\n  echo \"❌ Version mismatch detected!\"\n  echo \"   The CLI is reporting a different version than package.json.\"\n  echo \"   This can happen if VERSION was hardcoded instead of read from package.json.\"\n  exit 1\nfi\necho \"✅ CLI version matches package.json\"\n"
+      - name: Verify package contents
+        run: npm pack --dry-run --workspace=@cortexmemory/cli
+  cleanup-runtime-fixtures:
+    timeout-minutes: 10
+    name: Retire exact CI fixture authority
+    runs-on: ubuntu-latest
+    needs:
+      - setup-and-purge
+      - test-typescript
+      - test-vercel-ai-provider
+      - test-cli
+    if: 'always() && inputs.queue_probe != true && contains(fromJSON(inputs.selection).selected, ''cleanup-runtime-fixtures'') && (needs.setup-and-purge.result == ''success'' || needs.setup-and-purge.result == ''failure'' || needs.setup-and-purge.result == ''cancelled'')'
+    env:
+      CORTEX_CI_RUN_ID: '${{ github.run_id }}-${{ github.run_attempt }}'
+      CORTEX_CI_AUTH_ISSUER: '${{ vars.CORTEX_CI_AUTH_ISSUER }}'
+      CORTEX_CI_AUTH_AUDIENCE: '${{ vars.CORTEX_CI_AUTH_AUDIENCE }}'
+      CORTEX_CI_AUTH_PRIVATE_KEY: '${{ secrets.CORTEX_CI_AUTH_PRIVATE_KEY }}'
+      CORTEX_CI_DISPOSABLE_DEPLOYMENTS: '${{ vars.CORTEX_CI_DISPOSABLE_DEPLOYMENTS }}'
+      CONVEX_URL: '${{ secrets.CORTEX_CI_CONVEX_URL }}'
+      CONVEX_URL_CLI: '${{ secrets.CORTEX_CI_CONVEX_URL_CLI }}'
+      CONVEX_DEPLOY_KEY: '${{ secrets.CORTEX_CI_CONVEX_DEPLOY_KEY }}'
+      CONVEX_DEPLOY_KEY_CLI: '${{ secrets.CORTEX_CI_CONVEX_DEPLOY_KEY_CLI }}'
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          ref: '${{ inputs.candidate-sha }}'
+          persist-credentials: false
+          sparse-checkout: |
+            /*
+            !/_goals/
+            !/work/
+          sparse-checkout-cone-mode: false
+      - uses: ./.github/actions/cortex-setup
+      - name: Install dependencies
+        run: npm ci
+      - name: Retire owned SDK test tenant; preserve failure and tombstone history
+        if: always()
+        run: npx tsx scripts/cleanup-test-data.ts sdk > ci-sdk-cleanup.json
+      - name: Retire owned CLI test tenant; preserve failure and tombstone history
+        if: always()
+        run: npx tsx scripts/cleanup-test-data.ts cli > ci-cli-cleanup.json
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: ci-runtime-cleanup-receipts
+          path: ci-*-cleanup.json
+          retention-days: 14
+  managed-outcomes:
+    name: Require complete managed outcomes
+    needs:
+      - setup-and-purge
+      - test-typescript
+      - test-vercel-ai-provider
+      - test-cli
+      - cleanup-runtime-fixtures
+    if: always() && inputs.queue_probe != true
+    runs-on: ubuntu-latest
+    outputs:
+      receipt: '${{ steps.aggregate.outputs.receipt }}'
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          ref: '${{ inputs.candidate-sha }}'
+          persist-credentials: false
+          sparse-checkout: |
+            /*
+            !/_goals/
+            !/work/
+          sparse-checkout-cone-mode: false
+      - uses: ./.github/actions/cortex-setup
+        with:
+          cache: 'false'
+      - name: Require selected leaves success and intentional skips
+        id: aggregate
+        env:
+          CI_SELECTION: '${{ inputs.selection }}'
+          CI_CANDIDATE_SHA: '${{ inputs.candidate-sha }}'
+          CI_NEEDS: '${{ toJSON(needs) }}'
+        run: node scripts/ci-managed.mjs aggregate

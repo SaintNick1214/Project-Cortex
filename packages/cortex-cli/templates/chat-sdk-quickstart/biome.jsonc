@@ -1,9 +1,9 @@
 {
   "$schema": "./node_modules/@biomejs/biome/configuration_schema.json",
   "extends": [
-    "ultracite/biome/core",
-    "ultracite/biome/next",
-    "ultracite/biome/react"
+    "./config/biome/core.jsonc",
+    "./config/biome/next.jsonc",
+    "./config/biome/react.jsonc"
   ],
   "formatter": {
     "indentStyle": "space",
@@ -15,6 +15,7 @@
       "**/*.tsx",
       "**/*.js",
       "**/*.jsx",
+      "**/*.mjs",
       "!node_modules",
       "!.next",
       "!ai-sdk",
@@ -33,7 +34,12 @@
         "useAwait": "off",
         "noArrayIndexKey": "off",
         "noNestedPromises": "off",
-        "noBitwiseOperators": "off"
+        "noBitwiseOperators": "off",
+        "noAssignInExpressions": "warn",
+        "noReturnAssign": "warn",
+        "noShadow": "warn",
+        "useIterableCallbackReturn": "warn",
+        "noLeakedRender": "warn"
       },
       "style": {
         "noMagicNumbers": "off",
@@ -42,14 +48,30 @@
         "noNonNullAssertion": "off",
         "noDescendingSpecificity": "off",
         "noNestedTernary": "off",
-        "useConsistentTypeDefinitions": "off"
+        "useConsistentTypeDefinitions": "off",
+        "noInferrableTypes": "warn",
+        "noNegationElse": "warn",
+        "noUnusedTemplateLiteral": "warn",
+        "useAtIndex": "warn",
+        "useBlockStatements": "warn",
+        "useConsistentArrayType": "warn",
+        "useConsistentArrowReturn": "warn",
+        "useConsistentMethodSignatures": "warn",
+        "useErrorCause": "warn",
+        "useFilenamingConvention": "warn",
+        "useNumericSeparators": "warn",
+        "useTemplate": "warn"
       },
       "nursery": {
         "useSortedClasses": "off"
       },
       "complexity": {
         "noExcessiveCognitiveComplexity": "off",
-        "useSimplifiedLogicExpression": "off"
+        "useSimplifiedLogicExpression": "off",
+        "noForEach": "warn",
+        "noUselessUndefined": "warn",
+        "noVoid": "warn",
+        "useOptionalChain": "warn"
       },
       "a11y": {
         "noSvgWithoutTitle": "off"
@@ -62,7 +84,8 @@
         "noBarrelFile": "off",
         "noJsxPropsBind": "off",
         "noAwaitInLoops": "off",
-        "useTopLevelRegex": "off"
+        "useTopLevelRegex": "off",
+        "noNamespaceImport": "warn"
       }
     }
   }

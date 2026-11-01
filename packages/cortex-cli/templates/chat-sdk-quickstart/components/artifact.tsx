@@ -1,3 +1,4 @@
+import { toast } from "sonner";
 import type { UseChatHelpers } from "@ai-sdk/react";
 import { formatDistance } from "date-fns";
 import equal from "fast-deep-equal";
@@ -17,7 +18,8 @@ import { imageArtifact } from "@/artifacts/image/client";
 import { sheetArtifact } from "@/artifacts/sheet/client";
 import { textArtifact } from "@/artifacts/text/client";
 import { useArtifact } from "@/hooks/use-artifact";
-import type { Attachment, ChatMessage, Document, Vote } from "@/lib/types";
+import type { Document, Vote } from "@/lib/types";
+import type { Attachment, ChatMessage } from "@/lib/types";
 import { fetcher } from "@/lib/utils";
 import { ArtifactActions } from "./artifact-actions";
 import { ArtifactCloseButton } from "./artifact-close-button";
@@ -96,7 +98,7 @@ function PureArtifact({
     artifact.documentId !== "init" && artifact.status !== "streaming"
       ? `/api/document?id=${artifact.documentId}`
       : null,
-    fetcher
+    fetcher,
   );
 
   const [mode, setMode] = useState<"edit" | "diff">("edit");
@@ -142,42 +144,45 @@ function PureArtifact({
 
           const currentDocument = currentDocuments.at(-1);
 
-          if (!currentDocument?.content) {
+          if (!currentDocument || (currentDocument.content === null || currentDocument.content === undefined)) {
             setIsContentDirty(false);
             return currentDocuments;
           }
 
           if (currentDocument.content !== updatedContent) {
-            await fetch(`/api/document?id=${artifact.documentId}`, {
-              body: JSON.stringify({
-                content: updatedContent,
-                kind: artifact.kind,
-                title: artifact.title,
-              }),
-              method: "POST",
-            });
+            const response = await fetch(
+              `/api/document?id=${artifact.documentId}`,
+              {
+                method: "POST",
+                body: JSON.stringify({
+                  title: artifact.title,
+                  content: updatedContent,
+                  kind: artifact.kind,
+                }),
+              },
+            );
 
+            if (!response.ok) {
+              toast.error(
+                "Document save did not finish. Reload before retrying.",
+              );
+              throw new Error("Document save did not finish");
+            }
+            const saved: Document = await response.json();
             setIsContentDirty(false);
-
-            const newDocument = {
-              ...currentDocument,
-              content: updatedContent,
-              createdAt: new Date(),
-            };
-
-            return [...currentDocuments, newDocument];
+            return [...currentDocuments, saved];
           }
           return currentDocuments;
         },
-        { revalidate: false }
+        { revalidate: false },
       );
     },
-    [artifact, mutate]
+    [artifact, mutate],
   );
 
   const debouncedHandleContentChange = useDebounceCallback(
     handleContentChange,
-    2000
+    2000,
   );
 
   const saveContent = useCallback(
@@ -192,7 +197,7 @@ function PureArtifact({
         }
       }
     },
-    [document, debouncedHandleContentChange, handleContentChange]
+    [document, debouncedHandleContentChange, handleContentChange],
   );
 
   function getDocumentContentById(index: number) {
@@ -245,7 +250,7 @@ function PureArtifact({
   const isMobile = windowWidth ? windowWidth < 768 : false;
 
   const artifactDefinition = artifactDefinitions.find(
-    (definition) => definition.kind === artifact.kind
+    (definition) => definition.kind === artifact.kind,
   );
 
   if (!artifactDefinition) {
@@ -263,7 +268,7 @@ function PureArtifact({
 
   return (
     <AnimatePresence>
-      {!!artifact.isVisible && (
+      {Boolean(artifact.isVisible) && (
         <motion.div
           animate={{ opacity: 1 }}
           className="fixed top-0 left-0 z-50 flex h-dvh w-dvw flex-row bg-transparent"
@@ -273,15 +278,15 @@ function PureArtifact({
         >
           {!isMobile && (
             <motion.div
-              animate={{ right: 0, width: windowWidth }}
+              animate={{ width: windowWidth, right: 0 }}
               className="fixed h-dvh bg-background"
               exit={{
-                right: 0,
                 width: isSidebarOpen ? windowWidth - 256 : windowWidth,
+                right: 0,
               }}
               initial={{
-                right: 0,
                 width: isSidebarOpen ? windowWidth - 256 : windowWidth,
+                right: 0,
               }}
             />
           )}
@@ -290,23 +295,23 @@ function PureArtifact({
             <motion.div
               animate={{
                 opacity: 1,
+                x: 0,
                 scale: 1,
                 transition: {
-                  damping: 30,
                   delay: 0.1,
-                  stiffness: 300,
                   type: "spring",
+                  stiffness: 300,
+                  damping: 30,
                 },
-                x: 0,
               }}
               className="relative h-dvh w-[400px] shrink-0 bg-muted dark:bg-background"
               exit={{
                 opacity: 0,
+                x: 0,
                 scale: 1,
                 transition: { duration: 0 },
-                x: 0,
               }}
-              initial={{ opacity: 0, scale: 1, x: 10 }}
+              initial={{ opacity: 0, x: 10, scale: 1 }}
             >
               <AnimatePresence>
                 {!isCurrentVersion && (
@@ -357,36 +362,36 @@ function PureArtifact({
             animate={
               isMobile
                 ? {
-                    borderRadius: 0,
-                    height: windowHeight,
                     opacity: 1,
-                    transition: {
-                      damping: 30,
-                      delay: 0,
-                      duration: 0.8,
-                      stiffness: 300,
-                      type: "spring",
-                    },
-                    width: windowWidth ? windowWidth : "calc(100dvw)",
                     x: 0,
                     y: 0,
+                    height: windowHeight,
+                    width: windowWidth ? windowWidth : "calc(100dvw)",
+                    borderRadius: 0,
+                    transition: {
+                      delay: 0,
+                      type: "spring",
+                      stiffness: 300,
+                      damping: 30,
+                      duration: 0.8,
+                    },
                   }
                 : {
-                    borderRadius: 0,
-                    height: windowHeight,
                     opacity: 1,
-                    transition: {
-                      damping: 30,
-                      delay: 0,
-                      duration: 0.8,
-                      stiffness: 300,
-                      type: "spring",
-                    },
+                    x: 400,
+                    y: 0,
+                    height: windowHeight,
                     width: windowWidth
                       ? windowWidth - 400
                       : "calc(100dvw-400px)",
-                    x: 400,
-                    y: 0,
+                    borderRadius: 0,
+                    transition: {
+                      delay: 0,
+                      type: "spring",
+                      stiffness: 300,
+                      damping: 30,
+                      duration: 0.8,
+                    },
                   }
             }
             className="fixed flex h-dvh flex-col overflow-y-scroll border-zinc-200 bg-background md:border-l dark:border-zinc-700 dark:bg-muted"
@@ -394,29 +399,29 @@ function PureArtifact({
               opacity: 0,
               scale: 0.5,
               transition: {
-                damping: 30,
                 delay: 0.1,
-                stiffness: 600,
                 type: "spring",
+                stiffness: 600,
+                damping: 30,
               },
             }}
             initial={
               isMobile
                 ? {
-                    borderRadius: 50,
-                    height: artifact.boundingBox.height,
                     opacity: 1,
-                    width: artifact.boundingBox.width,
                     x: artifact.boundingBox.left,
                     y: artifact.boundingBox.top,
+                    height: artifact.boundingBox.height,
+                    width: artifact.boundingBox.width,
+                    borderRadius: 50,
                   }
                 : {
-                    borderRadius: 50,
-                    height: artifact.boundingBox.height,
                     opacity: 1,
-                    width: artifact.boundingBox.width,
                     x: artifact.boundingBox.left,
                     y: artifact.boundingBox.top,
+                    height: artifact.boundingBox.height,
+                    width: artifact.boundingBox.width,
+                    borderRadius: 50,
                   }
             }
           >
@@ -438,7 +443,7 @@ function PureArtifact({
                         new Date(),
                         {
                           addSuffix: true,
-                        }
+                        },
                       )}`}
                     </div>
                   ) : (
@@ -480,7 +485,7 @@ function PureArtifact({
               />
 
               <AnimatePresence>
-                {!!isCurrentVersion && (
+                {Boolean(isCurrentVersion) && (
                   <Toolbar
                     artifactKind={artifact.kind}
                     isToolbarVisible={isToolbarVisible}

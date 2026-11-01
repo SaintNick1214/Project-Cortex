@@ -405,7 +405,7 @@ describe("Conversations API (Layer 1a) - DEBUG MODE", () => {
       debugLog("Verification", "SDK confirms deletion");
 
       logStep(4, "Verify it's gone from storage");
-      const stored = await client.query(api.conversations.get, {
+      const stored = await client.mutation(api.conversations.get, {
         conversationId: conversation.conversationId,
       });
 

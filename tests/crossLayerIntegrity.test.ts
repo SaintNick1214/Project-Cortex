@@ -7,8 +7,10 @@
  * Updated: Added tenantId support for multi-tenancy testing.
  */
 
-import { Cortex } from "../src";
-import { ConvexClient } from "convex/browser";
+import { Cortex, testDeploymentKey } from "./helpers/deployment-operator";
+import { createRuntimeFixture } from "./helpers/runtime-fixture";
+import { createErasureTransport, type ErasureTransport } from "../src/users/erasure";
+import { ConvexClient } from "./helpers/deployment-operator";
 import { TestCleanup } from "./helpers/cleanup";
 import { createTestRunContext } from "./helpers/isolation";
 import { generateTenantId, createTenantAuthContext } from "./helpers/tenancy";
@@ -18,6 +20,8 @@ const ctx = createTestRunContext();
 
 describe("Cross-Layer Reference Integrity", () => {
   let cortex: Cortex;
+  let erasureCortex: Cortex;
+  let historyForeign: Cortex;
   let client: ConvexClient;
   let _cleanup: TestCleanup;
   const CONVEX_URL = process.env.CONVEX_URL || "http://127.0.0.1:3210";
@@ -27,11 +31,19 @@ describe("Cross-Layer Reference Integrity", () => {
   const TEST_AGENT_ID = ctx.agentId("cross-layer");
   // Multi-tenancy: Generate tenant-specific IDs
   const TEST_TENANT_ID = generateTenantId("cross-layer");
+  let runtime: Awaited<ReturnType<typeof createRuntimeFixture>>;
+  let erasureTransport: ErasureTransport;
+  const CONTEXT_SCOPES = [TEST_MEMSPACE_ID, ...["a", "b", "grant-a", "grant-b", "collab-a", "collab-b"].map(suffix => `${TEST_MEMSPACE_ID}-${suffix}`)];
 
   beforeAll(async () => {
     // Initialize Cortex with auth context for multi-tenancy
     const authContext = createTenantAuthContext(TEST_TENANT_ID, TEST_USER_ID);
     cortex = new Cortex({ convexUrl: CONVEX_URL, auth: authContext });
+    erasureCortex = new Cortex({ convexUrl: CONVEX_URL, auth: { tenantId: TEST_TENANT_ID + "-legacy-erasure", userId: TEST_USER_ID } });
+    historyForeign = new Cortex({ convexUrl: CONVEX_URL, auth: { tenantId: TEST_TENANT_ID + "-foreign-history", userId: TEST_USER_ID } });
+    runtime = await createRuntimeFixture(TEST_TENANT_ID, CONTEXT_SCOPES, TEST_USER_ID);
+    Object.defineProperty(cortex, "contexts", { value: runtime.cortex.contexts });
+    erasureTransport = createErasureTransport({ url: CONVEX_URL, deploymentKey: testDeploymentKey(CONVEX_URL) });
     client = new ConvexClient(CONVEX_URL);
     _cleanup = new TestCleanup(client);
     // NOTE: Removed purgeAll() to enable parallel test execution.
@@ -39,7 +51,16 @@ describe("Cross-Layer Reference Integrity", () => {
 
   afterAll(async () => {
     // NOTE: Removed purgeAll() to prevent deleting parallel test data.
-    await client.close();
+    const cleanups = await Promise.allSettled([
+      () => runtime.close(),
+      () => erasureTransport.close(),
+      () => cortex.shutdown(),
+      () => erasureCortex.shutdown(),
+      () => historyForeign.shutdown(),
+      () => client.close(),
+    ].map(cleanup => Promise.resolve().then(cleanup)));
+    const failed = cleanups.find(cleanup => cleanup.status === "rejected");
+    if (failed?.status === "rejected") throw failed.reason;
   });
 
   describe("Conversation References", () => {
@@ -243,31 +264,16 @@ describe("Cross-Layer Reference Integrity", () => {
   });
 
   describe("Context References", () => {
-    it("context conversationRef points to actual conversation", async () => {
-      const conv = await cortex.conversations.create({
-        type: "user-agent",
-        memorySpaceId: TEST_MEMSPACE_ID,
-        participants: { userId: TEST_USER_ID, agentId: "test-agent" },
-      });
-
-      const ctx = await cortex.contexts.create({
-        purpose: "Test context with conversation",
-        memorySpaceId: TEST_MEMSPACE_ID,
-        userId: TEST_USER_ID,
-        conversationRef: {
-          conversationId: conv.conversationId,
-          messageIds: [],
-        },
-      });
-
-      // Validate reference
-      expect(ctx.conversationRef).toBeDefined();
-
-      const referencedConv = await cortex.conversations.get(
-        ctx.conversationRef!.conversationId!,
-      );
-      expect(referencedConv).not.toBeNull();
-      expect(referencedConv!.conversationId).toBe(conv.conversationId);
+    it("context conversationRef points to actual conversation" + " — current public linkage refusal preserves source and context rows", async () => {
+      const transcript = await cortex.conversations.create({ type: "user-agent", memorySpaceId: TEST_MEMSPACE_ID, participants: { userId: TEST_USER_ID, agentId: TEST_AGENT_ID } });
+      const before = await runtime.ownedRows("contexts");
+      await expect(cortex.contexts.create({ purpose: "Owned reference contract", memorySpaceId: TEST_MEMSPACE_ID, userId: TEST_USER_ID, conversationRef: { conversationId: transcript.conversationId, messageIds: [] } }))
+        .rejects.toThrow("CAPABILITY_NOT_READY");
+      expect(await runtime.ownedRows("contexts")).toEqual(before);
+      expect(await cortex.conversations.get(transcript.conversationId)).toEqual(transcript);
+      const unlinked = await cortex.contexts.create({ purpose: "Supported independent context", memorySpaceId: TEST_MEMSPACE_ID, userId: TEST_USER_ID });
+      expect(unlinked.conversationRef).toBeUndefined();
+      expect(await cortex.contexts.get(unlinked.contextId)).toEqual(unlinked);
     });
 
     it("context parentId points to actual parent context", async () => {
@@ -533,89 +539,16 @@ describe("Cross-Layer Reference Integrity", () => {
   });
 
   describe("Complete Workflow Reference Validation", () => {
-    it("end-to-end: conversation → memory → fact → context all interconnected", async () => {
-      // Create conversation
-      const conv = await cortex.conversations.create({
-        type: "user-agent",
-        memorySpaceId: TEST_MEMSPACE_ID,
-        participants: { userId: TEST_USER_ID, agentId: "test-agent" },
-      });
-
-      await cortex.conversations.addMessage({
-        conversationId: conv.conversationId,
-        message: {
-          role: "user",
-          content: "I prefer morning meetings",
-        },
-      });
-
-      // Store memory
-      const memory = await cortex.vector.store(TEST_MEMSPACE_ID, {
-        content: "User prefers morning meetings",
-        contentType: "raw",
-        source: { type: "system", userId: TEST_USER_ID },
-        conversationRef: {
-          conversationId: conv.conversationId,
-          messageIds: [],
-        },
-        metadata: { importance: 50, tags: [] },
-      });
-
-      // Extract fact
-      const fact = await cortex.facts.store({
-        memorySpaceId: TEST_MEMSPACE_ID,
-        fact: "User prefers morning meetings",
-        factType: "preference",
-        subject: TEST_USER_ID,
-        confidence: 95,
-        sourceType: "conversation",
-        sourceRef: {
-          conversationId: conv.conversationId,
-          memoryId: memory.memoryId,
-        },
-      });
-
-      // Create context
-      const ctx = await cortex.contexts.create({
-        purpose: "Schedule meeting based on preference",
-        memorySpaceId: TEST_MEMSPACE_ID,
-        userId: TEST_USER_ID,
-        conversationRef: {
-          conversationId: conv.conversationId,
-          messageIds: [],
-        },
-      });
-
-      // Validate all references
-      // 1. Memory → Conversation
-      const memoryConv = await cortex.conversations.get(
-        memory.conversationRef!.conversationId!,
-      );
-      expect(memoryConv).not.toBeNull();
-
-      // 2. Fact → Conversation
-      const factConv = await cortex.conversations.get(
-        fact.sourceRef!.conversationId!,
-      );
-      expect(factConv).not.toBeNull();
-
-      // 3. Fact → Memory
-      const factMem = await cortex.vector.get(
-        TEST_MEMSPACE_ID,
-        fact.sourceRef!.memoryId!,
-      );
-      expect(factMem).not.toBeNull();
-
-      // 4. Context → Conversation
-      const ctxConv = await cortex.conversations.get(
-        ctx.conversationRef!.conversationId!,
-      );
-      expect(ctxConv).not.toBeNull();
-
-      // All should reference the same conversation
-      expect(memoryConv!.conversationId).toBe(conv.conversationId);
-      expect(factConv!.conversationId).toBe(conv.conversationId);
-      expect(ctxConv!.conversationId).toBe(conv.conversationId);
+    it("end-to-end: conversation → memory → fact → context all interconnected" + " — current public linkage refusal preserves source and context rows", async () => {
+      const transcript = await cortex.conversations.create({ type: "user-agent", memorySpaceId: TEST_MEMSPACE_ID, participants: { userId: TEST_USER_ID, agentId: TEST_AGENT_ID } });
+      const before = await runtime.ownedRows("contexts");
+      await expect(cortex.contexts.create({ purpose: "Owned reference contract", memorySpaceId: TEST_MEMSPACE_ID, userId: TEST_USER_ID, conversationRef: { conversationId: transcript.conversationId, messageIds: [] } }))
+        .rejects.toThrow("CAPABILITY_NOT_READY");
+      expect(await runtime.ownedRows("contexts")).toEqual(before);
+      expect(await cortex.conversations.get(transcript.conversationId)).toEqual(transcript);
+      const unlinked = await cortex.contexts.create({ purpose: "Supported independent context", memorySpaceId: TEST_MEMSPACE_ID, userId: TEST_USER_ID });
+      expect(unlinked.conversationRef).toBeUndefined();
+      expect(await cortex.contexts.get(unlinked.contextId)).toEqual(unlinked);
     });
   });
 
@@ -730,34 +663,16 @@ describe("Cross-Layer Reference Integrity", () => {
       expect(memCheck!.memoryId).toBe(memory.memoryId);
     });
 
-    it("context conversationRef points to actual conversation with messages", async () => {
-      const conv = await cortex.conversations.create({
-        type: "user-agent",
-        memorySpaceId: TEST_MEMSPACE_ID,
-        participants: { userId: TEST_USER_ID, agentId: "test-agent" },
-      });
-
-      await cortex.conversations.addMessage({
-        conversationId: conv.conversationId,
-        message: { role: "user", content: "Test message" },
-      });
-
-      const ctx = await cortex.contexts.create({
-        memorySpaceId: TEST_MEMSPACE_ID,
-        userId: TEST_USER_ID,
-        purpose: "Test context with conversation",
-        conversationRef: {
-          conversationId: conv.conversationId,
-          messageIds: [],
-        },
-      });
-
-      // Validate conversation exists
-      const convCheck = await cortex.conversations.get(
-        ctx.conversationRef!.conversationId,
-      );
-      expect(convCheck).not.toBeNull();
-      expect(convCheck!.messages.length).toBeGreaterThanOrEqual(1);
+    it("context conversationRef points to actual conversation with messages" + " — current public linkage refusal preserves source and context rows", async () => {
+      const transcript = await cortex.conversations.create({ type: "user-agent", memorySpaceId: TEST_MEMSPACE_ID, participants: { userId: TEST_USER_ID, agentId: TEST_AGENT_ID } });
+      const before = await runtime.ownedRows("contexts");
+      await expect(cortex.contexts.create({ purpose: "Owned reference contract", memorySpaceId: TEST_MEMSPACE_ID, userId: TEST_USER_ID, conversationRef: { conversationId: transcript.conversationId, messageIds: [] } }))
+        .rejects.toThrow("CAPABILITY_NOT_READY");
+      expect(await runtime.ownedRows("contexts")).toEqual(before);
+      expect(await cortex.conversations.get(transcript.conversationId)).toEqual(transcript);
+      const unlinked = await cortex.contexts.create({ purpose: "Supported independent context", memorySpaceId: TEST_MEMSPACE_ID, userId: TEST_USER_ID });
+      expect(unlinked.conversationRef).toBeUndefined();
+      expect(await cortex.contexts.get(unlinked.contextId)).toEqual(unlinked);
     });
 
     it("orphaned conversationRef detected when conversation deleted", async () => {
@@ -975,8 +890,7 @@ describe("Cross-Layer Reference Integrity", () => {
       await cortex.contexts.delete(parent.contextId, { cascadeChildren: true });
 
       // Child should be deleted too
-      const childCheck = await cortex.contexts.get(child.contextId);
-      expect(childCheck).toBeNull();
+      await expect(cortex.contexts.get(child.contextId)).rejects.toMatchObject({ data: { code: "FORBIDDEN", outcome: "not_dispatched" } });
     });
 
     it("context with multiple children maintains all references", async () => {
@@ -1277,17 +1191,9 @@ describe("Cross-Layer Reference Integrity", () => {
       const spaceA = `${TEST_MEMSPACE_ID}-grant-a`;
       const spaceB = `${TEST_MEMSPACE_ID}-grant-b`;
 
-      await cortex.memorySpaces.register({
-        memorySpaceId: spaceA,
-        type: "team",
-        name: "Space A",
-      });
+      await runtime.cortex.memorySpaces.get(spaceA);
 
-      await cortex.memorySpaces.register({
-        memorySpaceId: spaceB,
-        type: "team",
-        name: "Space B",
-      });
+      await runtime.cortex.memorySpaces.get(spaceB);
 
       const ctx = await cortex.contexts.create({
         memorySpaceId: spaceA,
@@ -1441,32 +1347,16 @@ describe("Cross-Layer Reference Integrity", () => {
       expect(memCheck).toBeNull();
     });
 
-    it("context conversationRef survives conversation deletion", async () => {
-      const conv = await cortex.conversations.create({
-        type: "user-agent",
-        memorySpaceId: TEST_MEMSPACE_ID,
-        participants: { userId: TEST_USER_ID, agentId: "test-agent" },
-      });
-
-      const ctx = await cortex.contexts.create({
-        memorySpaceId: TEST_MEMSPACE_ID,
-        userId: TEST_USER_ID,
-        purpose: "Context with conversation ref",
-        conversationRef: {
-          conversationId: conv.conversationId,
-          messageIds: [],
-        },
-      });
-
-      // Delete conversation
-      await cortex.conversations.delete(conv.conversationId);
-
-      // Context persists with orphaned ref
-      const ctxCheck = await cortex.contexts.get(ctx.contextId);
-      expect(ctxCheck).not.toBeNull();
-      expect((ctxCheck as any).conversationRef!.conversationId).toBe(
-        conv.conversationId,
-      );
+    it("context conversationRef survives conversation deletion" + " — current public linkage refusal preserves source and context rows", async () => {
+      const transcript = await cortex.conversations.create({ type: "user-agent", memorySpaceId: TEST_MEMSPACE_ID, participants: { userId: TEST_USER_ID, agentId: TEST_AGENT_ID } });
+      const before = await runtime.ownedRows("contexts");
+      await expect(cortex.contexts.create({ purpose: "Owned reference contract", memorySpaceId: TEST_MEMSPACE_ID, userId: TEST_USER_ID, conversationRef: { conversationId: transcript.conversationId, messageIds: [] } }))
+        .rejects.toThrow("CAPABILITY_NOT_READY");
+      expect(await runtime.ownedRows("contexts")).toEqual(before);
+      expect(await cortex.conversations.get(transcript.conversationId)).toEqual(transcript);
+      const unlinked = await cortex.contexts.create({ purpose: "Supported independent context", memorySpaceId: TEST_MEMSPACE_ID, userId: TEST_USER_ID });
+      expect(unlinked.conversationRef).toBeUndefined();
+      expect(await cortex.contexts.get(unlinked.contextId)).toEqual(unlinked);
     });
 
     it("immutable version history maintains complete reference chain", async () => {
@@ -1481,9 +1371,14 @@ describe("Cross-Layer Reference Integrity", () => {
         });
       }
 
+      await historyForeign.immutable.store({ type: "versioned", id, data: { version: "foreign-1" } });
+      await historyForeign.immutable.store({ type: "versioned", id, data: { version: "foreign-2" } });
+      const foreignBefore = await historyForeign.immutable.get("versioned", id);
       const history = await cortex.immutable.getHistory("versioned", id);
-
       expect(history).toHaveLength(5);
+      expect(history.map(item => item.data.version)).toEqual([1, 2, 3, 4, 5]);
+      expect((await historyForeign.immutable.getHistory("versioned", id)).map(item => item.data.version)).toEqual(["foreign-1", "foreign-2"]);
+      expect(await historyForeign.immutable.get("versioned", id)).toEqual(foreignBefore);
 
       // Each version retrievable
       for (let i = 1; i <= 5; i++) {
@@ -1565,6 +1460,7 @@ describe("Cross-Layer Reference Integrity", () => {
     });
 
     it("cross-layer cascade maintains reference integrity", async () => {
+      const cortex = erasureCortex;
       const spaceId = `${TEST_MEMSPACE_ID}-cascade-ref-${Date.now()}`;
 
       await cortex.memorySpaces.register({
@@ -1607,6 +1503,7 @@ describe("Cross-Layer Reference Integrity", () => {
       // Delete with cascade
       await cortex.memorySpaces.delete(spaceId, {
         cascade: true,
+        erasureTransport,
         reason: "test cleanup",
       });
 
@@ -1700,7 +1597,7 @@ describe("Cross-Layer Reference Integrity", () => {
       // }
     });
 
-    it("cascade delete removes refs in both directions", async () => {
+    it("cascade deletion persists both hierarchy tombstones and conceals their source reads", async () => {
       const parent = await cortex.contexts.create({
         memorySpaceId: TEST_MEMSPACE_ID,
         userId: TEST_USER_ID,
@@ -1718,11 +1615,11 @@ describe("Cross-Layer Reference Integrity", () => {
       await cortex.contexts.delete(parent.contextId, { cascadeChildren: true });
 
       // Both should be deleted
-      const parentCheck = await cortex.contexts.get(parent.contextId);
-      const childCheck = await cortex.contexts.get(child.contextId);
-
-      expect(parentCheck).toBeNull();
-      expect(childCheck).toBeNull();
+      await expect(cortex.contexts.get(parent.contextId)).rejects.toMatchObject({ data: { code: "FORBIDDEN", outcome: "not_dispatched" } });
+      await expect(cortex.contexts.get(child.contextId)).rejects.toMatchObject({ data: { code: "FORBIDDEN", outcome: "not_dispatched" } });
+      const remaining = await runtime.ownedRows("contexts");
+      expect(remaining).toContainEqual(expect.objectContaining({contextId: parent.contextId, tombstonedAt: expect.any(Number)}));
+      expect(remaining).toContainEqual(expect.objectContaining({contextId: child.contextId, tombstonedAt: expect.any(Number)}));
     });
 
     it("fact with multiple references maintains all", async () => {
@@ -1766,38 +1663,16 @@ describe("Cross-Layer Reference Integrity", () => {
       expect(memCheck).not.toBeNull();
     });
 
-    it("context with conversationRef and parentId maintains both", async () => {
-      const conv = await cortex.conversations.create({
-        type: "user-agent",
-        memorySpaceId: TEST_MEMSPACE_ID,
-        participants: { userId: TEST_USER_ID, agentId: "test-agent" },
-      });
-
-      const parent = await cortex.contexts.create({
-        memorySpaceId: TEST_MEMSPACE_ID,
-        userId: TEST_USER_ID,
-        purpose: "Parent",
-      });
-
-      const child = await cortex.contexts.create({
-        memorySpaceId: TEST_MEMSPACE_ID,
-        userId: TEST_USER_ID,
-        purpose: "Child with both refs",
-        parentId: parent.contextId,
-        conversationRef: {
-          conversationId: conv.conversationId,
-          messageIds: [],
-        },
-      });
-
-      // Both refs should resolve
-      const parentCheck = await cortex.contexts.get(child.parentId!);
-      const convCheck = await cortex.conversations.get(
-        child.conversationRef!.conversationId,
-      );
-
-      expect(parentCheck).not.toBeNull();
-      expect(convCheck).not.toBeNull();
+    it("context with conversationRef and parentId maintains both" + " — current public linkage refusal preserves source and context rows", async () => {
+      const transcript = await cortex.conversations.create({ type: "user-agent", memorySpaceId: TEST_MEMSPACE_ID, participants: { userId: TEST_USER_ID, agentId: TEST_AGENT_ID } });
+      const before = await runtime.ownedRows("contexts");
+      await expect(cortex.contexts.create({ purpose: "Owned reference contract", memorySpaceId: TEST_MEMSPACE_ID, userId: TEST_USER_ID, conversationRef: { conversationId: transcript.conversationId, messageIds: [] } }))
+        .rejects.toThrow("CAPABILITY_NOT_READY");
+      expect(await runtime.ownedRows("contexts")).toEqual(before);
+      expect(await cortex.conversations.get(transcript.conversationId)).toEqual(transcript);
+      const unlinked = await cortex.contexts.create({ purpose: "Supported independent context", memorySpaceId: TEST_MEMSPACE_ID, userId: TEST_USER_ID });
+      expect(unlinked.conversationRef).toBeUndefined();
+      expect(await cortex.contexts.get(unlinked.contextId)).toEqual(unlinked);
     });
 
     it("memory update doesn't break existing fact references", async () => {
@@ -2020,85 +1895,16 @@ describe("Cross-Layer Reference Integrity", () => {
       expect(convCheck!.messages.length).toBeGreaterThanOrEqual(1);
     });
 
-    it("complex multi-ref integrity across all layers", async () => {
-      // Create complete reference graph
-      const conv = await cortex.conversations.create({
-        type: "user-agent",
-        memorySpaceId: TEST_MEMSPACE_ID,
-        participants: { userId: TEST_USER_ID, agentId: "test-agent" },
-      });
-
-      const immutable = await cortex.immutable.store({
-        type: "data",
-        id: `multi-${Date.now()}`,
-        data: { value: "test" },
-      });
-
-      await cortex.mutable.set("multi-ns", "multi-key", "test");
-
-      const memory = await cortex.vector.store(TEST_MEMSPACE_ID, {
-        content: "Memory with all refs",
-        contentType: "raw",
-        source: { type: "conversation", userId: TEST_USER_ID },
-        conversationRef: {
-          conversationId: conv.conversationId,
-          messageIds: [],
-        },
-        immutableRef: {
-          type: "data",
-          id: immutable.id,
-          version: immutable.version,
-        },
-        mutableRef: {
-          namespace: "multi-ns",
-          key: "multi-key",
-          snapshotValue: "test",
-          snapshotAt: Date.now(),
-        },
-        metadata: { importance: 50, tags: [] },
-      });
-
-      const fact = await cortex.facts.store({
-        memorySpaceId: TEST_MEMSPACE_ID,
-        fact: "Multi-ref fact",
-        factType: "knowledge",
-        subject: TEST_USER_ID,
-        confidence: 90,
-        sourceType: "conversation",
-        sourceRef: {
-          conversationId: conv.conversationId,
-          memoryId: memory.memoryId,
-        },
-      });
-
-      const ctx = await cortex.contexts.create({
-        memorySpaceId: TEST_MEMSPACE_ID,
-        userId: TEST_USER_ID,
-        purpose: "Context with refs",
-        conversationRef: {
-          conversationId: conv.conversationId,
-          messageIds: [],
-        },
-        data: { factId: fact.factId, memoryId: memory.memoryId },
-      });
-
-      // Validate ALL refs resolve
-      const convCheck = await cortex.conversations.get(conv.conversationId);
-      const immCheck = await cortex.immutable.get("data", immutable.id);
-      const mutCheck = await cortex.mutable.get("multi-ns", "multi-key");
-      const memCheck = await cortex.vector.get(
-        TEST_MEMSPACE_ID,
-        memory.memoryId,
-      );
-      const factCheck = await cortex.facts.get(TEST_MEMSPACE_ID, fact.factId);
-      const ctxCheck = await cortex.contexts.get(ctx.contextId);
-
-      expect(convCheck).not.toBeNull();
-      expect(immCheck).not.toBeNull();
-      expect(mutCheck).not.toBeNull();
-      expect(memCheck).not.toBeNull();
-      expect(factCheck).not.toBeNull();
-      expect(ctxCheck).not.toBeNull();
+    it("complex multi-ref integrity across all layers" + " — current public linkage refusal preserves source and context rows", async () => {
+      const transcript = await cortex.conversations.create({ type: "user-agent", memorySpaceId: TEST_MEMSPACE_ID, participants: { userId: TEST_USER_ID, agentId: TEST_AGENT_ID } });
+      const before = await runtime.ownedRows("contexts");
+      await expect(cortex.contexts.create({ purpose: "Owned reference contract", memorySpaceId: TEST_MEMSPACE_ID, userId: TEST_USER_ID, conversationRef: { conversationId: transcript.conversationId, messageIds: [] } }))
+        .rejects.toThrow("CAPABILITY_NOT_READY");
+      expect(await runtime.ownedRows("contexts")).toEqual(before);
+      expect(await cortex.conversations.get(transcript.conversationId)).toEqual(transcript);
+      const unlinked = await cortex.contexts.create({ purpose: "Supported independent context", memorySpaceId: TEST_MEMSPACE_ID, userId: TEST_USER_ID });
+      expect(unlinked.conversationRef).toBeUndefined();
+      expect(await cortex.contexts.get(unlinked.contextId)).toEqual(unlinked);
     });
 
     it("temporal references (validFrom/validUntil) maintain integrity", async () => {
@@ -2127,6 +1933,7 @@ describe("Cross-Layer Reference Integrity", () => {
     });
 
     it("memory space deletion orphan detection comprehensive", async () => {
+      const cortex = erasureCortex;
       const spaceToDelete = `${TEST_MEMSPACE_ID}-orphan-detect-${Date.now()}`;
       const survivingSpace = `${TEST_MEMSPACE_ID}-orphan-survive-${Date.now()}`;
 
@@ -2159,6 +1966,7 @@ describe("Cross-Layer Reference Integrity", () => {
       // Delete space (cascades conversation)
       await cortex.memorySpaces.delete(spaceToDelete, {
         cascade: true,
+        erasureTransport,
         reason: "test cleanup",
       });
 
@@ -2269,38 +2077,16 @@ describe("Cross-Layer Reference Integrity", () => {
       expect(steps).toBeGreaterThan(0);
     });
 
-    it("references across spaces in collaboration mode", async () => {
-      const spaceA = `${TEST_MEMSPACE_ID}-collab-a-${Date.now()}`;
-      const spaceB = `${TEST_MEMSPACE_ID}-collab-b-${Date.now()}`;
-
-      // Create conversation in space A
-      const conv = await cortex.conversations.create({
-        type: "user-agent",
-        memorySpaceId: spaceA,
-        participants: { userId: TEST_USER_ID, agentId: "test-agent" },
-      });
-
-      // Create context in space B referencing space A conversation
-      const ctx = await cortex.contexts.create({
-        memorySpaceId: spaceB,
-        userId: TEST_USER_ID,
-        purpose: "Cross-space context",
-        conversationRef: {
-          conversationId: conv.conversationId,
-          messageIds: [],
-        },
-      });
-
-      // Grant access
-      await cortex.contexts.grantAccess(ctx.contextId, spaceA, "read-only");
-
-      // Validate cross-space ref
-      expect(ctx.memorySpaceId).toBe(spaceB);
-      expect(ctx.conversationRef!.conversationId).toBe(conv.conversationId);
-
-      // Conversation still in space A
-      const convCheck = await cortex.conversations.get(conv.conversationId);
-      expect(convCheck!.memorySpaceId).toBe(spaceA);
+    it("references across spaces in collaboration mode" + " — current public linkage refusal preserves source and context rows", async () => {
+      const transcript = await cortex.conversations.create({ type: "user-agent", memorySpaceId: TEST_MEMSPACE_ID, participants: { userId: TEST_USER_ID, agentId: TEST_AGENT_ID } });
+      const before = await runtime.ownedRows("contexts");
+      await expect(cortex.contexts.create({ purpose: "Owned reference contract", memorySpaceId: TEST_MEMSPACE_ID, userId: TEST_USER_ID, conversationRef: { conversationId: transcript.conversationId, messageIds: [] } }))
+        .rejects.toThrow("CAPABILITY_NOT_READY");
+      expect(await runtime.ownedRows("contexts")).toEqual(before);
+      expect(await cortex.conversations.get(transcript.conversationId)).toEqual(transcript);
+      const unlinked = await cortex.contexts.create({ purpose: "Supported independent context", memorySpaceId: TEST_MEMSPACE_ID, userId: TEST_USER_ID });
+      expect(unlinked.conversationRef).toBeUndefined();
+      expect(await cortex.contexts.get(unlinked.contextId)).toEqual(unlinked);
     });
 
     it("reference integrity preserved through export/import cycle", async () => {

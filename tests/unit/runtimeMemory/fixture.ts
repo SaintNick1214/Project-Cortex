@@ -1,0 +1,150 @@
+import { DEFAULT_EMBEDDING_PROFILE } from "../../../src/domain/profile";
+import type { EmbeddingProfile } from "../../../src/domain/profile";
+import { getFunctionName } from "convex/server";
+import { ConvexError } from "convex/values";
+import type { ActionCtx, MutationCtx } from "../../../convex-dev/_generated/server";
+import type { BackendGatewayBudget, BackendGatewayBudgetArgs } from "../../../convex-dev/runtimeGatewayBackend";
+import type { RuntimeAuthorityReference } from "../../../src/auth/verified";
+import * as memory from "../../../convex-dev/runtimeMemory";
+import * as auth from "../../../convex-dev/runtimeAuth";
+
+type Row = Record<string, unknown> & { _id: string; _creationTime: number };
+// Persist Convex JSON values in this realm; structuredClone uses a foreign Jest prototype.
+function nativeClone<T>(value: T): T { return JSON.parse(JSON.stringify(value)) as T; }
+export function registeredHandler<Args, Result>(registration: unknown): (ctx: MutationCtx, args: Args) => Promise<Result> {
+  return (registration as { _handler: (ctx: MutationCtx, args: Args) => Promise<Result> })._handler;
+}
+function field(row: Row, path: string): unknown {
+  return path.split(".").reduce<unknown>((value, key) => value && typeof value === "object" ? (value as Record<string, unknown>)[key] : undefined, row);
+}
+export class MemoryTestDb {
+  rows = new Map<string, Row[]>();
+  writes = 0;
+  sequence = 0;
+  reads: {table:string;index?:string;limit:number}[]=[];
+  table(name: string): Row[] { if (!this.rows.has(name)) this.rows.set(name, []); return this.rows.get(name)!; }
+  seed(table: string, value: Record<string, unknown>): Row {
+    const row = { ...value, _id: typeof value._id === "string" ? value._id : `${table}:${++this.sequence}`, _creationTime: 1000 };
+    this.table(table).push(row); return row;
+  }
+  query(table: string) {
+    const filters: ((row: Row) => boolean)[] = []; let keys: string[] = [];
+    let indexName:string|undefined;
+    let descending = false;
+    let predicate: (row: Row) => boolean = () => true;
+    const selected = () => { const rows = this.table(table).filter(row => filters.every(test => test(row)) && predicate(row)).sort((a, b) => {
+      for (const key of keys) { const av = field(a, key); const bv = field(b, key); if (av !== bv) return (av as number | string) < (bv as number | string) ? -1 : 1; } return 0;
+    }); return descending ? rows.reverse() : rows; };
+    const builder = {
+      withIndex: (name: string, callback: (q: { eq(key: string, value: unknown): unknown; gt(key: string, value: string | number): unknown }) => unknown) => {
+        indexName=name;
+        const q = { eq: (key: string, value: unknown) => { filters.push(row => field(row, key) === value); return q; },
+          gt: (key: string, value: string | number) => { filters.push(row => (field(row, key) as typeof value) > value); return q; } };
+        keys = table === "runtimeMemoryFactEntities" || name === "by_runtime_source_fact" ? ["factId"] : table === "runtimeGraphDependencies" && name === "by_upstream" ? ["dependentSourceId"]
+          : table === "runtimeGraphSources" ? name === "by_tenant_source" ? ["memorySpaceId"] : ["tenantId", "memorySpaceId", "sourceId"] : [];
+        callback(q); return builder;
+      },
+      withSearchIndex:(name:string,callback:(q:{search(key:string,value:string):unknown;eq(key:string,value:unknown):unknown})=>unknown)=>{
+        indexName=name;const q={search:(key:string,value:string)=>{const words=value.toLowerCase().split(/\s+/);filters.push(row=>words.some(word=>String(field(row,key)).toLowerCase().includes(word)));return q;},eq:(key:string,value:unknown)=>{filters.push(row=>field(row,key)===value);return q;}};callback(q);return builder;
+      },
+      filter: (callback: (q: {
+        field(name: string): string; eq(name: string, value: unknown): (row: Row) => boolean;
+        and(...predicates: ((row: Row) => boolean)[]): (row: Row) => boolean;
+        or(...predicates: ((row: Row) => boolean)[]): (row: Row) => boolean;
+        gt(name: string, value: number): (row: Row) => boolean;
+      }) => (row: Row) => boolean) => {
+        predicate = callback({ field: (name) => name, eq: (name, value) => (row) => field(row, name) === value,
+          and: (...predicates) => (row) => predicates.every((test) => test(row)),
+          or: (...predicates) => (row) => predicates.some((test) => test(row)),
+          gt: (name, value) => row => (field(row, name) as number) > value }); return builder;
+      },
+      unique: async () => { const rows = selected(); if (rows.length > 1) throw new Error("Nonunique canonical index"); return rows[0] ?? null; },
+      order: (direction: "asc" | "desc") => { descending = direction === "desc"; return builder; },
+      collect: async () => [...selected()], take: async (limit: number) => {this.reads.push({table,index:indexName,limit});return selected().slice(0, limit);},
+      paginate: async (opts: { cursor: string | null; numItems: number }) => {
+        this.reads.push({table,index:indexName,limit:opts.numItems});const rows = selected(); const offset = Number(opts.cursor ?? 0);
+        return { page: rows.slice(offset, offset + opts.numItems), isDone: offset + opts.numItems >= rows.length, continueCursor: String(offset + opts.numItems) };
+      },
+    };
+    return builder;
+  }
+  normalizeId(table: string, id: string): string | null { return id.startsWith(`${table}:`) ? id : null; }
+  async get(table: string, id: string): Promise<Row | null> { return this.table(table).find((row) => row._id === id) ?? null; }
+  async insert(table: string, value: Record<string, unknown>): Promise<string> { this.writes++; return this.seed(table, nativeClone(value))._id; }
+  async patch(table: string, id: string, value: Record<string, unknown>): Promise<void> {
+    const row = await this.get(table, id); if (!row) throw new Error("Missing row");
+    this.writes++; Object.assign(row, nativeClone(value));
+  }
+  async delete(table:string,id:string):Promise<void>{const rows=this.table(table),index=rows.findIndex(row=>row._id===id);if(index>=0){rows.splice(index,1);this.writes++;}}
+  async replace(table: string, id: string, value: Record<string, unknown>): Promise<void> {
+    const rows = this.table(table); const index = rows.findIndex((row) => row._id === id);
+    if (index < 0) throw new Error("Missing row"); this.writes++;
+    rows[index] = { ...nativeClone(value), _id: id, _creationTime: rows[index]!._creationTime };
+  }
+  async transaction<T>(run: () => Promise<T>): Promise<T> {
+    const before = new Map([...this.rows].map(([table, rows]) => [table, nativeClone(rows)])); const writes = this.writes; const sequence = this.sequence;
+    try { return await run(); } catch (error) { this.rows = before; this.writes = writes; this.sequence = sequence; throw error; }
+  }
+}
+export function memoryFixture(options: { profile?: () => EmbeddingProfile; budget?: (args: BackendGatewayBudgetArgs) => Promise<BackendGatewayBudget> } = {}) {
+  const db = new MemoryTestDb();
+  const principal = db.seed("runtimeAuthPrincipals", { issuer: "https://host.test", subject: "user-a", actorKind: "user", version: 1, createdAt: 1000 });
+  const membership = db.seed("runtimeAuthMemberships", { principalId: principal._id, tenantId: "tenant-a", version: 1, createdAt: 1000 });
+  db.seed("runtimeAuthScopes", { tenantId: "tenant-a", epoch: 1, createdAt: 1000 });
+  db.seed("runtimeAuthScopes", { tenantId: "tenant-a", memorySpaceId: "space-a", epoch: 1, createdAt: 1000 });
+  const grant = db.seed("runtimeAuthGrants", { principalId: principal._id, membershipId: membership._id,
+    tenantId: "tenant-a", memorySpaceId: "space-a", tenantEpoch: 1, memorySpaceEpoch: 1,
+    capabilities: ["read", "write"], resourceAccess: "own", version: 1, createdAt: 1000 });
+  const reference: RuntimeAuthorityReference = { principalId: principal._id, principalVersion: 1,
+    membershipId: membership._id, membershipVersion: 1, grantId: grant._id, grantVersion: 1,
+    tenantId: "tenant-a", tenantEpoch: 1, memorySpaceId: "space-a", memorySpaceEpoch: 1 };
+  const ctx = { db, auth: { getUserIdentity: async () => ({ issuer: "https://host.test", subject: "user-a" }) } } as unknown as MutationCtx;
+  const searches: { table: string; index: string; filter: { key: string; value: unknown }; vector: number[] }[] = [];
+  const policyRequests: BackendGatewayBudgetArgs[] = [];
+  const actionCtx = {
+    runQuery: async (ref: unknown, args: unknown) => {
+      const name = getFunctionName(ref as Parameters<typeof getFunctionName>[0]);
+      const [module, key] = name.split(":");
+      if (module === "runtimeModelPolicy" && key === "embeddingProfile") {
+        await registeredHandler<unknown, unknown>(memory.checkAuthority)(ctx, { reference: (args as { reference: unknown }).reference, capability: (args as { operationKey: string }).operationKey === "embedding.query" ? "read" : "write" });
+        return options.profile?.() ?? DEFAULT_EMBEDDING_PROFILE;
+      }
+      if(module==='runtimeMemoryQuery') {
+        const query=await import('../../../convex-dev/runtimeMemoryQuery');
+        return registeredHandler<unknown,unknown>((query as unknown as Record<string,unknown>)[key!]!)(ctx,args);
+      }
+      const registration = (module === "runtimeAuth" ? auth : memory) as unknown as Record<string, unknown>;
+      return await registeredHandler<unknown, unknown>(registration[key!]!)(ctx, args);
+    },
+    runMutation: async (ref: unknown, args: unknown) => {
+      const [module, key] = getFunctionName(ref as Parameters<typeof getFunctionName>[0]).split(":");
+      if (module === "runtimeModelPolicy" && key === "ensureBudget") {
+        const input = args as BackendGatewayBudgetArgs;
+        policyRequests.push(input);
+        if (options.budget) return await options.budget(input);
+        throw new ConvexError({ version: 1, code: "CAPABILITY_UNAVAILABLE", message: "Memory capability unavailable.",
+          retryable: false, outcome: "not_dispatched" });
+      }
+      if (module === "runtimeIngestion" && ["registerCompletedDerived", "retireScopedSource"].includes(key!)) {
+        // Real atomic child bookkeeping; defer module load until synthetic policy peers are installed.
+        const ingestion = await import("../../../convex-dev/runtimeIngestion");
+        return await db.transaction(async () => await registeredHandler<unknown, unknown>((ingestion as unknown as Record<string, unknown>)[key!]!)(ctx, args));
+      }
+      if(module==='runtimeMemoryQuery') {
+        const query=await import('../../../convex-dev/runtimeMemoryQuery');
+        return await db.transaction(async()=>await registeredHandler<unknown,unknown>((query as unknown as Record<string,unknown>)[key!]!)(ctx,args));
+      }
+      if (module !== "runtimeMemory") throw new Error("Unsupported fixture mutation");
+      return await db.transaction(async () => await registeredHandler<unknown, unknown>((memory as unknown as Record<string, unknown>)[key!]!)(ctx, args));
+    },
+    vectorSearch: async (table: string, index: string, query: { vector: number[]; limit: number; filter(q: unknown): unknown }) => {
+      const filter = query.filter({ eq: (key: string, value: unknown) => ({ key, value }) }) as { key: string; value: unknown };
+      searches.push({ table, index, filter, vector: query.vector });
+      return db.table(table).filter((row) => row[filter.key] === filter.value).slice(0, query.limit).map((row) => ({ _id: row._id, _score: 0.9 }));
+    },
+  } as unknown as ActionCtx;
+  ctx.runQuery = actionCtx.runQuery as unknown as MutationCtx["runQuery"];
+  ctx.runMutation = actionCtx.runMutation as unknown as MutationCtx["runMutation"];
+  ctx.scheduler = { runAfter: async () => "scheduled:memory-bookkeeping" } as unknown as MutationCtx["scheduler"];
+  return { db, ctx, actionCtx, reference, principal, membership, grant, searches, policyRequests };
+}

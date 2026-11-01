@@ -1,5 +1,5 @@
-import { Cortex } from '../src';
-import { ConvexClient } from 'convex/browser';
+import { Cortex } from "./helpers/deployment-operator";
+import { ConvexClient } from "./helpers/deployment-operator";
 import { createNamedTestRunContext, ScopedCleanup } from './helpers';
 
 describe('fact similarity retrieval', () => {

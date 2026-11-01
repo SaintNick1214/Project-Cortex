@@ -1,5 +1,4 @@
 "use client";
-
 import {
   createContext,
   useContext,
@@ -8,16 +7,11 @@ import {
   useCallback,
   type ReactNode,
 } from "react";
-
-// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-// Types
-// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-
 export interface User {
   id: string;
   displayName: string;
+  allowedMemorySpaceIds: string[];
 }
-
 export interface AuthState {
   isLoading: boolean;
   isAdminSetup: boolean | null;
@@ -25,31 +19,22 @@ export interface AuthState {
   user: User | null;
   error: string | null;
 }
-
 export interface AuthContextValue extends AuthState {
-  setupAdmin: (password: string) => Promise<boolean>;
+  setupAdmin: (
+    username: string,
+    password: string,
+    setupToken: string,
+  ) => Promise<boolean>;
   login: (username: string, password: string) => Promise<boolean>;
   register: (
     username: string,
     password: string,
     displayName?: string,
   ) => Promise<boolean>;
-  logout: () => void;
+  logout: () => Promise<void>;
   clearError: () => void;
 }
-
-// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-// Context
-// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-
 const AuthContext = createContext<AuthContextValue | null>(null);
-
-const STORAGE_KEY = "cortex-quickstart-auth";
-
-// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-// Provider
-// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-
 export function AuthProvider({ children }: { children: ReactNode }) {
   const [state, setState] = useState<AuthState>({
     isLoading: true,
@@ -58,226 +43,106 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     user: null,
     error: null,
   });
-
-  // Check admin setup status and restore session on mount
   useEffect(() => {
-    const init = async () => {
-      try {
-        // Check if admin is set up
-        const checkResponse = await fetch("/api/auth/check");
-        const checkData = await checkResponse.json();
-
-        // Try to restore session from localStorage
-        let user: User | null = null;
-        let sessionToken: string | null = null;
-
-        if (typeof window !== "undefined") {
-          const stored = localStorage.getItem(STORAGE_KEY);
-          if (stored) {
-            try {
-              const parsed = JSON.parse(stored);
-              user = parsed.user;
-              sessionToken = parsed.sessionToken;
-            } catch {
-              localStorage.removeItem(STORAGE_KEY);
-            }
-          }
-        }
-
-        setState({
-          isLoading: false,
-          isAdminSetup: checkData.isSetup,
-          isAuthenticated: !!user && !!sessionToken,
-          user,
-          error: null,
-        });
-      } catch (error) {
-        console.error("Auth init error:", error);
-        setState((prev) => ({
-          ...prev,
-          isLoading: false,
-          error: "Failed to initialize authentication",
-        }));
-      }
-    };
-
-    init();
-  }, []);
-
-  // Setup admin password
-  const setupAdmin = useCallback(async (password: string): Promise<boolean> => {
-    setState((prev) => ({ ...prev, error: null }));
-
+    // Retire the old client-asserted identity; only the server cookie restores access.
     try {
-      const response = await fetch("/api/auth/setup", {
+      localStorage.removeItem("cortex-quickstart-auth");
+    } catch {
+      /* Cookie authentication also works when browser storage is blocked. */
+    }
+    let active = true;
+    fetch("/api/auth/check")
+      .then(async (response) => {
+        const data = await response.json();
+        if (!response.ok)
+          throw new Error(data.error || "Authentication unavailable");
+        if (active)
+          setState({
+            isLoading: false,
+            isAdminSetup: data.isSetup,
+            isAuthenticated: !!data.user,
+            user: data.user,
+            error: null,
+          });
+      })
+      .catch((error) => {
+        if (active)
+          setState((previous) => ({
+            ...previous,
+            isLoading: false,
+            error: error.message,
+          }));
+      });
+    return () => {
+      active = false;
+    };
+  }, []);
+  const authenticate = useCallback(async (mode: string, body: object) => {
+    setState((previous) => ({ ...previous, error: null }));
+    try {
+      const response = await fetch(`/api/auth/${mode}`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ password }),
+        body: JSON.stringify(body),
       });
-
       const data = await response.json();
-
-      if (!response.ok) {
-        setState((prev) => ({ ...prev, error: data.error }));
-        return false;
-      }
-
-      setState((prev) => ({
-        ...prev,
+      if (!response.ok)
+        throw new Error(data.error || "Authentication unavailable");
+      setState({
+        isLoading: false,
         isAdminSetup: true,
-      }));
-
+        isAuthenticated: true,
+        user: data.user,
+        error: null,
+      });
       return true;
     } catch (error) {
-      console.error("Setup error:", error);
-      setState((prev) => ({
-        ...prev,
-        error: "Failed to setup admin password",
+      setState((previous) => ({
+        ...previous,
+        error:
+          error instanceof Error ? error.message : "Authentication unavailable",
       }));
       return false;
     }
   }, []);
-
-  // Login
-  const login = useCallback(
-    async (username: string, password: string): Promise<boolean> => {
-      setState((prev) => ({ ...prev, error: null }));
-
-      try {
-        const response = await fetch("/api/auth/login", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ username, password }),
-        });
-
-        const data = await response.json();
-
-        if (!response.ok) {
-          setState((prev) => ({ ...prev, error: data.error }));
-          return false;
-        }
-
-        // Store session
-        if (typeof window !== "undefined") {
-          localStorage.setItem(
-            STORAGE_KEY,
-            JSON.stringify({
-              user: data.user,
-              sessionToken: data.sessionToken,
-            }),
-          );
-        }
-
-        setState((prev) => ({
-          ...prev,
-          isAuthenticated: true,
-          user: data.user,
-        }));
-
-        return true;
-      } catch (error) {
-        console.error("Login error:", error);
-        setState((prev) => ({
-          ...prev,
-          error: "Failed to login",
-        }));
-        return false;
-      }
-    },
-    [],
-  );
-
-  // Register
-  const register = useCallback(
-    async (
-      username: string,
-      password: string,
-      displayName?: string,
-    ): Promise<boolean> => {
-      setState((prev) => ({ ...prev, error: null }));
-
-      try {
-        const response = await fetch("/api/auth/register", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ username, password, displayName }),
-        });
-
-        const data = await response.json();
-
-        if (!response.ok) {
-          setState((prev) => ({ ...prev, error: data.error }));
-          return false;
-        }
-
-        // Store session
-        if (typeof window !== "undefined") {
-          localStorage.setItem(
-            STORAGE_KEY,
-            JSON.stringify({
-              user: data.user,
-              sessionToken: data.sessionToken,
-            }),
-          );
-        }
-
-        setState((prev) => ({
-          ...prev,
-          isAuthenticated: true,
-          user: data.user,
-        }));
-
-        return true;
-      } catch (error) {
-        console.error("Register error:", error);
-        setState((prev) => ({
-          ...prev,
-          error: "Failed to register",
-        }));
-        return false;
-      }
-    },
-    [],
-  );
-
-  // Logout
-  const logout = useCallback(() => {
-    if (typeof window !== "undefined") {
-      localStorage.removeItem(STORAGE_KEY);
+  const logout = useCallback(async () => {
+    try {
+      const response = await fetch("/api/auth/logout", { method: "POST" });
+      if (!response.ok) throw new Error("Logout could not finish. Retry.");
+      setState((previous) => ({
+        ...previous,
+        isAuthenticated: false,
+        user: null,
+        error: null,
+      }));
+    } catch (error) {
+      setState((previous) => ({
+        ...previous,
+        error: error instanceof Error ? error.message : "Logout unavailable",
+      }));
     }
-
-    setState((prev) => ({
-      ...prev,
-      isAuthenticated: false,
-      user: null,
-    }));
   }, []);
-
-  // Clear error
-  const clearError = useCallback(() => {
-    setState((prev) => ({ ...prev, error: null }));
-  }, []);
-
-  const value: AuthContextValue = {
-    ...state,
-    setupAdmin,
-    login,
-    register,
-    logout,
-    clearError,
-  };
-
-  return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
+  return (
+    <AuthContext.Provider
+      value={{
+        ...state,
+        setupAdmin: (username, password, setupToken) =>
+          authenticate("setup", { username, password, setupToken }),
+        login: (username, password) =>
+          authenticate("login", { username, password }),
+        register: (username, password, displayName) =>
+          authenticate("register", { username, password, displayName }),
+        logout,
+        clearError: () =>
+          setState((previous) => ({ ...previous, error: null })),
+      }}
+    >
+      {children}
+    </AuthContext.Provider>
+  );
 }
-
-// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-// Hook
-// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-
-export function useAuth(): AuthContextValue {
+export function useAuth() {
   const context = useContext(AuthContext);
-  if (!context) {
-    throw new Error("useAuth must be used within an AuthProvider");
-  }
+  if (!context) throw new Error("useAuth requires AuthProvider");
   return context;
 }

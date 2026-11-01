@@ -1,3 +1,7 @@
+import { readBackend } from "../common/backendRead";
+import type { FunctionReference, FunctionArgs, FunctionReturnType } from "convex/server";
+import { writeGraphMutation, type GraphPrimary } from "../graph/erasure";
+import type { GraphSyncPolicy } from "../graph/types";
 /**
  * Cortex SDK - Immutable Store API
  *
@@ -5,7 +9,7 @@
  */
 
 import type { ConvexClient } from "convex/browser";
-import { api } from "../../convex-dev/_generated/api";
+import { api } from "../common/backendApi";
 import type {
   CountImmutableFilter,
   ImmutableEntry,
@@ -38,7 +42,16 @@ export class ImmutableAPI {
     private readonly graphAdapter?: GraphAdapter,
     private readonly resilience?: ResilienceLayer,
     private readonly authContext?: AuthContext,
+    private readonly graphSyncPolicy?: GraphSyncPolicy,
   ) {}
+  private mutateGraph<M extends FunctionReference<"mutation", "public">>(reference: M, args: FunctionArgs<M>, explicit?: boolean): Promise<GraphPrimary<FunctionReturnType<M>>> {
+    return writeGraphMutation(this.client, this.graphAdapter, this.graphSyncPolicy, reference, args, explicit);
+  }
+  private executeGraphWrite<T>(operation: () => Promise<T>, name: string, explicit?: boolean): Promise<T> {
+    // A configured graph writer has one primary application invocation; delivery retries are separate.
+    return this.graphAdapter && explicit !== false ? operation() : this.executeWithResilience(operation, name);
+  }
+
 
   /**
    * Execute an operation through the resilience layer (if available)
@@ -95,34 +108,21 @@ export class ImmutableAPI {
     // CLIENT-SIDE VALIDATION
     validateImmutableEntry(entry);
 
-    const result = await this.executeWithResilience(
+    const result = await this.executeGraphWrite(
       () =>
-        this.client.mutation(api.immutable.store, {
+        this.mutateGraph(api.immutable.store, {
           type: entry.type,
           id: entry.id,
           data: entry.data,
           userId: entry.userId,
           tenantId: this.authContext?.tenantId, // Inject tenantId from auth context
           metadata: entry.metadata,
-        }),
-      "immutable:store",
+        }, _options?.syncToGraph),
+      "immutable:store", _options?.syncToGraph,
     );
 
     // Sync to graph if requested (facts are handled specially in FactsAPI)
-    if (this.graphAdapter && entry.type !== "fact") {
-      try {
-        await this.graphAdapter.createNode({
-          label: "Immutable",
-          properties: {
-            immutableType: entry.type,
-            immutableId: entry.id,
-            ...(result as ImmutableRecord),
-          },
-        });
-      } catch (error) {
-        console.warn("Failed to sync immutable to graph:", error);
-      }
-    }
+    
 
     return result as ImmutableRecord;
   }
@@ -142,7 +142,7 @@ export class ImmutableAPI {
 
     const result = await this.executeWithResilience(
       () =>
-        this.client.query(api.immutable.get, {
+        readBackend(this.client, api.immutable.get, {
           type,
           id,
           tenantId: this.authContext?.tenantId, // Multi-tenancy filter
@@ -173,7 +173,7 @@ export class ImmutableAPI {
 
     const result = await this.executeWithResilience(
       () =>
-        this.client.query(api.immutable.getVersion, {
+        readBackend(this.client, api.immutable.getVersion, {
           type,
           id,
           version,
@@ -204,9 +204,10 @@ export class ImmutableAPI {
 
     const result = await this.executeWithResilience(
       () =>
-        this.client.query(api.immutable.getHistory, {
+        readBackend(this.client, api.immutable.getHistory, {
           type,
           id,
+          tenantId: this.authContext?.tenantId,
         }),
       "immutable:getHistory",
     );
@@ -233,7 +234,7 @@ export class ImmutableAPI {
 
     const result = await this.executeWithResilience(
       () =>
-        this.client.query(api.immutable.list, {
+        readBackend(this.client, api.immutable.list, {
           type: filter?.type,
           userId: filter?.userId,
           tenantId: this.authContext?.tenantId, // Multi-tenancy filter
@@ -270,7 +271,7 @@ export class ImmutableAPI {
 
     const result = await this.executeWithResilience(
       () =>
-        this.client.query(api.immutable.search, {
+        readBackend(this.client, api.immutable.search, {
           query: input.query,
           type: input.type,
           userId: input.userId,
@@ -300,7 +301,7 @@ export class ImmutableAPI {
 
     const result = await this.executeWithResilience(
       () =>
-        this.client.query(api.immutable.count, {
+        readBackend(this.client, api.immutable.count, {
           type: filter?.type,
           userId: filter?.userId,
         }),
@@ -332,9 +333,9 @@ export class ImmutableAPI {
     validateId(id, "id");
 
     try {
-      const result = await this.executeWithResilience(
+      const result = await this.executeGraphWrite(
         () =>
-          this.client.mutation(api.immutable.purge, {
+          this.mutateGraph(api.immutable.purge, {
             type,
             id,
           }),
@@ -378,7 +379,7 @@ export class ImmutableAPI {
 
     const result = await this.executeWithResilience(
       () =>
-        this.client.query(api.immutable.getAtTimestamp, {
+        readBackend(this.client, api.immutable.getAtTimestamp, {
           type,
           id,
           timestamp: ts,
@@ -405,9 +406,9 @@ export class ImmutableAPI {
     // CLIENT-SIDE VALIDATION
     validatePurgeManyFilter(filter);
 
-    const result = await this.executeWithResilience(
+    const result = await this.executeGraphWrite(
       () =>
-        this.client.mutation(api.immutable.purgeMany, {
+        this.mutateGraph(api.immutable.purgeMany, {
           type: filter.type,
           userId: filter.userId,
         }),
@@ -443,9 +444,9 @@ export class ImmutableAPI {
     validateKeepLatest(keepLatest, "keepLatest");
 
     try {
-      const result = await this.executeWithResilience(
+      const result = await this.executeGraphWrite(
         () =>
-          this.client.mutation(api.immutable.purgeVersions, {
+          this.mutateGraph(api.immutable.purgeVersions, {
             type,
             id,
             keepLatest,

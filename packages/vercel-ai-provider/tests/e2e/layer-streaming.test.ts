@@ -13,7 +13,7 @@ import {
   LAYER_STREAM_EVENTS,
   type StreamWriter,
 } from "../../src/streaming-helpers";
-import { Cortex } from "@cortexmemory/sdk";
+import { Cortex } from "../helpers/operator-client";
 import type { LayerEvent, OrchestrationSummary } from "../../src/types";
 import {
   createTestMemorySpaceId,

@@ -1,0 +1,14 @@
+# Basic HTTP admission mitigation; keep all other projects and paths scanned.
+version: v1.25.0
+ignore:
+  SNYK-JS-ZOD-20510278:
+    - '@convex-dev/ai-sdk-provider@0.2.1 > zod@4.6.5':
+        reason: >-
+          No upstream fixed Zod release. Basic /chat counts streamed bytes before
+          JSON parsing (64KiB) and forwards only bounded message/conversationId
+          strings; arrays and unknown fields are rejected before SDK effects.
+          Actual HTTP regressions cover failing large arrays below the byte cap
+          and chunked oversize input. Temporary reviewed mitigation for this Basic
+          manifest and exact dependency path only. Does not certify SDK/gateway,
+          model-response parsers, other apps or other Zod paths. See SECURITY.md.
+        expires: '2026-11-07T23:59:59.000Z'

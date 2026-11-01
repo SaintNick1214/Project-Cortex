@@ -11,7 +11,8 @@ const { existsSync } = require("node:fs");
 const { join } = require("node:path");
 const localEnvPath = join(__dirname, ".env.local");
 // Load before Jest creates worker environments; Node's loader preserves overrides.
-if (existsSync(localEnvPath)) process.loadEnvFile(localEnvPath);
+const explicitEnvironment = process.env.CORTEX_TEST_ENV_MODE === "explicit" || process.env.CI === "true";
+if (!explicitEnvironment && existsSync(localEnvPath)) process.loadEnvFile(localEnvPath);
 
 const baseConfig = {
   preset: "ts-jest",
@@ -19,9 +20,11 @@ const baseConfig = {
   moduleNameMapper: {
     // Handle path aliases from tsconfig
     "^@/(.*)$": "<rootDir>/$1",
+    "^\\.\\./_generated/server$": "<rootDir>/tests/helpers/convex-registration.ts",
+    "^server-only$": "<rootDir>/tests/helpers/server-only.ts",
   },
   transform: {
-    "^.+\\.tsx?$": [
+    "^.+\\.[tj]sx?$": [
       "ts-jest",
       {
         tsconfig: { ...require("./tsconfig.json").compilerOptions, rootDir: "." },

@@ -11,8 +11,8 @@
  * PARALLEL-SAFE: Uses TestRunContext for isolated test data
  */
 
-import { Cortex } from "../src";
-import { ConvexClient } from "convex/browser";
+import { Cortex } from "./helpers/deployment-operator";
+import { ConvexClient } from "./helpers/deployment-operator";
 import { api } from "../convex-dev/_generated/api";
 import { createNamedTestRunContext, ScopedCleanup } from "./helpers";
 
@@ -465,15 +465,17 @@ describe("Facts API (Layer 3)", () => {
         cortex.facts.update(TEST_MEMSPACE_ID, "fact-does-not-exist", {
           fact: "New fact",
         }),
-      ).rejects.toThrow("FACT_NOT_FOUND");
+      ).rejects.toThrow("FACT_HISTORY_SOURCE_REQUIRED");
     });
 
     it("prevents updating other memory space's facts", async () => {
+      const before = await cortex.facts.get(TEST_MEMSPACE_ID, originalFactId);
       await expect(
         cortex.facts.update("memspace-other", originalFactId, {
           fact: "Unauthorized update",
         }),
-      ).rejects.toThrow("PERMISSION_DENIED");
+      ).rejects.toThrow("FACT_HISTORY_SOURCE_REQUIRED");
+      expect(await cortex.facts.get(TEST_MEMSPACE_ID, originalFactId)).toEqual(before);
     });
   });
 
@@ -503,7 +505,7 @@ describe("Facts API (Layer 3)", () => {
     it("throws error for non-existent fact", async () => {
       await expect(
         cortex.facts.delete(TEST_MEMSPACE_ID, "fact-does-not-exist"),
-      ).rejects.toThrow("FACT_NOT_FOUND");
+      ).rejects.toThrow("FACT_HISTORY_SOURCE_REQUIRED");
     });
 
     it("prevents deleting other memory space's facts", async () => {
@@ -518,7 +520,8 @@ describe("Facts API (Layer 3)", () => {
 
       await expect(
         cortex.facts.delete("memspace-other", fact.factId),
-      ).rejects.toThrow("PERMISSION_DENIED");
+      ).rejects.toThrow("FACT_HISTORY_SOURCE_REQUIRED");
+      expect(await cortex.facts.get(TEST_MEMSPACE_ID, fact.factId)).toEqual(fact);
     });
   });
 
@@ -558,19 +561,16 @@ describe("Facts API (Layer 3)", () => {
       expect(history.some((f) => f.fact === "Version 3")).toBe(true);
     });
 
-    it("returns empty for non-existent fact", async () => {
-      const history = await cortex.facts.getHistory(
-        TEST_MEMSPACE_ID,
-        "fact-does-not-exist",
-      );
-
-      expect(history).toEqual([]);
+    it("requires a canonical source before disclosing fact history", async () => {
+      await expect(cortex.facts.getHistory(TEST_MEMSPACE_ID, "fact-does-not-exist"))
+        .rejects.toThrow("FACT_HISTORY_SOURCE_REQUIRED");
     });
 
     it("respects memory space isolation", async () => {
-      const history = await cortex.facts.getHistory("memspace-other", factId);
-
-      expect(history).toEqual([]);
+      const before = await cortex.facts.getHistory(TEST_MEMSPACE_ID, factId);
+      await expect(cortex.facts.getHistory("memspace-other", factId))
+        .rejects.toThrow("FACT_HISTORY_SOURCE_REQUIRED");
+      expect(await cortex.facts.getHistory(TEST_MEMSPACE_ID, factId)).toEqual(before);
     });
   });
 
@@ -811,7 +811,7 @@ describe("Facts API (Layer 3)", () => {
     });
 
     describe("Error Handling", () => {
-      it("should handle non-existent factIds gracefully", async () => {
+      it("refuses a missing canonical source without changing the existing fact", async () => {
         // Create one real fact
         const realFact = await cortex.facts.store({
           memorySpaceId: TEST_MEMSPACE_ID,
@@ -822,20 +822,14 @@ describe("Facts API (Layer 3)", () => {
           tags: ["consolidate-error-test"],
         });
 
-        // Try to consolidate with non-existent factIds
-        // Backend should handle gracefully (only consolidate existing ones)
-        const result = await cortex.facts.consolidate({
+        await expect(cortex.facts.consolidate({
           memorySpaceId: TEST_MEMSPACE_ID,
-          factIds: [realFact.factId, "fact-nonexistent-12345"],
-          keepFactId: realFact.factId,
-        });
-
-        // Should succeed, treating non-existent facts as already handled
-        expect(result.consolidated).toBe(true);
-        expect(result.keptFactId).toBe(realFact.factId);
+          factIds: [realFact.factId, "fact-nonexistent-12345"], keepFactId: realFact.factId,
+        })).rejects.toThrow("FACT_HISTORY_SOURCE_REQUIRED");
+        expect(await cortex.facts.get(TEST_MEMSPACE_ID, realFact.factId)).toEqual(realFact);
       });
 
-      it("should handle cross-memory-space factIds (skip non-matching)", async () => {
+      it("refuses cross-space consolidation atomically and preserves every source", async () => {
         const SPACE_A = ctx.memorySpaceId("consolidate-space-a");
         const SPACE_B = ctx.memorySpaceId("consolidate-space-b");
 
@@ -868,46 +862,27 @@ describe("Facts API (Layer 3)", () => {
           tags: ["cross-space-consolidate"],
         });
 
-        // Try to consolidate using space B as memorySpaceId
-        // factA should be skipped because it's in space A
-        const result = await cortex.facts.consolidate({
-          memorySpaceId: SPACE_B,
-          factIds: [factA.factId, factB1.factId, factB2.factId],
-          keepFactId: factB2.factId,
-        });
+        const before = await Promise.all([
+          cortex.facts.get(SPACE_A, factA.factId), cortex.facts.get(SPACE_B, factB1.factId), cortex.facts.get(SPACE_B, factB2.factId),
+        ]);
+        await expect(cortex.facts.consolidate({ memorySpaceId: SPACE_B,
+          factIds: [factA.factId, factB1.factId, factB2.factId], keepFactId: factB2.factId,
+        })).rejects.toThrow("FACT_HISTORY_SOURCE_REQUIRED");
+        expect(await Promise.all([
+          cortex.facts.get(SPACE_A, factA.factId), cortex.facts.get(SPACE_B, factB1.factId), cortex.facts.get(SPACE_B, factB2.factId),
+        ])).toEqual(before);
 
-        expect(result.consolidated).toBe(true);
-        expect(result.keptFactId).toBe(factB2.factId);
-        // Backend returns factIds.length - 1 regardless of actual merges
-        expect(result.mergedCount).toBe(2);
-
-        // Verify factA is unchanged (still in space A, not superseded)
-        // Backend skips facts in different memory space during actual merge
-        const factACheck = await cortex.facts.get(SPACE_A, factA.factId);
-        expect(factACheck).not.toBeNull();
-        expect(factACheck!.supersededBy).toBeUndefined();
-
-        // Verify factB1 is superseded by factB2
-        await new Promise((resolve) => setTimeout(resolve, 100));
-        const factB1Check = await cortex.facts.get(SPACE_B, factB1.factId);
-        expect(factB1Check!.supersededBy).toBe(factB2.factId);
       });
 
-      it("should handle all non-existent factIds", async () => {
-        // Try to consolidate with all non-existent factIds
-        // Backend returns factIds.length - 1 regardless of whether facts exist
-        const result = await cortex.facts.consolidate({
-          memorySpaceId: TEST_MEMSPACE_ID,
-          factIds: ["fact-fake-1", "fact-fake-2", "fact-fake-3"],
-          keepFactId: "fact-fake-1",
-        });
-
-        // Backend always returns consolidated: true and mergedCount: factIds.length - 1
-        expect(result.consolidated).toBe(true);
-        expect(result.mergedCount).toBe(2); // 3 factIds - 1 = 2
+      it("refuses consolidation when every canonical source is absent", async () => {
+        const before = await cortex.facts.list({ memorySpaceId: TEST_MEMSPACE_ID });
+        await expect(cortex.facts.consolidate({ memorySpaceId: TEST_MEMSPACE_ID,
+          factIds: ["fact-fake-1", "fact-fake-2", "fact-fake-3"], keepFactId: "fact-fake-1",
+        })).rejects.toThrow("FACT_HISTORY_SOURCE_REQUIRED");
+        expect(await cortex.facts.list({ memorySpaceId: TEST_MEMSPACE_ID })).toEqual(before);
       });
 
-      it("should handle large consolidation batch", async () => {
+      it("refuses an oversized consolidation before changing any source", async () => {
         const SPACE = ctx.memorySpaceId("large-consolidate");
 
         // Create 10 facts
@@ -928,28 +903,13 @@ describe("Facts API (Layer 3)", () => {
         const keepFact = facts[9]; // Keep highest confidence
         const factIds = facts.map((f) => f.factId);
 
-        const result = await cortex.facts.consolidate({
-          memorySpaceId: SPACE,
-          factIds,
+        const before = await Promise.all(facts.map(fact => cortex.facts.get(SPACE, fact.factId)));
+        await expect(cortex.facts.consolidate({ memorySpaceId: SPACE, factIds,
           keepFactId: keepFact.factId,
-        });
+        })).rejects.toThrow("FACT_HISTORY_CONSOLIDATION_BUDGET");
+        expect(await Promise.all(facts.map(fact => cortex.facts.get(SPACE, fact.factId)))).toEqual(before);
+        expect((await cortex.facts.list({ memorySpaceId: SPACE, tags: ["large-consolidate"], includeSuperseded: false })).length).toBe(10);
 
-        expect(result.consolidated).toBe(true);
-        expect(result.keptFactId).toBe(keepFact.factId);
-        expect(result.mergedCount).toBe(9);
-
-        // Allow time for mutations
-        await new Promise((resolve) => setTimeout(resolve, 200));
-
-        // Verify only kept fact is active
-        const activeFacts = await cortex.facts.list({
-          memorySpaceId: SPACE,
-          tags: ["large-consolidate"],
-          includeSuperseded: false,
-        });
-
-        expect(activeFacts.length).toBe(1);
-        expect(activeFacts[0].factId).toBe(keepFact.factId);
       });
     });
   });
@@ -1048,7 +1008,7 @@ describe("Facts API (Layer 3)", () => {
       });
 
       // Direct database query
-      const stored = await client.query(api.facts.get, {
+      const stored = await client.mutation(api.facts.get, {
         memorySpaceId: TEST_MEMSPACE_ID,
         factId: fact.factId,
       });

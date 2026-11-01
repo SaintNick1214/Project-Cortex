@@ -1,20 +1,8 @@
-/**
- * Convex schema for the quickstart demo
- *
- * This extends the Cortex SDK schema to add any demo-specific tables.
- * The actual memory tables (conversations, memories, facts) come from @cortexmemory/sdk.
- */
+// App schema remains caller-owned. The 1.3 runtime installer adds cortexTablesV1.
+import { defineSchema } from "convex/server";
+import appSchema from "./app.schema";
 
-import { defineSchema, defineTable } from "convex/server";
-import { v } from "convex/values";
-
-export default defineSchema({
-  // Demo session tracking (optional, for demo purposes)
-  demoSessions: defineTable({
-    sessionId: v.string(),
-    userId: v.string(),
-    memorySpaceId: v.string(),
-    startedAt: v.number(),
-    messageCount: v.number(),
-  }).index("by_session", ["sessionId"]),
-});
+export default defineSchema(
+  { ...appSchema.tables },
+  { schemaValidation: true, strictTableNameTypes: true },
+);

@@ -10,8 +10,8 @@
  * PARALLEL-SAFE: Uses TestRunContext for isolated test data
  */
 
-import { Cortex } from "../src";
-import { ConvexClient } from "convex/browser";
+import { Cortex } from "./helpers/deployment-operator";
+import { ConvexClient } from "./helpers/deployment-operator";
 import { api } from "../convex-dev/_generated/api";
 import { createNamedTestRunContext, ScopedCleanup } from "./helpers";
 
@@ -585,7 +585,7 @@ describe("Immutable Store API (Layer 1b)", () => {
       expect(result.updatedAt).toBeGreaterThan(0);
 
       // Validate Convex storage
-      const stored = await client.query(api.immutable.get, {
+      const stored = await client.mutation(api.immutable.get, {
         type: "kb-article",
         id: uniqueId,
       });
@@ -627,7 +627,7 @@ describe("Immutable Store API (Layer 1b)", () => {
       expect(v2.previousVersions[0].data.duration).toBe("30 days");
 
       // Validate storage
-      const stored = await client.query(api.immutable.get, {
+      const stored = await client.mutation(api.immutable.get, {
         type: "kb-article",
         id: uniqueId,
       });
@@ -650,7 +650,7 @@ describe("Immutable Store API (Layer 1b)", () => {
       expect(result.userId).toBe("user-123");
 
       // Validate storage
-      const stored = await client.query(api.immutable.get, {
+      const stored = await client.mutation(api.immutable.get, {
         type: "feedback",
         id: "feedback-001",
       });
@@ -1233,7 +1233,7 @@ describe("Immutable Store API (Layer 1b)", () => {
       }
 
       // Durability: Storage matches SDK response
-      const stored = await client.query(api.immutable.get, {
+      const stored = await client.mutation(api.immutable.get, {
         type,
         id,
       });
@@ -2462,23 +2462,13 @@ describe("Immutable Store API (Layer 1b)", () => {
   });
 
   describe("store() with syncToGraph Option", () => {
-    it("accepts syncToGraph option without error when no graph adapter", async () => {
+    it("refuses required graph synchronization without an adapter before effects", async () => {
       const type = ctx.immutableType("graph-sync-test");
       const id = ctx.immutableId("no-adapter");
 
-      // Should not throw even with syncToGraph: true when no adapter configured
-      const result = await cortex.immutable.store(
-        {
-          type,
-          id,
-          data: { value: "test" },
-        },
-        { syncToGraph: true },
-      );
-
-      expect(result).toBeDefined();
-      expect(result.type).toBe(type);
-      expect(result.id).toBe(id);
+      await expect(cortex.immutable.store({ type, id, data: { value: "test" } }, { syncToGraph: true }))
+        .rejects.toMatchObject({ code: "GRAPH_ADAPTER_REQUIRED" });
+      expect(await cortex.immutable.get(type, id)).toBeNull();
     });
 
     it("creates entry normally with syncToGraph: false", async () => {
@@ -2502,7 +2492,7 @@ describe("Immutable Store API (Layer 1b)", () => {
       expect(retrieved).not.toBeNull();
     });
 
-    it("syncToGraph option does not affect versioning", async () => {
+    it("explicitly disabling graph synchronization preserves versioning", async () => {
       const type = ctx.immutableType("graph-sync-version");
       const id = ctx.immutableId("version-check");
 
@@ -2513,7 +2503,7 @@ describe("Immutable Store API (Layer 1b)", () => {
           id,
           data: { version: 1 },
         },
-        { syncToGraph: true },
+        { syncToGraph: false },
       );
 
       expect(v1.version).toBe(1);
@@ -2531,14 +2521,18 @@ describe("Immutable Store API (Layer 1b)", () => {
       expect(v2.version).toBe(2);
       expect(v2.previousVersions).toHaveLength(1);
 
-      // Update to v3 with syncToGraph again
+      // Required graph synchronization refuses before changing the current version.
+      await expect(cortex.immutable.store({ type, id, data: { version: 3 } }, { syncToGraph: true }))
+        .rejects.toMatchObject({ code: "GRAPH_ADAPTER_REQUIRED" });
+      expect(await cortex.immutable.get(type, id)).toEqual(v2);
+      // The explicitly disabled graph path still preserves every prior version.
       const v3 = await cortex.immutable.store(
         {
           type,
           id,
           data: { version: 3 },
         },
-        { syncToGraph: true },
+        { syncToGraph: false },
       );
 
       expect(v3.version).toBe(3);

@@ -1,3 +1,5 @@
+// Controlled legacy administration; no native authentication or services run in these mocks.
+const legacyCredentials = { deploymentKey: "unit-controlled-key" };
 /**
  * Unit Tests: Factory Functions and Manual Methods
  *
@@ -45,8 +47,10 @@ jest.mock("@cortexmemory/sdk", () => {
   };
 
   const mockInstance = {
+    deploymentOperator: true,
     memory: mockMemory,
     close: jest.fn(),
+    shutdown: jest.fn().mockResolvedValue(undefined),
   };
 
   const MockCortex = jest.fn().mockImplementation(() => mockInstance);
@@ -84,7 +88,7 @@ describe("Factory Functions", () => {
   describe("createCortexMemory", () => {
     it("should create model factory", () => {
       const config = createTestConfig();
-      const factory = createCortexMemory(config);
+      const factory = createCortexMemory(config, legacyCredentials);
 
       expect(typeof factory).toBe("function");
     });
@@ -93,14 +97,14 @@ describe("Factory Functions", () => {
       const config = createTestConfig();
       (config as any).convexUrl = "";
 
-      expect(() => createCortexMemory(config)).toThrow("convexUrl is required");
+      expect(() => createCortexMemory(config, legacyCredentials)).toThrow("convexUrl is required");
     });
 
     it("should throw on missing memorySpaceId", () => {
       const config = createTestConfig();
       (config as any).memorySpaceId = "";
 
-      expect(() => createCortexMemory(config)).toThrow(
+      expect(() => createCortexMemory(config, legacyCredentials)).toThrow(
         "memorySpaceId is required",
       );
     });
@@ -109,19 +113,19 @@ describe("Factory Functions", () => {
       const config = createTestConfig();
       (config as any).userId = "";
 
-      expect(() => createCortexMemory(config)).toThrow("userId is required");
+      expect(() => createCortexMemory(config, legacyCredentials)).toThrow("userId is required");
     });
 
     it("should throw on missing agentId", () => {
       const config = createTestConfig();
       (config as any).agentId = "";
 
-      expect(() => createCortexMemory(config)).toThrow("agentId is required");
+      expect(() => createCortexMemory(config, legacyCredentials)).toThrow("agentId is required");
     });
 
     it("should wrap underlying model", () => {
       const config = createTestConfig();
-      const factory = createCortexMemory(config);
+      const factory = createCortexMemory(config, legacyCredentials);
       const mockLLM = createMockLLM();
 
       const wrappedModel = factory(mockLLM);
@@ -132,7 +136,7 @@ describe("Factory Functions", () => {
 
     it("should expose manual control methods", () => {
       const config = createTestConfig();
-      const factory = createCortexMemory(config);
+      const factory = createCortexMemory(config, legacyCredentials);
 
       expect(typeof factory.search).toBe("function");
       expect(typeof factory.remember).toBe("function");
@@ -142,13 +146,14 @@ describe("Factory Functions", () => {
     });
     it("shares and closes one SDK client for wrapped models", async () => {
       const { Cortex } = await import("@cortexmemory/sdk");
-      const factory = createCortexMemory(createTestConfig());
+      const factory = createCortexMemory(createTestConfig(), legacyCredentials);
       factory(createMockLLM());
       factory(createMockLLM());
       expect(Cortex).toHaveBeenCalledTimes(1);
       const client = (Cortex as unknown as jest.Mock).mock.results[0].value;
-      await factory.close();
-      expect(client.close).toHaveBeenCalledTimes(1);
+      await Promise.all([factory.close(), factory.close()]);
+      expect(client.shutdown).toHaveBeenCalledTimes(1);
+      expect(client.close).not.toHaveBeenCalled();
     });
 
   });
@@ -160,7 +165,7 @@ describe("Factory Functions", () => {
   describe("createCortexMemoryAsync", () => {
     it("should create model factory asynchronously", async () => {
       const config = createTestConfig();
-      const factory = await createCortexMemoryAsync(config);
+      const factory = await createCortexMemoryAsync(config, legacyCredentials);
 
       expect(typeof factory).toBe("function");
     });
@@ -169,14 +174,14 @@ describe("Factory Functions", () => {
       const config = createTestConfig();
       (config as any).convexUrl = "";
 
-      await expect(createCortexMemoryAsync(config)).rejects.toThrow(
+      await expect(createCortexMemoryAsync(config, legacyCredentials)).rejects.toThrow(
         "convexUrl is required",
       );
     });
 
     it("should wrap underlying model", async () => {
       const config = createTestConfig();
-      const factory = await createCortexMemoryAsync(config);
+      const factory = await createCortexMemoryAsync(config, legacyCredentials);
       const mockLLM = createMockLLM();
 
       const wrappedModel = factory(mockLLM);
@@ -186,7 +191,7 @@ describe("Factory Functions", () => {
 
     it("should expose manual control methods", async () => {
       const config = createTestConfig();
-      const factory = await createCortexMemoryAsync(config);
+      const factory = await createCortexMemoryAsync(config, legacyCredentials);
 
       expect(typeof factory.search).toBe("function");
       expect(typeof factory.remember).toBe("function");
@@ -203,7 +208,7 @@ describe("Manual Control Methods", () => {
 
   beforeEach(() => {
     config = createTestConfig();
-    factory = createCortexMemory(config);
+    factory = createCortexMemory(config, legacyCredentials);
   });
 
   // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
@@ -265,7 +270,7 @@ describe("Manual Control Methods", () => {
       const configWithEmbed = createTestConfig({
         embeddingProvider: { generate: generateMock },
       });
-      const factoryWithEmbed = createCortexMemory(configWithEmbed);
+      const factoryWithEmbed = createCortexMemory(configWithEmbed, legacyCredentials);
 
       await factoryWithEmbed.search("test query");
 
@@ -282,7 +287,7 @@ describe("Manual Control Methods", () => {
         memorySearchLimit: 15,
         minMemoryRelevance: 0.9,
       });
-      const factoryWithDefaults = createCortexMemory(configWithDefaults);
+      const factoryWithDefaults = createCortexMemory(configWithDefaults, legacyCredentials);
 
       await factoryWithDefaults.search("query");
 
@@ -351,7 +356,7 @@ describe("Manual Control Methods", () => {
 
     it("should use config defaults for importance", async () => {
       const configWithDefaults = createTestConfig({ defaultImportance: 75 });
-      const factoryWithDefaults = createCortexMemory(configWithDefaults);
+      const factoryWithDefaults = createCortexMemory(configWithDefaults, legacyCredentials);
 
       await factoryWithDefaults.remember("Hello", "Hi");
 
@@ -365,7 +370,7 @@ describe("Manual Control Methods", () => {
       const configWithDefaults = createTestConfig({
         defaultTags: ["test", "auto"],
       });
-      const factoryWithDefaults = createCortexMemory(configWithDefaults);
+      const factoryWithDefaults = createCortexMemory(configWithDefaults, legacyCredentials);
 
       await factoryWithDefaults.remember("Hello", "Hi");
 

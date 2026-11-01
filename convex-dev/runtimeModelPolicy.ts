@@ -1,0 +1,1356 @@
+/** Native private admission/accounting. No provider imports or action/public registrations. */
+import { ConvexError, v } from "convex/values";
+import type { Infer } from "convex/values";
+import { z } from "zod";
+import { internalMutation, internalQuery } from "./_generated/server";
+import type { MutationCtx, QueryCtx } from "./_generated/server";
+import type { Doc, Id } from "./_generated/dataModel";
+import type { RuntimeAuthorityReference, RuntimeCapability } from "../src/auth/verified";
+import { runtimeAuthorityReference } from "./runtimeAuthSchema";
+import { createAuthorityReader, recheckAuthority, createAuthorityReadScope, createV8AuthorityReadScope, createMemorySourceReadScope, readDeploymentPolicyRows, readQualificationRows, readTenantPolicyRows } from "./runtimeAuth";
+import { ConvexMemoryRepository, memoryScope } from "./runtimeMemoryRepository";
+import { sameAuthority } from "./runtimeWorkerAuth";
+import { assertEmbeddingVector, assertProfileMatches, assertSupportedEmbeddingProfile, DEFAULT_EMBEDDING_PROFILE, LARGE_EMBEDDING_PROFILE, semanticHash } from "../src/domain/profile";
+import { FACTS_JSON_SCHEMA } from "../src/domain/extraction";
+import { CONFLICT_DECISION_JSON_SCHEMA } from "../src/domain/conflicts";
+import { assertModelRequestIdentity as pureAssertModelRequestIdentity, canonicalModelJson as pureCanonicalModelJson, canFallbackModel, MODEL_LIMIT_KEYS, resolveModelPolicy as pureResolveModelPolicy, validateModelRequest as pureValidateModelRequest, MEMORY_JSON_OBJECT_CONTRACT, memoryJsonObjectInputBound, MEMORY_JSON_SCHEMA_CONTRACT, MEMORY_JSON_SCHEMA_V5_CONTRACT, memoryJsonSchemaInputBound } from "../src/domain/model-policy";
+import type { ModelOperationKey, ModelPolicySnapshotV1, TrustedModelPolicyRecord, TrustedModelPolicyContext } from "../src/domain/model-policy";
+import { isTrustedDeploymentManifest, lookupDeploymentManifest, qualifiedTerminalModelId } from "./runtimeModelPolicyBootstrap";
+import type { DeploymentPolicyManifest, QualifiedDispatchEvidence } from "./runtimeModelPolicyBootstrap";
+import { modelOperationKey, modelSource, visibilityFields, fullRootProvenanceFor, compactRootProvenance, rootProvenanceEncodings, rootProvenanceEqual, rootProvenanceMatches } from "./runtimePolicySchema";
+import type { RootProvenanceEncodings } from "./runtimePolicySchema";
+import { readCurrentExecutableDefinition } from "./agentDefinitions";
+import { AGENT_TOOL_REGISTRY_VERSION, AGENT_TOOL_REGISTRY_VERSION_V2, agentToolCatalog, agentToolsInputBoundV2, agentToolsInputBound } from "../src/domain/agent-tools";
+import { privateFrameVideoInputBound } from "../src/domain/media-input";
+import { mediaContractSchema, mediaInputBound, mediaResultSchema } from "../src/domain/media-jobs";
+import { allowMediaCompletion } from "./runtimeMediaFence";
+import { parseAgentLanguageResult } from "../src/domain/agent-language";
+import { guardContentRunBudget, assertContentPolicyPin, completedContentTitle } from "./runtimeContentFence";
+import { guardAgentRunBudget } from "./runtimeAgentFence";
+import type { CompletedAgentTitle } from "./runtimeAgentFence";
+import { currentControlRun } from "./runs";
+import { assertIngestionPolicyPin, guardIngestionRunBudget } from "./runtimeIngestion";
+import { unreservedCapacityRefusal } from "./runtimeIngestionSchema";
+
+type ReadCtx = Pick<QueryCtx, "db" | "runQuery">;
+type WriteCtx = Pick<MutationCtx, "db" | "runQuery">;
+type Account = Doc<"runtimeBudgetAccounts">;
+type Operation = Doc<"runtimeModelOperations">;
+type Attempt = Doc<"runtimeModelAttempts">;
+type Root = Account["root"];
+type FullRoot = Extract<Root, { canonical: string }>;
+type Source = Infer<typeof modelSource>;
+export const MODEL_LEDGER_STORAGE_LIMITS = Object.freeze({ canonicalBytes: 180_000, privateResultBytes: 60_000, embeddingValuesPerCall: 1 });
+const MAX_CANONICAL_BYTES = MODEL_LEDGER_STORAGE_LIMITS.canonicalBytes;
+const digest = /^[a-f0-9]{64}$/;
+function fail(code: string, outcome = "not_dispatched"): never {
+  throw new ConvexError({ version: 1, code, message: "Model operation control failed.", retryable: false, outcome });
+}
+/** Only synchronous PURE calls cross this boundary; no auth, DB or handler catch.
+ * Inspect own data descriptors, never arbitrary error getters or raw user details.
+ * Nonstandard errors and inspection failures keep their original identity/cause.
+ */
+function domainControl<T>(call: () => T, outcome = "not_dispatched"): T {
+  try { return call(); } catch (error: unknown) {
+    let message: unknown;
+    try {
+      if (typeof error !== "object" || error === null || Object.getPrototypeOf(error) !== Error.prototype) throw error;
+      const descriptor = Object.getOwnPropertyDescriptor(error, "message");
+      if (!descriptor || !("value" in descriptor)) throw error;
+      message = descriptor.value;
+    } catch { throw error; }
+    if (typeof message === "string") {
+      const code = /^(INVALID_INPUT|POLICY_DENIED|CAPABILITY_UNAVAILABLE|CAPABILITY_UNSUPPORTED|PROFILE_NOT_READY|IDEMPOTENCY_CONFLICT): /.exec(message)?.[1];
+      if (code) fail(code, outcome);
+    }
+    throw error;
+  }
+}
+// Shared stored-snapshot/canonical paths can execute after paid dispatch. Their
+// conservative envelope never asserts absence of earlier liability or alters it.
+function canonicalModelJson(value: unknown): string {
+  return domainControl(() => pureCanonicalModelJson(value), "uncertain");
+}
+function resolveModelPolicy(value: unknown): ModelPolicySnapshotV1 {
+  return domainControl(() => pureResolveModelPolicy(value), "uncertain");
+}
+function validateModelRequest(...args: Parameters<typeof pureValidateModelRequest>) {
+  return domainControl(() => pureValidateModelRequest(...args));
+}
+function assertModelRequestIdentity(...args: [...Parameters<typeof pureAssertModelRequestIdentity>, outcome?: string]): void {
+  domainControl(() => pureAssertModelRequestIdentity(args[0], args[1]), args[2]);
+}
+function integer(value: number, minimum = 0): number {
+  if (!Number.isSafeInteger(value) || value < minimum) fail("INVALID_INPUT");
+  return value;
+}
+function add(...values: number[]): number { return integer(values.reduce((sum, value) => integer(sum + integer(value)), 0)); }
+function subtract(value: number, amount: number): number { return integer(integer(value) - integer(amount)); }
+function text(value: string): string {
+  if (!value || value.trim() !== value || value.length > 256) fail("INVALID_INPUT");
+  return value;
+}
+function canonical(value: unknown): string {
+  const encoded = canonicalModelJson(value);
+  if (new TextEncoder().encode(encoded).length > MAX_CANONICAL_BYTES) fail("INVALID_INPUT");
+  return encoded;
+}
+function decode(value: string): unknown {
+  if (new TextEncoder().encode(value).length > MAX_CANONICAL_BYTES) fail("INVALID_INPUT");
+  let decoded: unknown;
+  try { decoded = JSON.parse(value); } catch { return fail("INVALID_INPUT"); }
+  if (canonical(decoded) !== value) fail("INVALID_INPUT");
+  return decoded;
+}
+function single<T>(rows: T[]): T | undefined {
+  if (rows.length > 1) fail("POLICY_DENIED");
+  return rows[0];
+}
+function purpose(key: ModelOperationKey): RuntimeCapability {
+  return key === "embedding.query" ? "read" : key === "memory.extract" || key === "facts.resolve" || key === "embedding.memory" ? "write" : "run";
+}
+async function currentAuthority(ctx: ReadCtx, reference: RuntimeAuthorityReference, key: ModelOperationKey) {
+  memoryScope(reference);
+  return await recheckAuthority(ctx, reference, { capability: purpose(key), tenantId: reference.tenantId, memorySpaceId: reference.memorySpaceId });
+}
+async function finalActor(ctx: ReadCtx, reference: RuntimeAuthorityReference, key: ModelOperationKey) {
+  const grant = await createAuthorityReader(ctx).getGrant(reference.grantId);
+  await currentAuthority(ctx, reference, key);
+  if (!grant || (grant.expiresAt !== undefined && Date.now() >= grant.expiresAt)) fail("FORBIDDEN");
+}
+async function checkSource(ctx: ReadCtx, reference: RuntimeAuthorityReference, key: ModelOperationKey, source?: Source) {
+  if (!source) {
+    if (key === "memory.extract" || key === "embedding.memory" || key === "facts.resolve") fail("FORBIDDEN");
+    return;
+  }
+  integer(source.sourceRevision, 1);
+  const capability = purpose(key) === "write" ? "write" : "read";
+  const row = await new ConvexMemoryRepository(ctx, reference, capability).getSource(source.sourceId);
+  if (!row || row.lineage.sourceEventId !== source.sourceEventId || row.lineage.sourceRevision !== source.sourceRevision || row.contentHash !== source.contentHash) fail("FORBIDDEN");
+  if (await semanticHash(row.content) !== source.contentHash) fail("FORBIDDEN");
+}
+function validManifest(manifest: DeploymentPolicyManifest | undefined): asserts manifest is DeploymentPolicyManifest {
+  if (!manifest || !isTrustedDeploymentManifest(manifest) || !digest.test(manifest.evidenceHash) || !digest.test(manifest.acceptanceHash)
+    || !manifest.artifactRevision || !manifest.policies.length || !manifest.qualifications.length || manifest.policies.length > 64 || manifest.qualifications.length > 64) fail("CAPABILITY_UNAVAILABLE");
+  integer(manifest.revision, 1); integer(manifest.budgetWindowMs, 1);
+  if (manifest.policies.some((policy) => policy.override || (policy.scope === "deployment" ? Boolean(policy.tenantId || policy.agentId) :
+    policy.scope !== "agent" || !policy.tenantId || !policy.agentId || !Number.isSafeInteger(policy.agentVersion) || policy.agentVersion! < 1))) fail("POLICY_DENIED");
+  for (const qualification of manifest.qualifications) {
+    const proof = single(manifest.dispatchEvidence.filter((entry) => entry.receiptId === qualification.receiptId));
+    if (!proof || qualifiedTerminalModelId(proof) === undefined || !digest.test(proof.evidenceHash) || !digest.test(proof.inputBound.proofHash) || !proof.providerVersion
+      || proof.modelId !== qualification.modelId || proof.nativeInterface !== qualification.nativeInterface
+      || proof.priceRevision !== qualification.priceRevision || proof.boundRevision !== qualification.boundRevision
+      || !digest.test(proof.inputBound.nativeTransformHash) || !digest.test(proof.inputBound.documentHash)
+      || proof.terminalProof !== "provider-terminal-v1") fail("CAPABILITY_UNAVAILABLE");
+    if (!digest.test(proof.resultBound.proofHash) || proof.resultBound.maximumPrivateResultBytes > (proof.inputBound.featureEnvelope === "profile-embedding-v1" && proof.embeddingProfile?.profileId === LARGE_EMBEDDING_PROFILE.profileId ? 131_072 : 60_000)
+      || proof.resultBound.maximumEmbeddingValues !== 1) fail("CAPABILITY_UNAVAILABLE");
+    if (proof.inputBound.featureEnvelope === "profile-embedding-v1") {
+      if (proof.nativeInterface !== "embedding" || proof.inputBound.ruleId !== "profile-embedding-utf8-v1" || !proof.embeddingProfile) fail("CAPABILITY_UNAVAILABLE");
+      assertSupportedEmbeddingProfile(proof.embeddingProfile);
+      if (proof.embeddingProfile.modelId !== proof.modelId) fail("CAPABILITY_UNAVAILABLE");
+    } else if (proof.embeddingProfile) fail("CAPABILITY_UNAVAILABLE");
+    integer(proof.resultBound.maximumPrivateResultBytes, 1); integer(proof.resultBound.maximumOutputTokens);
+    integer(proof.inputBound.revision, 1); integer(proof.checkedAt); integer(proof.expiresAt, 1);
+    if (proof.checkedAt >= proof.expiresAt) fail("CAPABILITY_UNAVAILABLE");
+    if (proof.inputBound.featureEnvelope === MEMORY_JSON_SCHEMA_CONTRACT.featureEnvelope || proof.inputBound.ruleId === MEMORY_JSON_SCHEMA_CONTRACT.inputRule
+      || qualification.boundRevision === MEMORY_JSON_SCHEMA_CONTRACT.boundRevision) {
+      if (proof.inputBound.featureEnvelope !== MEMORY_JSON_SCHEMA_CONTRACT.featureEnvelope || proof.inputBound.ruleId !== MEMORY_JSON_SCHEMA_CONTRACT.inputRule
+        || proof.inputBound.revision !== 1 || qualification.boundRevision !== MEMORY_JSON_SCHEMA_CONTRACT.boundRevision
+        || proof.nativeInterface !== "chat" || proof.modelId !== MEMORY_JSON_SCHEMA_CONTRACT.modelId
+        || !qualification.capabilities.includes("structured") || qualification.capabilities.includes("tools") || qualification.allowedOptions.length
+        || qualification.limits.inputTokens > MEMORY_JSON_SCHEMA_CONTRACT.maximumInputTokens || qualification.limits.contextTokens > MEMORY_JSON_SCHEMA_CONTRACT.maximumContextTokens
+        || qualification.limits.outputTokens > MEMORY_JSON_SCHEMA_CONTRACT.maximumOutputTokens || qualification.limits.toolSteps
+        || qualification.limits.timeoutMs > 60000
+        || qualification.costBound.maximumCostUnits !== MEMORY_JSON_SCHEMA_CONTRACT.maximumCostUnits
+        || !proof.resultBound.maximumOutputTokens || proof.resultBound.maximumOutputTokens > MEMORY_JSON_SCHEMA_CONTRACT.maximumOutputTokens || proof.supportsStream) fail("CAPABILITY_UNAVAILABLE");
+    }
+    if (proof.inputBound.featureEnvelope === MEMORY_JSON_OBJECT_CONTRACT.featureEnvelope || proof.inputBound.ruleId === MEMORY_JSON_OBJECT_CONTRACT.inputRule
+      || qualification.boundRevision === MEMORY_JSON_OBJECT_CONTRACT.boundRevision) {
+      if (proof.inputBound.featureEnvelope !== MEMORY_JSON_OBJECT_CONTRACT.featureEnvelope || proof.inputBound.ruleId !== MEMORY_JSON_OBJECT_CONTRACT.inputRule
+        || proof.inputBound.revision !== 1 || qualification.boundRevision !== MEMORY_JSON_OBJECT_CONTRACT.boundRevision
+        || proof.nativeInterface !== "chat" || proof.modelId !== MEMORY_JSON_OBJECT_CONTRACT.modelId
+        || !qualification.capabilities.includes("structured") || qualification.capabilities.includes("tools") || qualification.allowedOptions.length
+        || qualification.limits.inputTokens > MEMORY_JSON_OBJECT_CONTRACT.maximumInputTokens || qualification.limits.contextTokens > MEMORY_JSON_OBJECT_CONTRACT.maximumContextTokens
+        || qualification.limits.outputTokens > MEMORY_JSON_OBJECT_CONTRACT.maximumOutputTokens || qualification.limits.toolSteps
+        || qualification.limits.timeoutMs > 60000
+        || qualification.costBound.maximumCostUnits !== MEMORY_JSON_OBJECT_CONTRACT.maximumCostUnits
+        || !proof.resultBound.maximumOutputTokens || proof.resultBound.maximumOutputTokens > MEMORY_JSON_OBJECT_CONTRACT.maximumOutputTokens || proof.supportsStream) fail("CAPABILITY_UNAVAILABLE");
+    }
+    if (proof.inputBound.featureEnvelope === "media-image-v1" || proof.inputBound.featureEnvelope === "media-video-async-v1") {
+      const media = mediaContractSchema.safeParse(proof.mediaContract);
+      if (!media.success || proof.inputBound.ruleId !== "media-native-utf8-v1" || proof.inputBound.revision !== 1
+        || media.data.options.kind !== proof.nativeInterface || !qualification.capabilities.includes(media.data.options.kind)
+        || (media.data.options.kind === "image") !== (proof.inputBound.featureEnvelope === "media-image-v1")) fail("CAPABILITY_UNAVAILABLE");
+    } else if (proof.mediaContract) fail("CAPABILITY_UNAVAILABLE");
+    if (["agent-tools-chat-v1", "agent-tools-chat-v2"].includes(proof.inputBound.featureEnvelope)) {
+      if (proof.nativeInterface !== "chat" || proof.inputBound.ruleId !== "agent-tools-chat-utf8-v1" || !qualification.capabilities.includes("tools")
+        || !proof.toolContract || !agentToolCatalog(proof.toolContract.registryVersion) || proof.toolContract.toolsCanonical !== canonical(agentToolCatalog(proof.toolContract.registryVersion))
+        || ((proof.inputBound.featureEnvelope === "agent-tools-chat-v1") !== (proof.toolContract.registryVersion === AGENT_TOOL_REGISTRY_VERSION))
+        || proof.toolContract.maximumToolCalls < 1 || proof.toolContract.maximumToolCalls > 4) fail("CAPABILITY_UNAVAILABLE");
+      integer(proof.toolContract.maximumToolCalls, 1);
+    } else if (proof.toolContract || qualification.capabilities.includes("tools")) fail("CAPABILITY_UNAVAILABLE");
+  }
+}
+async function provenance(manifest: DeploymentPolicyManifest): Promise<FullRoot> {
+  const encoded = canonical(manifest);
+  return fullRootProvenanceFor(manifest, encoded, await semanticHash(encoded));
+}
+function sameRootEncoded(left: Root, right: Root, expected: RootProvenanceEncodings): boolean {
+  return rootProvenanceEqual(canonical(left), canonical(right), expected);
+}
+/** Representation differences cannot replace a financial/provenance identity. */
+async function sameRoot(left: Root, right: Root): Promise<boolean> {
+  // Preserve original malformed-canonical failure ordering before registry lookup.
+  const leftEncoded = canonical(left), rightEncoded = canonical(right);
+  const manifest = lookupDeploymentManifest(right.manifestId, right.revision);
+  if (!manifest || !isTrustedDeploymentManifest(manifest)) return false;
+  const expected = rootProvenanceEncodings(await provenance(manifest), canonical);
+  return rootProvenanceMatches(leftEncoded, expected) && rootProvenanceMatches(rightEncoded, expected);
+}
+async function verifiedRoot(root: Root) {
+  const manifest = lookupDeploymentManifest(root.manifestId, root.revision); validManifest(manifest);
+  const encodings = rootProvenanceEncodings(await provenance(manifest), canonical);
+  if (!rootProvenanceMatches(canonical(root), encodings)) fail("POLICY_DENIED");
+  return { manifest, encodings };
+}
+async function trustedRoot(root: Root): Promise<DeploymentPolicyManifest> {
+  return (await verifiedRoot(root)).manifest;
+}
+
+async function activeRoot(ctx: ReadCtx): Promise<{ manifest: DeploymentPolicyManifest; root: Root; encodings: RootProvenanceEncodings }> {
+  const rows = await readDeploymentPolicyRows(ctx);
+  if (!rows.length || rows.length > 64) fail("CAPABILITY_UNAVAILABLE");
+  const root = rows[0]!.root;
+  const { manifest, encodings } = await verifiedRoot(root);
+  if (rows.length !== manifest.policies.filter((p) => p.scope === "deployment").length || rows.some((row) => row.revokedAt !== undefined || !sameRootEncoded(row.root, root, encodings)
+    || !manifest.policies.some((policy) => policy.policyId === row.policyId && policy.version === row.version && canonical(policy) === row.canonical))) fail("POLICY_DENIED");
+  for (const qualification of manifest.qualifications) {
+    const row = single(await readQualificationRows(ctx, qualification.receiptId, root.revision));
+    if (!row || !row.active || row.revokedAt !== undefined || row.canonical !== canonical(qualification) || !sameRootEncoded(row.root, root, encodings)) fail("CAPABILITY_UNAVAILABLE");
+  }
+  return { manifest, root, encodings };
+}
+function evidence(manifest: DeploymentPolicyManifest, snapshot: ModelPolicySnapshotV1): QualifiedDispatchEvidence {
+  const proof = single(manifest.dispatchEvidence.filter((entry) => entry.receiptId === snapshot.qualificationReceiptId));
+  if (!proof || proof.modelId !== snapshot.modelId || proof.nativeInterface !== snapshot.nativeInterface) fail("CAPABILITY_UNAVAILABLE");
+  return proof;
+}
+/** Historical attestations remain part of immutable root provenance. Only the
+ * proof consumed by this operation grants current dispatch or replay authority. */
+function assertCurrentEvidence(proof: QualifiedDispatchEvidence): void {
+  const now = Date.now();
+  if (proof.checkedAt > now || now >= proof.expiresAt) fail("CAPABILITY_UNAVAILABLE");
+}
+const option = z.enum(["temperature", "topP", "seed", "stopSequences"]);
+const capability = z.enum(["text", "structured", "tools", "embedding", "image", "video"]);
+const nativeInterface = z.enum(["chat", "responses", "messages", "embedding", "image", "video"]);
+const count = z.number().int().min(0).max(Number.MAX_SAFE_INTEGER);
+const limitsSchema = z.object({ inputTokens: count.min(1), contextTokens: count.min(1), outputTokens: count.min(1), toolSteps: count,
+  timeoutMs: count.min(1), operationBudgetUnits: count.min(1), runBudgetUnits: count.min(1), tenantBudgetUnits: count.min(1), concurrency: count.min(1) });
+const rulesSchema = z.object({ modelId: z.string().optional(), nativeInterface: nativeInterface.optional(), allowedModels: z.array(z.string()).optional(),
+  interfaces: z.array(nativeInterface).optional(), capabilities: z.array(capability).optional(), allowedOptions: z.array(option).optional(),
+  allowedTools: z.array(z.string()).optional(), fallbackModels: z.array(z.string()).optional(), limits: limitsSchema.partial().optional(),
+  pins: z.object({ promptVersion: z.string(), schemaVersion: z.string(), extractionVersion: z.string(), toolRegistryVersion: z.string(),
+    priceRevision: z.string(), boundRevision: z.string() }).partial().optional() }).strict();
+const tenantPolicySchema = z.object({ policyId: z.string().min(1), version: count.min(1), scope: z.literal("tenant"), tenantId: z.string().min(1),
+  operationKey: z.enum(["agent.respond", "memory.extract", "facts.resolve", "memory.summarize", "conversation.title", "artifact.text", "artifact.code", "artifact.sheet",
+    "artifact.suggestions", "embedding.query", "embedding.memory", "media.image.generate", "media.video.generate"]).optional(), rules: rulesSchema,
+  override: z.object({ actorPrincipalId: z.string(), changeRevision: count.min(1), authorizationId: z.string() }).strict().optional(),
+}).strict();
+export interface TrustedAgentPolicyVersion {
+  readonly tenantId: string;
+  readonly agent: { readonly agentId: string; readonly version: number };
+  readonly policies: readonly TrustedModelPolicyRecord[];
+}
+/**
+ * Selectors are never policy authority. This current owned immutable definition reader checks
+ * scope, grant, revocation and canonical hash before returning validated narrowed policies.
+ * Resolve/admit/checkpoint share this native context. Scoped administrators publish definitions
+ * through agentDefinitions; they cannot attest deployment prices or provider bounds.
+ */
+export async function readTrustedAgentPolicyVersion(ctx: ReadCtx, reference: RuntimeAuthorityReference,
+  agent: { agentId: string; version: number }): Promise<TrustedAgentPolicyVersion> {
+  text(agent.agentId); integer(agent.version, 1);
+  await currentAuthority(ctx, reference, "agent.respond");
+  const current = await readCurrentExecutableDefinition(ctx, reference, agent, { capability: "run", operationKey: "agent.respond" });
+  return { tenantId: current.tenantId, agent: current.agent, policies: current.policies };
+}
+async function policies(ctx: ReadCtx, manifest: DeploymentPolicyManifest, root: Root, encodings: RootProvenanceEncodings, reference: RuntimeAuthorityReference, key: ModelOperationKey, agent?: { agentId: string; version: number }): Promise<TrustedModelPolicyRecord[]> {
+  const rows = await readTenantPolicyRows(ctx, reference.tenantId);
+  if (rows.length > 64) fail("POLICY_DENIED");
+  const agentPolicies = agent ? (await readTrustedAgentPolicyVersion(ctx, reference, agent)).policies : [];
+  const selected: TrustedModelPolicyRecord[] = [...manifest.policies.filter((policy) => policy.scope === "deployment" && (!policy.operationKey || policy.operationKey === key)),
+    ...agentPolicies.filter((policy) => !policy.operationKey || policy.operationKey === key)];
+  for (const row of rows) {
+    if (row.revokedAt !== undefined || !sameRootEncoded(row.root, root, encodings) || !row.actorReference) fail("POLICY_DENIED");
+    await recheckAuthority(ctx, row.actorReference, { capability: "admin", tenantId: reference.tenantId, memorySpaceId: row.actorReference.memorySpaceId });
+    const parsed = tenantPolicySchema.safeParse(decode(row.canonical));
+    if (!parsed.success || parsed.data.policyId !== row.policyId || parsed.data.version !== row.version || parsed.data.tenantId !== reference.tenantId) fail("POLICY_DENIED");
+    if (parsed.data.override) {
+      const expected = await semanticHash(canonical([row.actorReference, parsed.data.policyId, parsed.data.version]));
+      if (parsed.data.override.actorPrincipalId !== row.actorReference.principalId || parsed.data.override.changeRevision !== parsed.data.version || parsed.data.override.authorizationId !== expected) fail("POLICY_DENIED");
+    }
+    if (!parsed.data.operationKey || parsed.data.operationKey === key) selected.push(parsed.data);
+  }
+  return selected;
+}
+function resolutionContext(reference: RuntimeAuthorityReference, key: ModelOperationKey, runBudgetId: string, source?: Source, parentOperationId?: string, agent?: { agentId: string; version: number }): TrustedModelPolicyContext {
+  return { scope: memoryScope(reference), operationKey: key, runBudgetId, authorizedOverrides: [], ...(agent ? { agent } : {}),
+    ...(source ? { source: { sourceId: source.sourceId, sourceEventId: source.sourceEventId, sourceRevision: source.sourceRevision } } : {}),
+    ...(parentOperationId ? { parentOperationId } : {}) };
+}
+async function resolveCurrent(ctx: ReadCtx, reference: RuntimeAuthorityReference, key: ModelOperationKey, runBudgetId: string, source?: Source, parentOperationId?: string, agent?: { agentId: string; version: number }) {
+  const { manifest, root, encodings } = await activeRoot(ctx);
+  const records = await policies(ctx, manifest, root, encodings, reference, key, agent);
+  const context = resolutionContext(reference, key, runBudgetId, source, parentOperationId, agent);
+  context.authorizedOverrides = records.flatMap((record) => record.override ? [{ ...record.override, policyId: record.policyId, policyVersion: record.version }] : []);
+  const resolution = { context, policies: records, qualifications: manifest.qualifications };
+  const snapshot = resolveModelPolicy(resolution);
+  assertCurrentEvidence(evidence(manifest, snapshot));
+  return { root, manifest, resolutionCanonical: canonical(resolution), snapshot };
+}
+function snapshotOf(record: Pick<Operation, "resolutionCanonical" | "snapshotCanonical">): ModelPolicySnapshotV1 {
+  const snapshot = resolveModelPolicy(decode(record.resolutionCanonical));
+  if (canonical(snapshot) !== record.snapshotCanonical) fail("POLICY_DENIED");
+  return snapshot;
+}
+async function currentOperation(ctx: ReadCtx, reference: RuntimeAuthorityReference, operation: Operation, permitCancelled = false, asParent = false, mediaCompletion = false, titleParent?: CompletedAgentTitle) {
+  if (!sameAuthority(reference, operation.reference)) fail("FORBIDDEN");
+  await currentAuthority(ctx, reference, operation.operationKey);
+  await checkSource(ctx, reference, operation.operationKey, operation.source);
+  if (operation.cancelled && !permitCancelled) fail("RUN_CANCELLED");
+  const run = await ctx.db.get("runtimeBudgetAccounts", operation.runAccountId);
+  if (!run || !run.reference || !sameAuthority(run.reference, reference) || run.tenantId !== reference.tenantId || (run.cancelled && !permitCancelled)) fail("FORBIDDEN");
+  if (!permitCancelled) {
+    const title = asParent ? titleParent : await completedContentTitle(ctx, reference, run._id, operation.operationKey, operation.parentOperationId, operation.semanticId);
+    if (asParent && title && (operation._id !== title.parentOperationId || operation.operationKey !== "agent.respond")) fail("FORBIDDEN");
+    if (!mediaCompletion) await guardAgentRunBudget(ctx, reference, run._id, title);
+    await guardIngestionRunBudget(ctx, reference, run._id);
+    if (!asParent) await guardContentRunBudget(ctx, reference, run._id, operation.operationKey);
+  }
+  let parentId = operation.parentOperationId;
+  const visited = new Set<string>([operation._id]);
+  while (parentId) {
+    if (visited.has(parentId) || visited.size > 16) fail("FORBIDDEN");
+    visited.add(parentId);
+    const parent = await ctx.db.get("runtimeModelOperations", parentId);
+    if (!parent || !sameAuthority(reference, parent.reference) || parent.runAccountId !== operation.runAccountId || parent.cancelled) fail("FORBIDDEN");
+    await currentAuthority(ctx, reference, parent.operationKey);
+    await checkSource(ctx, reference, parent.operationKey, parent.source);
+    parentId = parent.parentOperationId;
+  }
+  const snapshot = snapshotOf(operation);
+  const current = await resolveCurrent(ctx, reference, operation.operationKey, run.runBudgetId!, operation.source, operation.parentOperationId, run.agentId ? { agentId: run.agentId, version: run.agentVersion! } : undefined);
+  if (!permitCancelled) {
+    await assertIngestionPolicyPin(ctx, run._id, operation.operationKey, current.snapshot, false, !asParent);
+    await assertContentPolicyPin(ctx, run._id, operation.operationKey, current.snapshot, false, !asParent);
+    if (snapshot.semanticProfile) assertProfileMatches(snapshot.semanticProfile, current.snapshot.semanticProfile!);
+  }
+  if (!current.snapshot.allowedModels.includes(snapshot.modelId) || !snapshot.capabilities.every((cap) => current.snapshot.capabilities.includes(cap))
+    || !current.manifest.qualifications.some((q) => q.receiptId === snapshot.qualificationReceiptId && q.modelId === snapshot.modelId && q.nativeInterface === snapshot.nativeInterface
+      && q.priceRevision === snapshot.pins.priceRevision && q.boundRevision === snapshot.pins.boundRevision)) fail("POLICY_DENIED");
+  assertCurrentEvidence(evidence(current.manifest, snapshot));
+  return { snapshot, run, current };
+}
+function balanced(account: Account): void {
+  [account.limitUnits, account.reservedUnits, account.settledUnits, account.uncertainUnits, account.activeConcurrency, account.concurrencyLimit, account.version].forEach((value) => integer(value));
+  add(account.reservedUnits, account.settledUnits, account.uncertainUnits);
+}
+export type UnreservedCapacityRefusal = Infer<typeof unreservedCapacityRefusal>;
+function capacityReason(account: Account, ceiling: number, limit: number, concurrency: number): UnreservedCapacityRefusal["reason"] | undefined {
+  balanced(account);
+  if (!account.current || account.cancelled || account.overrun) return "account";
+  if (Date.now() < account.windowStart || Date.now() >= account.windowEnd) return "window";
+  if (add(account.reservedUnits, account.settledUnits, account.uncertainUnits, ceiling) > Math.min(account.limitUnits, integer(limit, 1))) return "money";
+  if (account.activeConcurrency >= Math.min(account.concurrencyLimit, integer(concurrency, 1))) return "concurrency";
+}
+function capacity(account: Account, ceiling: number, limit = account.limitUnits, concurrency = account.concurrencyLimit,
+  admission?: Omit<UnreservedCapacityRefusal, "reason">): void {
+  const reason = capacityReason(account, ceiling, limit, concurrency);
+  if (!reason) return;
+  if (!admission) fail("BUDGET_EXCEEDED");
+  throw new ConvexError({ version: 1, code: "BUDGET_EXCEEDED", message: "Model operation control failed.", retryable: false,
+    outcome: "not_dispatched", capacity: { ...admission, reason } });
+}
+/** Permit-boundary capacity: the reservation and active slot are already counted. */
+function heldCapacity(account: Account, limit: number, concurrency: number): void {
+  balanced(account);
+  if (!account.current || account.cancelled || account.overrun || Date.now() < account.windowStart || Date.now() >= account.windowEnd
+    || add(account.reservedUnits, account.settledUnits, account.uncertainUnits) > Math.min(account.limitUnits, integer(limit, 1))
+    || account.activeConcurrency > Math.min(account.concurrencyLimit, integer(concurrency, 1))) fail("BUDGET_EXCEEDED");
+}
+const bindingArgs = { reference: runtimeAuthorityReference, operationKey: modelOperationKey, requestId: v.string(), requestCanonical: v.string(), agentId: v.optional(v.string()), agentVersion: v.optional(v.number()) };
+export type BindBudgetArgs = { reference: RuntimeAuthorityReference; operationKey: ModelOperationKey; requestId: string; requestCanonical: string; agentId?: string; agentVersion?: number };
+/** Task05 calls this helper in ITS native parent mutation. Creates accounts, no envelope double reservation. */
+export async function bindTrustedBudget(ctx: WriteCtx, args: BindBudgetArgs): Promise<{ runBudgetId: string; runAccountId: Id<"runtimeBudgetAccounts"> }> {
+  await currentAuthority(ctx, args.reference, args.operationKey); text(args.requestId); decode(args.requestCanonical);
+  const bindingKey = canonical(["run", args.reference.tenantId, args.reference.memorySpaceId, args.reference.principalId, args.operationKey, args.requestId]);
+  const runBudgetId = await semanticHash(bindingKey);
+  const existing = single(await ctx.db.query("runtimeBudgetAccounts").withIndex("by_run", (q) => q.eq("runBudgetId", runBudgetId)).take(2));
+  if (existing && (!existing.reference || !sameAuthority(existing.reference, args.reference) || existing.scopeKey !== bindingKey || existing.requestCanonical !== args.requestCanonical || existing.agentId !== args.agentId || existing.agentVersion !== args.agentVersion)) fail("IDEMPOTENCY_CONFLICT");
+  if ((args.agentId === undefined) !== (args.agentVersion === undefined)) fail("INVALID_INPUT");
+  if (args.agentId) { text(args.agentId); integer(args.agentVersion!, 1); }
+  const agent = args.agentId ? { agentId: args.agentId, version: args.agentVersion! } : undefined;
+  const resolved = await resolveCurrent(ctx, args.reference, args.operationKey, runBudgetId, undefined, undefined, agent);
+  if (existing) return { runBudgetId, runAccountId: existing._id };
+  const now = integer(Date.now());
+  const start = Math.floor(now / resolved.manifest.budgetWindowMs) * resolved.manifest.budgetWindowMs;
+  const end = add(start, resolved.manifest.budgetWindowMs);
+  const tenantScope = canonical(["tenant", args.reference.tenantId]);
+  let tenant = single(await ctx.db.query("runtimeBudgetAccounts").withIndex("by_scope_current", (q) => q.eq("scopeKey", tenantScope).eq("current", true)).take(2));
+  if (tenant && (tenant.windowEnd <= now || !(await sameRoot(tenant.root, resolved.root)))) {
+    balanced(tenant);
+    if (tenant.reservedUnits || tenant.uncertainUnits || tenant.activeConcurrency || tenant.overrun) fail("BUDGET_EXCEEDED");
+    // Policy replacement within a window cannot reset money spent.
+    if (tenant.windowEnd > now) fail("POLICY_DENIED");
+    await ctx.db.patch("runtimeBudgetAccounts", tenant._id, { current: false, version: add(tenant.version, 1) });
+    tenant = undefined;
+  }
+  await finalActor(ctx, args.reference, args.operationKey);
+  const counters = { reservedUnits: 0, settledUnits: 0, uncertainUnits: 0, activeConcurrency: 0, overrun: false, current: true, cancelled: false, version: 1, createdAt: now };
+  const window = { windowId: canonical([args.reference.tenantId, start, end]), windowStart: start, windowEnd: end, currency: "USD" as const, monetaryUnit: "micro-USD" as const, root: resolved.root };
+  if (!tenant) await ctx.db.insert("runtimeBudgetAccounts", { accountKey: await semanticHash(canonical([tenantScope, start, end])), scopeKey: tenantScope,
+    kind: "tenant", tenantId: args.reference.tenantId, ...window, ...counters,
+    limitUnits: resolved.snapshot.limits.tenantBudgetUnits, concurrencyLimit: resolved.snapshot.limits.concurrency });
+  else if (tenant.limitUnits !== resolved.snapshot.limits.tenantBudgetUnits || tenant.concurrencyLimit !== resolved.snapshot.limits.concurrency) {
+    // Tenant-wide capacity is the tightest policy seen, never inflated by another operation.
+    await ctx.db.patch("runtimeBudgetAccounts", tenant._id, { limitUnits: Math.min(tenant.limitUnits, resolved.snapshot.limits.tenantBudgetUnits),
+      concurrencyLimit: Math.min(tenant.concurrencyLimit, resolved.snapshot.limits.concurrency), version: add(tenant.version, 1) });
+  }
+  const runAccountId = await ctx.db.insert("runtimeBudgetAccounts", { accountKey: runBudgetId, scopeKey: bindingKey, kind: "run",
+    tenantId: args.reference.tenantId, runBudgetId, reference: args.reference, requestCanonical: args.requestCanonical, ...(agent ? { agentId: agent.agentId, agentVersion: agent.version } : {}), ...window, ...counters,
+    limitUnits: resolved.snapshot.limits.runBudgetUnits, concurrencyLimit: resolved.snapshot.limits.concurrency });
+  return { runBudgetId, runAccountId };
+}
+/** Foreground preflight before persisting a new source intent. Final admission
+ * still reserves atomically; a concurrent caller can consume capacity afterward.
+ * Existing exact requests retain read-only replay under their original liability. */
+export const ensureBudget = internalMutation({ args: bindingArgs, handler: async (ctx, args) => {
+  const key = canonical(["run", args.reference.tenantId, args.reference.memorySpaceId, args.reference.principalId, args.operationKey, args.requestId]);
+  const id = await semanticHash(key);
+  const existing = single(await ctx.db.query("runtimeBudgetAccounts").withIndex("by_run", (q) => q.eq("runBudgetId", id)).take(2));
+  const budget = await bindTrustedBudget(ctx, args);
+  if (existing) return budget;
+  const run = await ctx.db.get("runtimeBudgetAccounts", budget.runAccountId);
+  const tenant = single(await ctx.db.query("runtimeBudgetAccounts").withIndex("by_scope_current", (q) =>
+    q.eq("scopeKey", canonical(["tenant", args.reference.tenantId])).eq("current", true)).take(2));
+  if (!run || !tenant) fail("BUDGET_EXCEEDED");
+  const { snapshot } = await resolveCurrent(ctx, args.reference, args.operationKey, budget.runBudgetId, undefined, undefined,
+    args.agentId ? { agentId: args.agentId, version: args.agentVersion! } : undefined);
+  const ceiling = snapshot.costBound.maximumCostUnits;
+  if (ceiling > snapshot.limits.operationBudgetUnits) fail("BUDGET_EXCEEDED");
+  capacity(run, ceiling, snapshot.limits.runBudgetUnits, snapshot.limits.concurrency);
+  capacity(tenant, ceiling, snapshot.limits.tenantBudgetUnits, snapshot.limits.concurrency);
+  return budget;
+} });
+
+export const installDeploymentPolicy = internalMutation({ args: { manifestId: v.string(), expectedRevision: v.number() }, handler: async (ctx, args) => {
+  text(args.manifestId); integer(args.expectedRevision, 1);
+  const manifest = lookupDeploymentManifest(args.manifestId, args.expectedRevision); validManifest(manifest);
+  const full = await provenance(manifest), encodings = rootProvenanceEncodings(full, canonical);
+  let root: Root = compactRootProvenance(full);
+  const old = await ctx.db.query("runtimeModelPolicies").withIndex("by_scope_active", (q) => q.eq("scope", "deployment").eq("tenantId", undefined).eq("active", true)).take(65);
+  if (old.length > 64) fail("POLICY_DENIED");
+  const previous = old[0]?.root;
+  const samePrevious = previous ? sameRootEncoded(previous, root, encodings) : false;
+  if (previous && !samePrevious && args.expectedRevision <= previous.revision) fail("IDEMPOTENCY_CONFLICT");
+  // A validated same-revision installation retains its exact legacy/compact bytes.
+  if (previous && samePrevious) root = previous;
+  // Validate complete resolver contracts before writes, including every qualification's feature limits.
+  const proofScope = { tenantId: "bootstrap-validation", memorySpaceId: "bootstrap-validation", principalId: "bootstrap-validation", principalVersion: 1,
+    membershipId: "bootstrap-validation", membershipVersion: 1, grantId: "bootstrap-validation", grantVersion: 1, tenantEpoch: 1, memorySpaceEpoch: 1 };
+  for (const qualification of manifest.qualifications) {
+    const key: ModelOperationKey = qualification.nativeInterface === "embedding" ? "embedding.query" : "agent.respond";
+    resolveModelPolicy({ context: { scope: proofScope, operationKey: key, runBudgetId: "bootstrap-validation", authorizedOverrides: [] }, policies: manifest.policies.filter((p) => p.scope === "deployment" && (!p.operationKey || p.operationKey === key)), qualifications: manifest.qualifications });
+  }
+  for (const row of old) if (!sameRootEncoded(row.root, root, encodings)) await ctx.db.patch("runtimeModelPolicies", row._id, { active: false });
+  for (const policy of manifest.policies) {
+    const existing = single(await ctx.db.query("runtimeModelPolicies").withIndex("by_policy_version", (q) => q.eq("policyId", policy.policyId).eq("version", policy.version)).take(2));
+    if (existing) {
+      if (existing.canonical !== canonical(policy) || !sameRootEncoded(existing.root, root, encodings) || existing.revokedAt !== undefined) fail("IDEMPOTENCY_CONFLICT");
+      if (!existing.active) await ctx.db.patch("runtimeModelPolicies", existing._id, { active: true });
+    } else await ctx.db.insert("runtimeModelPolicies", { policyId: policy.policyId, version: policy.version, scope: policy.scope === "agent" ? "agent" : "deployment",
+      ...(policy.scope === "agent" ? { tenantId: policy.tenantId!, agentId: policy.agentId!, agentVersion: policy.agentVersion! } : {}),
+      ...(policy.operationKey ? { operationKey: policy.operationKey } : {}), canonical: canonical(policy), root, active: true, createdAt: Date.now() });
+  }
+  for (const qualification of manifest.qualifications) {
+    const existing = single(await ctx.db.query("runtimeModelQualifications").withIndex("by_receipt", (q) => q.eq("receiptId", qualification.receiptId).eq("version", root.revision)).take(2));
+    if (existing) {
+      if (existing.canonical !== canonical(qualification) || !sameRootEncoded(existing.root, root, encodings) || existing.revokedAt !== undefined) fail("IDEMPOTENCY_CONFLICT");
+    } else await ctx.db.insert("runtimeModelQualifications", { receiptId: qualification.receiptId, version: root.revision, canonical: canonical(qualification), root, active: true, createdAt: Date.now() });
+  }
+  return { manifestId: manifest.manifestId, revision: manifest.revision };
+} });
+export const provisionTenantPolicy = internalMutation({ args: { reference: runtimeAuthorityReference, policyCanonical: v.string(), overrideRequested: v.optional(v.boolean()) }, handler: async (ctx, args) => {
+  const authority = await recheckAuthority(ctx, args.reference, { capability: "admin", tenantId: args.reference.tenantId, memorySpaceId: args.reference.memorySpaceId });
+  // A space/own administrator cannot set tenant-wide rules.
+  if (authority.resourceAccess !== "tenant" || args.reference.memorySpaceId !== undefined) fail("FORBIDDEN");
+  const parsed = tenantPolicySchema.safeParse(decode(args.policyCanonical));
+  if (!parsed.success || parsed.data.tenantId !== args.reference.tenantId) fail("POLICY_DENIED");
+  if (parsed.data.override) fail("POLICY_DENIED");
+  const policy = { ...parsed.data, ...(args.overrideRequested ? { override: { actorPrincipalId: authority.principalId, changeRevision: parsed.data.version,
+    authorizationId: await semanticHash(canonical([args.reference, parsed.data.policyId, parsed.data.version])) } } : {}) };
+  const policyCanonical = canonical(policy); const { manifest, root } = await activeRoot(ctx);
+  const hard = manifest.policies.find((entry) => entry.scope === "deployment" && !entry.operationKey);
+  if (!hard) fail("POLICY_DENIED");
+  const rules = policy.rules;
+  for (const key of MODEL_LIMIT_KEYS) if (rules.limits?.[key] !== undefined && rules.limits[key]! > (hard.rules.limits?.[key] ?? 0)) fail("POLICY_DENIED");
+  for (const key of ["allowedModels", "interfaces", "capabilities", "allowedOptions", "allowedTools", "fallbackModels"] as const) {
+    const baseline: readonly string[] = hard.rules[key] ?? [];
+    if (rules[key]?.some((entry) => !baseline.includes(entry))) fail("POLICY_DENIED");
+  }
+  if (rules.modelId && !hard.rules.allowedModels?.includes(rules.modelId)) fail("POLICY_DENIED");
+  if (rules.nativeInterface && !hard.rules.interfaces?.includes(rules.nativeInterface)) fail("POLICY_DENIED");
+  const changedPins = Object.entries(rules.pins ?? {}).filter(([key, value]) => value !== hard.rules.pins?.[key as keyof NonNullable<typeof hard.rules.pins>]);
+  if (changedPins.length) {
+    // Price/bound IDs are selectors into the current compiled qualification,
+    // never tenant attestations. Keep one financial root/window and every
+    // existing liability while selecting an exact supported embedding profile.
+    if (changedPins.some(([key]) => key !== "priceRevision" && key !== "boundRevision")
+      || policy.operationKey !== "embedding.memory" && policy.operationKey !== "embedding.query"
+      || rules.nativeInterface !== "embedding"
+      || ![DEFAULT_EMBEDDING_PROFILE.modelId, LARGE_EMBEDDING_PROFILE.modelId].includes(rules.modelId ?? "")
+      || !rules.pins?.priceRevision || !rules.pins.boundRevision) fail("POLICY_DENIED");
+    const qualified = single(manifest.qualifications.filter(entry => entry.modelId === rules.modelId
+      && entry.nativeInterface === rules.nativeInterface && entry.priceRevision === rules.pins!.priceRevision
+      && entry.boundRevision === rules.pins!.boundRevision && entry.capabilities.includes("embedding")));
+    if (!qualified) fail("POLICY_DENIED");
+  }
+  const sameId = single(await ctx.db.query("runtimeModelPolicies").withIndex("by_policy_version", (q) => q.eq("policyId", policy.policyId).eq("version", policy.version)).take(2));
+  if (sameId) {
+    if (sameId.scope !== "tenant" || sameId.tenantId !== args.reference.tenantId || sameId.canonical !== policyCanonical || !sameId.actorReference
+      || !sameAuthority(sameId.actorReference, args.reference) || sameId.revokedAt !== undefined) fail("IDEMPOTENCY_CONFLICT");
+    return { policyId: policy.policyId, version: policy.version };
+  }
+  const old = await ctx.db.query("runtimeModelPolicies").withIndex("by_scope_active", (q) => q.eq("scope", "tenant").eq("tenantId", args.reference.tenantId).eq("active", true)).take(65);
+  if (old.length > 64) fail("POLICY_DENIED");
+  for (const row of old.filter((entry) => entry.operationKey === policy.operationKey)) {
+    if (policy.version <= row.version || row.policyId !== policy.policyId) fail("IDEMPOTENCY_CONFLICT");
+    await ctx.db.patch("runtimeModelPolicies", row._id, { active: false });
+  }
+  await recheckAuthority(ctx, args.reference, { capability: "admin", tenantId: args.reference.tenantId });
+  await ctx.db.insert("runtimeModelPolicies", { policyId: policy.policyId, version: policy.version, scope: "tenant", tenantId: policy.tenantId,
+    ...(policy.operationKey ? { operationKey: policy.operationKey } : {}), canonical: policyCanonical, root, actorReference: args.reference, active: true, createdAt: Date.now() });
+  return { policyId: policy.policyId, version: policy.version };
+} });
+
+async function runAccount(ctx: ReadCtx, reference: RuntimeAuthorityReference, runBudgetId: string): Promise<Account> {
+  const run = single(await ctx.db.query("runtimeBudgetAccounts").withIndex("by_run", (q) => q.eq("runBudgetId", runBudgetId)).take(2));
+  if (!run || run.kind !== "run" || !run.reference || !sameAuthority(run.reference, reference) || run.tenantId !== reference.tenantId) fail("FORBIDDEN");
+  return run;
+}
+/** Policy metadata only: no source writes, model admission or caller profile override. */
+export async function readCurrentEmbeddingProfile(ctx: ReadCtx, reference: RuntimeAuthorityReference,
+  operationKey: "embedding.memory" | "embedding.query", runBudgetId?: string) {
+  await currentAuthority(ctx, reference, operationKey);
+  const account = runBudgetId ? await runAccount(ctx, reference, runBudgetId) : undefined;
+  if (account) {
+    if (account.cancelled || !account.current) fail("RUN_CANCELLED");
+    await guardAgentRunBudget(ctx, reference, account._id);
+    await guardIngestionRunBudget(ctx, reference, account._id);
+  }
+  const current = await resolveCurrent(ctx, reference, operationKey, runBudgetId ?? "profile-metadata",
+    undefined, undefined, account?.agentId ? { agentId: account.agentId, version: account.agentVersion! } : undefined);
+  if (!current.snapshot.semanticProfile) fail("CAPABILITY_UNAVAILABLE");
+  assertSupportedEmbeddingProfile(current.snapshot.semanticProfile);
+  return current.snapshot.semanticProfile;
+}
+export const embeddingProfile = internalQuery({ args: { reference: runtimeAuthorityReference,
+  operationKey: v.union(v.literal("embedding.memory"), v.literal("embedding.query")), runBudgetId: v.optional(v.string()) },
+  handler: async (ctx, args) => readCurrentEmbeddingProfile(createAuthorityReadScope(ctx), args.reference, args.operationKey, args.runBudgetId) });
+const resolveArgs = { reference: runtimeAuthorityReference, operationKey: modelOperationKey, runBudgetId: v.string(), source: v.optional(modelSource), parentOperationId: v.optional(v.id("runtimeModelOperations")) };
+const _resolveInput = v.object(resolveArgs);
+/** Shared native body; each caller supplies its own current read snapshot. */
+export async function resolveHandler(ctx: ReadCtx, args: Infer<typeof _resolveInput>) {
+  await currentAuthority(ctx, args.reference, args.operationKey); const run = await runAccount(ctx, args.reference, args.runBudgetId);
+  const title = await completedContentTitle(ctx, args.reference, run._id, args.operationKey, args.parentOperationId);
+  await guardAgentRunBudget(ctx, args.reference, run._id, title);
+  await guardIngestionRunBudget(ctx, args.reference, run._id);
+  await guardContentRunBudget(ctx, args.reference, run._id, args.operationKey);
+  await checkSource(ctx, args.reference, args.operationKey, args.source);
+  if (args.parentOperationId) {
+    const parent = await ctx.db.get("runtimeModelOperations", args.parentOperationId);
+    if (!parent || parent.runAccountId !== run._id) fail("FORBIDDEN");
+    await currentOperation(ctx, args.reference, parent, false, true, false, title);
+  }
+  const resolved = await resolveCurrent(ctx, args.reference, args.operationKey, args.runBudgetId, args.source, args.parentOperationId, run.agentId ? { agentId: run.agentId, version: run.agentVersion! } : undefined);
+  await assertIngestionPolicyPin(ctx, run._id, args.operationKey, resolved.snapshot, true, true);
+  await assertContentPolicyPin(ctx, run._id, args.operationKey, resolved.snapshot, true, true);
+  return { snapshot: resolved.snapshot, dispatchEvidence: evidence(resolved.manifest, resolved.snapshot), storageLimits: { ...MODEL_LEDGER_STORAGE_LIMITS,
+    privateResultBytes: resolved.snapshot.semanticProfile?.profileId === LARGE_EMBEDDING_PROFILE.profileId ? 131_072 : MODEL_LEDGER_STORAGE_LIMITS.privateResultBytes } };
+}
+export const resolve = internalQuery({ args: resolveArgs, handler: (ctx, args) => resolveHandler(createAuthorityReadScope(ctx), args) });
+/** Full final request bytes, not caller estimates. Proof exists only in reviewed compiled root. */
+export function deriveQualifiedInputBound(proof: QualifiedDispatchEvidence, request: ReturnType<typeof validateModelRequest>["request"]): number {
+  if (request.outputTokens > proof.resultBound.maximumOutputTokens || (proof.nativeInterface === "embedding" && request.texts.length > proof.resultBound.maximumEmbeddingValues)) fail("POLICY_DENIED");
+  if (proof.inputBound.featureEnvelope === MEMORY_JSON_SCHEMA_CONTRACT.featureEnvelope || proof.inputBound.ruleId === MEMORY_JSON_SCHEMA_CONTRACT.inputRule) {
+    if (proof.inputBound.featureEnvelope !== MEMORY_JSON_SCHEMA_CONTRACT.featureEnvelope || proof.inputBound.ruleId !== MEMORY_JSON_SCHEMA_CONTRACT.inputRule
+      || proof.inputBound.revision !== 1 || proof.boundRevision !== MEMORY_JSON_SCHEMA_CONTRACT.boundRevision
+      || proof.nativeInterface !== "chat" || proof.modelId !== MEMORY_JSON_SCHEMA_CONTRACT.modelId
+      || (request.promptVersion !== MEMORY_JSON_SCHEMA_CONTRACT.promptVersion && request.promptVersion !== MEMORY_JSON_SCHEMA_V5_CONTRACT.promptVersion)
+      || request.schemaVersion !== MEMORY_JSON_SCHEMA_CONTRACT.schemaVersion
+      || request.toolRegistryVersion !== MEMORY_JSON_SCHEMA_CONTRACT.toolRegistryVersion || !request.responseFormat
+      || canonical(request.responseFormat) !== canonical(MEMORY_JSON_SCHEMA_CONTRACT.responseFormat) || canonical(request.outputSchema) !== canonical(FACTS_JSON_SCHEMA)
+      || request.tools.length || request.toolChoice || request.toolSteps || request.media || request.profile || request.batch
+      || canonical(request.options) !== '{"maxRetries":0}') fail("CAPABILITY_UNAVAILABLE");
+    return domainControl(() => memoryJsonSchemaInputBound(request.messages, request.outputTokens));
+  }
+  if (proof.inputBound.featureEnvelope === MEMORY_JSON_OBJECT_CONTRACT.featureEnvelope || proof.inputBound.ruleId === MEMORY_JSON_OBJECT_CONTRACT.inputRule) {
+    if (proof.inputBound.featureEnvelope !== MEMORY_JSON_OBJECT_CONTRACT.featureEnvelope || proof.inputBound.ruleId !== MEMORY_JSON_OBJECT_CONTRACT.inputRule
+      || proof.inputBound.revision !== 1 || proof.boundRevision !== MEMORY_JSON_OBJECT_CONTRACT.boundRevision
+      || proof.nativeInterface !== "chat" || proof.modelId !== MEMORY_JSON_OBJECT_CONTRACT.modelId
+      || request.promptVersion !== MEMORY_JSON_OBJECT_CONTRACT.promptVersion || request.schemaVersion !== MEMORY_JSON_OBJECT_CONTRACT.schemaVersion
+      || request.toolRegistryVersion !== MEMORY_JSON_OBJECT_CONTRACT.toolRegistryVersion || !request.responseFormat
+      || canonical(request.responseFormat) !== '{"type":"json"}' || canonical(request.outputSchema) !== canonical(FACTS_JSON_SCHEMA)
+      || request.tools.length || request.toolChoice || request.toolSteps || request.media || request.profile || request.batch
+      || canonical(request.options) !== '{"maxRetries":0}') fail("CAPABILITY_UNAVAILABLE");
+    return domainControl(() => memoryJsonObjectInputBound(request.messages, request.outputTokens));
+  }
+  if (request.responseFormat !== undefined || request.promptVersion === MEMORY_JSON_OBJECT_CONTRACT.promptVersion) fail("CAPABILITY_UNAVAILABLE");
+  if (proof.inputBound.ruleId === "media-native-utf8-v1" && (proof.inputBound.featureEnvelope === "media-image-v1" || proof.inputBound.featureEnvelope === "media-video-async-v1")) {
+    if (!request.media || !proof.mediaContract || request.messages?.length !== 1 || request.messages[0].role !== "user"
+      || request.messages[0].parts.length !== 1 || request.messages[0].parts[0].type !== "text" || request.messages[0].parts[0].text !== request.media.prompt
+      || canonical(request.options) !== canonical({ maxRetries: 0 })) fail("POLICY_DENIED");
+    return domainControl(() => mediaInputBound(request.media, proof.mediaContract, proof.modelId));
+  }
+  if (request.media) fail("CAPABILITY_UNAVAILABLE");
+  if (proof.nativeInterface === "video" && proof.inputBound.ruleId === "private-frame-video-json-v1"
+    && proof.inputBound.featureEnvelope === "private-frame-video-v1" && proof.inputBound.revision === 1) {
+    if (request.texts.length !== 1 || request.messages?.length !== 1 || request.messages[0].role !== "user"
+      || request.messages[0].parts.length !== 1 || request.messages[0].parts[0].type !== "text"
+      || request.messages[0].parts[0].text !== request.texts[0] || request.outputTokens || request.toolSteps
+      || request.tools.length || request.toolChoice || request.outputSchema || request.profile || request.batch
+      || canonical(request.options) !== canonical({ maxRetries: 0 })) fail("POLICY_DENIED");
+    return domainControl(() => privateFrameVideoInputBound(request.texts[0], proof.modelId));
+  }
+  const bytes = (value: string): number => {
+    for (const point of value) { const code = point.codePointAt(0)!; if (code >= 0xd800 && code <= 0xdfff) fail("INVALID_INPUT"); }
+    return new TextEncoder().encode(value).length;
+  };
+  if (proof.nativeInterface === "embedding" && ((proof.inputBound.ruleId === "default-embedding-utf8-v1" && proof.inputBound.featureEnvelope === "default-embedding-v1")
+    || (proof.inputBound.ruleId === "profile-embedding-utf8-v1" && proof.inputBound.featureEnvelope === "profile-embedding-v1"))) {
+    assertProfileMatches(request.profile!, proof.embeddingProfile ?? DEFAULT_EMBEDDING_PROFILE);
+    if (request.texts.length > 512) fail("POLICY_DENIED");
+    const counts = request.texts.map(bytes);
+    if (counts.some((n) => n > 8192) || add(...counts) > 300_000) fail("POLICY_DENIED");
+    return add(...counts);
+  }
+  if (proof.inputBound.ruleId === "agent-tools-chat-utf8-v1" && ["agent-tools-chat-v1", "agent-tools-chat-v2"].includes(proof.inputBound.featureEnvelope) && proof.nativeInterface === "chat") {
+    if (!request.messages || request.outputSchema || request.options.providerOptions || request.toolRegistryVersion !== proof.toolContract?.registryVersion
+      || !proof.toolContract || !agentToolCatalog(proof.toolContract.registryVersion) || proof.toolContract.toolsCanonical !== canonical(agentToolCatalog(proof.toolContract.registryVersion))
+        || ((proof.inputBound.featureEnvelope === "agent-tools-chat-v1") !== (proof.toolContract.registryVersion === AGENT_TOOL_REGISTRY_VERSION))
+      || request.toolSteps > proof.toolContract.maximumToolCalls) fail("CAPABILITY_UNAVAILABLE");
+    for (const tool of request.tools) {
+      const expected = agentToolCatalog(request.toolRegistryVersion)?.find(entry => entry.name === tool.name);
+      if (!expected || canonical(tool.definition) !== canonical({ description: expected.description, inputSchema: expected.inputSchema })) fail("POLICY_DENIED");
+    }
+    return (request.toolRegistryVersion === AGENT_TOOL_REGISTRY_VERSION_V2 ? agentToolsInputBoundV2 : agentToolsInputBound)(canonical({ messages: request.messages, tools: request.tools, ...request.toolChoice ? { toolChoice: request.toolChoice } : {} }), request.messages.length, request.tools.length);
+  }
+  if (proof.inputBound.ruleId !== "plain-chat-cookbook-utf8-v1" || proof.inputBound.featureEnvelope !== "plain-chat-v1" || proof.nativeInterface !== "chat"
+    || !request.messages || request.tools.length || request.options.providerOptions) fail("CAPABILITY_UNAVAILABLE");
+  // This envelope carries a semantic schema for strict backend parsing, not a
+  // provider response_format. Only the two fixed, versioned operation schemas
+  // are permitted; they are not sent to the native plain-chat endpoint.
+  if (request.outputSchema !== undefined) {
+    const expected = request.schemaVersion === "facts-v1" ? FACTS_JSON_SCHEMA
+      : request.schemaVersion === "conflicts-v1" ? CONFLICT_DECISION_JSON_SCHEMA : undefined;
+    if (!expected || canonical(request.outputSchema) !== canonical(expected)) fail("CAPABILITY_UNAVAILABLE");
+  }
+  let bound = 3;
+  for (const message of request.messages) {
+    const part = message.parts[0];
+    if (message.role === "tool" || message.parts.length !== 1 || !part || part.type !== "text") fail("CAPABILITY_UNAVAILABLE");
+    bound = add(bound, 3, bytes(message.role), bytes(part.text));
+  }
+  return integer(bound, 1);
+}
+const admitArgs = { ...resolveArgs, semanticId: v.string(), ordinal: v.number(), requestCanonical: v.string() };
+const _admissionValidator = v.object(admitArgs);
+export type AdmitModelArgs = Infer<typeof _admissionValidator>;
+export async function admitHandler(ctx: MutationCtx, args: Infer<typeof _admissionValidator>) {
+  await currentAuthority(ctx, args.reference, args.operationKey); integer(args.ordinal); text(args.semanticId);
+  await checkSource(ctx, args.reference, args.operationKey, args.source);
+  const run = await runAccount(ctx, args.reference, args.runBudgetId);
+  const title = await completedContentTitle(ctx, args.reference, run._id, args.operationKey, args.parentOperationId, args.semanticId);
+  await guardAgentRunBudget(ctx, args.reference, run._id, title);
+  await guardIngestionRunBudget(ctx, args.reference, run._id);
+  await guardContentRunBudget(ctx, args.reference, run._id, args.operationKey);
+  if (args.parentOperationId) {
+    const parent = await ctx.db.get("runtimeModelOperations", args.parentOperationId);
+    if (!parent || parent.runAccountId !== run._id) fail("FORBIDDEN");
+    await currentOperation(ctx, args.reference, parent, false, true, false, title);
+  }
+  let operation = single(await ctx.db.query("runtimeModelOperations").withIndex("by_identity", (q) => q.eq("tenantId", args.reference.tenantId)
+    .eq("memorySpaceId", args.reference.memorySpaceId!).eq("principalId", args.reference.principalId).eq("semanticId", args.semanticId).eq("operationKey", args.operationKey)).take(2));
+  const binding = canonical({ reference: args.reference, operationKey: args.operationKey, semanticId: args.semanticId, runAccountId: run._id,
+    ...(args.source ? { source: args.source } : {}), ...(args.parentOperationId ? { parentOperationId: args.parentOperationId } : {}) });
+  const bindingHash = await semanticHash(binding);
+  const resolved = operation ? { ...(await currentOperation(ctx, args.reference, operation)), resolutionCanonical: operation.resolutionCanonical } :
+    await resolveCurrent(ctx, args.reference, args.operationKey, args.runBudgetId, args.source, args.parentOperationId, run.agentId ? { agentId: run.agentId, version: run.agentVersion! } : undefined);
+  if (operation) assertModelRequestIdentity({ canonical: operation.identityCanonical, hash: operation.identityHash }, { canonical: binding, hash: bindingHash });
+  const snapshot = resolved.snapshot;
+  const effectiveSnapshot = "current" in resolved ? resolved.current.snapshot : snapshot;
+  await assertIngestionPolicyPin(ctx, run._id, args.operationKey, effectiveSnapshot, false, true);
+  await assertContentPolicyPin(ctx, run._id, args.operationKey, effectiveSnapshot, false, true);
+  const root = "root" in resolved ? resolved.root : run.root;
+  const manifest = await trustedRoot(root);
+  const proof = evidence(manifest, snapshot);
+  assertCurrentEvidence(proof);
+  const raw = decode(args.requestCanonical);
+  if (!raw || typeof raw !== "object" || Array.isArray(raw)) fail("INVALID_INPUT");
+  const request = raw as Record<string, unknown>;
+  const childCallId = await semanticHash(canonical([bindingHash, args.ordinal]));
+  const preliminary = validateModelRequest(snapshot, { ...request, semanticId: args.semanticId, childCallId, inputTokens: 1, reservationUnits: snapshot.costBound.maximumCostUnits });
+  const bounded = { ...preliminary.request, inputTokens: deriveQualifiedInputBound(proof, preliminary.request) };
+  const validated = validateModelRequest(snapshot, bounded);
+  validateModelRequest({ ...snapshot, limits: effectiveSnapshot.limits, allowedOptions: effectiveSnapshot.allowedOptions, allowedTools: effectiveSnapshot.allowedTools }, validated.request);
+  if ((args.operationKey === "agent.respond" && args.ordinal > snapshot.limits.toolSteps)
+    || (validated.request.batch && validated.request.batch.ordinal !== args.ordinal)) fail("POLICY_DENIED");
+  const requestHash = await semanticHash(validated.canonical);
+  if (operation) {
+    const attempts = await ctx.db.query("runtimeModelAttempts").withIndex("by_child_attempt", (q) => q.eq("operationDocumentId", operation!._id).eq("childCallId", childCallId)).take(65);
+    if (attempts.length > 64 || new Set(attempts.map((entry) => entry.attemptNumber)).size !== attempts.length) fail("POLICY_DENIED");
+    const existing = attempts.sort((a, b) => b.attemptNumber - a.attemptNumber)[0];
+    if (existing) {
+      if (capturedAttempt(existing) && await semanticHash(existing.terminalEvidenceCanonical!) !== existing.terminalEvidenceHash) fail("POLICY_DENIED", "uncertain");
+      const priorSnapshot = attemptSnapshot(existing, operation, manifest);
+      assertCurrentEvidence(evidence(manifest, priorSnapshot));
+      const incoming = validateModelRequest(priorSnapshot, { ...validated.request, inputTokens: deriveQualifiedInputBound(evidence(manifest, priorSnapshot), validated.request), reservationUnits: priorSnapshot.costBound.maximumCostUnits });
+      assertModelRequestIdentity({ canonical: existing.canonical, hash: existing.hash }, { canonical: incoming.canonical, hash: await semanticHash(incoming.canonical) });
+      if ((existing.state === "settled" || retainedConfirmedUnknown(existing, priorSnapshot, evidence(manifest, priorSnapshot)))
+        && existing.privateResultCanonical && !existing.resultWithheld
+        && !storedObservationViolation(existing, priorSnapshot, evidence(manifest, priorSnapshot))) return { status: "replay" as const, operationId: operation._id, resultCanonical: existing.privateResultCanonical };
+      if (existing.state === "settled" || existing.state === "confirmed_rejected" || existing.state === "not_dispatched") fail("CAPABILITY_UNAVAILABLE");
+      if (existing.state === "uncertain" || existing.state === "dispatch_pending") return { status: "uncertain" as const, operationId: operation._id, attemptId: existing._id, replayAllowed: false as const };
+      return { status: "inflight" as const, operationId: operation._id, attemptId: existing._id };
+    }
+  }
+  const tenant = single(await ctx.db.query("runtimeBudgetAccounts").withIndex("by_scope_current", (q) => q.eq("scopeKey", canonical(["tenant", args.reference.tenantId])).eq("current", true)).take(2));
+  if (!tenant || tenant.windowId !== run.windowId || !(await sameRoot(tenant.root, root))) fail("BUDGET_EXCEEDED");
+  const ceiling = snapshot.costBound.maximumCostUnits;
+  const admission = { version: 1 as const, origin: "unreserved-admission" as const, operationKey: args.operationKey,
+    runBudgetId: args.runBudgetId, semanticId: args.semanticId, ordinal: args.ordinal };
+  capacity(tenant, ceiling, effectiveSnapshot.limits.tenantBudgetUnits, effectiveSnapshot.limits.concurrency, admission);
+  capacity(run, ceiling, effectiveSnapshot.limits.runBudgetUnits, effectiveSnapshot.limits.concurrency, admission);
+  if (operation && (operation.overrun || operation.cancelled || add(operation.reservedUnits, operation.settledUnits, operation.uncertainUnits, ceiling) > Math.min(snapshot.limits.operationBudgetUnits, effectiveSnapshot.limits.operationBudgetUnits))) fail("BUDGET_EXCEEDED");
+  await finalActor(ctx, args.reference, args.operationKey);
+  if (proof.checkedAt > Date.now() || Date.now() >= proof.expiresAt) fail("CAPABILITY_UNAVAILABLE");
+  if (!operation) {
+    const operationDocumentId = await ctx.db.insert("runtimeModelOperations", { operationId: bindingHash, reference: args.reference, tenantId: args.reference.tenantId,
+      memorySpaceId: args.reference.memorySpaceId!, principalId: args.reference.principalId, semanticId: args.semanticId, operationKey: args.operationKey, runAccountId: run._id,
+      ...(args.source ? { source: args.source } : {}), ...(args.parentOperationId ? { parentOperationId: args.parentOperationId } : {}),
+      resolutionCanonical: resolved.resolutionCanonical, snapshotCanonical: canonical(snapshot), identityCanonical: binding, identityHash: bindingHash,
+      reservedUnits: 0, settledUnits: 0, uncertainUnits: 0, overrun: false, cancelled: false, createdAt: Date.now() });
+    operation = (await ctx.db.get("runtimeModelOperations", operationDocumentId))!;
+  }
+  const attemptId = await ctx.db.insert("runtimeModelAttempts", { operationDocumentId: operation._id, childCallId, ordinal: args.ordinal, attemptNumber: 1,
+    canonical: validated.canonical, hash: requestHash, resolutionCanonical: resolved.resolutionCanonical, snapshotCanonical: canonical(snapshot), inputProofCanonical: canonical({ proof, requestCanonical: canonical(validated.request), inputTokens: validated.request.inputTokens, outputTokens: validated.request.outputTokens }),
+    measuredInputTokens: validated.request.inputTokens, maximumOutputTokens: validated.request.outputTokens, tenantAccountId: tenant._id, runAccountId: run._id, reservationUnits: ceiling, state: "reserved", dispatchIdentity: await semanticHash(canonical([bindingHash, childCallId, 1])),
+    slotReleased: false, outputVisible: false, toolInputVisible: false, toolResultVisible: false, toolEffectCommitted: false, resultWithheld: false, createdAt: Date.now() });
+  for (const account of [tenant, run]) await ctx.db.patch("runtimeBudgetAccounts", account._id,
+    { reservedUnits: add(account.reservedUnits, ceiling), activeConcurrency: add(account.activeConcurrency, 1), version: add(account.version, 1) });
+  await ctx.db.patch("runtimeModelOperations", operation._id, { reservedUnits: add(operation.reservedUnits, ceiling) });
+  return { status: "reserved" as const, operationId: operation._id, attemptId, snapshot, requestCanonical: canonical(validated.request) };
+}
+export const admit = internalMutation({ args: admitArgs, handler: (ctx, args) => admitHandler(createAuthorityReadScope(ctx), args) });
+
+/** A scheduler may wait ONLY for a never-reserved identity. An error envelope alone
+ * is not proof: re-read the exact job/source/account/policy and the native ledger.
+ * This helper neither reserves a slot nor changes a liability or authorization. */
+export async function assertUnreservedIngestionCapacity(ctx: ReadCtx, reference: RuntimeAuthorityReference,
+  refusal: UnreservedCapacityRefusal, source: Source, parentOperationId?: Id<"runtimeModelOperations">): Promise<number> {
+  if (refusal.origin !== "unreserved-admission" || refusal.reason !== "concurrency" || refusal.ordinal !== 0) fail("RETRY_NOT_SAFE");
+  await currentAuthority(ctx, reference, refusal.operationKey);
+  await checkSource(ctx, reference, refusal.operationKey, source);
+  const run = await runAccount(ctx, reference, refusal.runBudgetId);
+  await guardIngestionRunBudget(ctx, reference, run._id);
+  const existing = single(await ctx.db.query("runtimeModelOperations").withIndex("by_identity", q => q.eq("tenantId", reference.tenantId)
+    .eq("memorySpaceId", reference.memorySpaceId!).eq("principalId", reference.principalId).eq("semanticId", refusal.semanticId)
+    .eq("operationKey", refusal.operationKey)).take(2));
+  // Includes reserved, held, cancelled, confirmed and UNKNOWN operations.
+  if (existing) fail("RETRY_NOT_SAFE");
+  const resolved = await resolveCurrent(ctx, reference, refusal.operationKey, refusal.runBudgetId, source, parentOperationId);
+  await assertIngestionPolicyPin(ctx, run._id, refusal.operationKey, resolved.snapshot, false, true);
+  const tenant = single(await ctx.db.query("runtimeBudgetAccounts").withIndex("by_scope_current", q => q.eq("scopeKey", canonical(["tenant", reference.tenantId])).eq("current", true)).take(2));
+  if (!tenant || tenant.windowId !== run.windowId || !(await sameRoot(tenant.root, resolved.root))) fail("BUDGET_EXCEEDED");
+  for (const [account, limit] of [[tenant, resolved.snapshot.limits.tenantBudgetUnits], [run, resolved.snapshot.limits.runBudgetUnits]] as const) {
+    const reason = capacityReason(account, resolved.snapshot.costBound.maximumCostUnits, limit, resolved.snapshot.limits.concurrency);
+    if (reason && reason !== "concurrency") fail("BUDGET_EXCEEDED");
+  }
+  await finalActor(ctx, reference, refusal.operationKey);
+  return Math.min(run.windowEnd, tenant.windowEnd, evidence(resolved.manifest, resolved.snapshot).expiresAt);
+}
+
+function attemptSnapshot(attempt: Attempt, operation: Operation, manifest: DeploymentPolicyManifest): ModelPolicySnapshotV1 {
+  const base = snapshotOf(operation);
+  if (attempt.resolutionCanonical !== operation.resolutionCanonical) fail("POLICY_DENIED");
+  let snapshot = base;
+  if (attempt.fallbackModelId) {
+    if (!attempt.priorAttemptId || !base.fallbackCandidates.some((candidate) => candidate.modelId === attempt.fallbackModelId)) fail("POLICY_DENIED");
+    const qualification = single(manifest.qualifications.filter((entry) => entry.modelId === attempt.fallbackModelId && entry.nativeInterface === base.nativeInterface
+      && base.fallbackCandidates.some((candidate) => candidate.qualificationReceiptId === entry.receiptId)));
+    if (!qualification) fail("CAPABILITY_UNAVAILABLE");
+    snapshot = { ...base, modelId: qualification.modelId, qualificationReceiptId: qualification.receiptId, costBound: qualification.costBound };
+  } else if (attempt.priorAttemptId) fail("POLICY_DENIED");
+  if (canonical(snapshot) !== attempt.snapshotCanonical || snapshot.costBound.maximumCostUnits !== attempt.reservationUnits) fail("POLICY_DENIED");
+  return snapshot;
+}
+async function attemptContext(ctx: ReadCtx, attemptId: Id<"runtimeModelAttempts">) {
+  const attempt = await ctx.db.get("runtimeModelAttempts", attemptId);
+  if (!attempt) fail("FORBIDDEN");
+  const operation = await ctx.db.get("runtimeModelOperations", attempt.operationDocumentId);
+  const tenant = await ctx.db.get("runtimeBudgetAccounts", attempt.tenantAccountId);
+  const run = await ctx.db.get("runtimeBudgetAccounts", attempt.runAccountId);
+  if (!operation || !tenant || !run || run._id !== operation.runAccountId || tenant.tenantId !== operation.tenantId || run.tenantId !== operation.tenantId
+    || tenant.windowId !== run.windowId || tenant.kind !== "tenant" || run.kind !== "run") fail("FORBIDDEN");
+  balanced(tenant); balanced(run); integer(attempt.reservationUnits, 1);
+  if (!run.reference || !sameAuthority(run.reference, operation.reference)) fail("POLICY_DENIED");
+  const manifest = await trustedRoot(run.root);
+  const snapshot = attemptSnapshot(attempt, operation, manifest); const proof = evidence(manifest, snapshot);
+  if (capturedAttempt(attempt) && await semanticHash(attempt.terminalEvidenceCanonical!) !== attempt.terminalEvidenceHash) fail("POLICY_DENIED", "uncertain");
+  return { attempt, operation, tenant, run, snapshot, proof };
+}
+const attemptArgs = { reference: runtimeAuthorityReference, attemptId: v.id("runtimeModelAttempts") };
+const checkpointArgs = { ...attemptArgs, requestCanonical: v.string() };
+const _checkpointValidator = v.object(checkpointArgs);
+export async function checkpointHandler(ctx: MutationCtx, args: Infer<typeof _checkpointValidator>) {
+  const { attempt, operation, snapshot, proof, run, tenant } = await attemptContext(ctx, args.attemptId);
+  const checked = await currentOperation(ctx, args.reference, operation);
+  if (Date.now() >= run.windowEnd) fail("BUDGET_EXCEEDED");
+  if (!checked.current.snapshot.allowedModels.includes(snapshot.modelId) || checked.current.snapshot.nativeInterface !== snapshot.nativeInterface
+    || !checked.current.manifest.qualifications.some((q) => q.receiptId === snapshot.qualificationReceiptId && q.modelId === snapshot.modelId && q.nativeInterface === snapshot.nativeInterface
+      && q.priceRevision === snapshot.pins.priceRevision && q.boundRevision === snapshot.pins.boundRevision)) fail("POLICY_DENIED");
+  const raw = decode(args.requestCanonical);
+  if (!raw || typeof raw !== "object" || Array.isArray(raw)) fail("INVALID_INPUT");
+  const request = raw as Record<string, unknown>;
+  if (request.semanticId !== operation.semanticId || request.childCallId !== attempt.childCallId || request.inputTokens !== deriveQualifiedInputBound(proof, validateModelRequest(snapshot, request).request)
+    || request.reservationUnits !== attempt.reservationUnits) fail("IDEMPOTENCY_CONFLICT");
+  const validated = validateModelRequest(snapshot, request);
+  validateModelRequest({ ...snapshot, limits: checked.current.snapshot.limits, allowedOptions: checked.current.snapshot.allowedOptions, allowedTools: checked.current.snapshot.allowedTools }, validated.request);
+  if (attempt.measuredInputTokens !== validated.request.inputTokens || attempt.maximumOutputTokens !== validated.request.outputTokens || attempt.inputProofCanonical !== canonical({ proof, requestCanonical: canonical(validated.request), inputTokens: validated.request.inputTokens, outputTokens: validated.request.outputTokens })) fail("POLICY_DENIED");
+  assertModelRequestIdentity({ canonical: attempt.canonical, hash: attempt.hash }, { canonical: validated.canonical, hash: await semanticHash(validated.canonical) });
+  if (attempt.state !== "reserved") return { dispatchPermit: false as const, state: attempt.state, replayAllowed: false as const };
+  // This attempt already holds its reservation/slot. Fence aggregate live liability
+  // against both pinned and current limits without adding that reservation twice.
+  const pinned = snapshotOf(operation).limits; const current = checked.current.snapshot.limits;
+  if (operation.overrun || add(operation.reservedUnits, operation.uncertainUnits, operation.settledUnits) > Math.min(pinned.operationBudgetUnits, current.operationBudgetUnits)) fail("BUDGET_EXCEEDED");
+  heldCapacity(tenant, Math.min(pinned.tenantBudgetUnits, current.tenantBudgetUnits), Math.min(pinned.concurrency, current.concurrency));
+  heldCapacity(run, Math.min(pinned.runBudgetUnits, current.runBudgetUnits), Math.min(pinned.concurrency, current.concurrency));
+  if (attempt.fallbackModelId) {
+    const prior = await attemptContext(ctx, attempt.priorAttemptId!);
+    if (prior.operation._id !== operation._id || prior.attempt.childCallId !== attempt.childCallId
+      || !fallbackAllowed(prior.attempt, operation, prior.snapshot, attempt.fallbackModelId)
+      || !fallbackAllowed(prior.attempt, operation, checked.current.snapshot, attempt.fallbackModelId)) fail("POLICY_DENIED");
+  }
+  await finalActor(ctx, args.reference, operation.operationKey);
+  if (proof.checkedAt > Date.now() || Date.now() >= proof.expiresAt) fail("CAPABILITY_UNAVAILABLE");
+  await ctx.db.patch("runtimeModelAttempts", attempt._id, { state: "dispatch_pending", checkpointAt: Date.now() });
+  return { dispatchPermit: true as const, dispatchIdentity: attempt.dispatchIdentity, snapshot, requestCanonical: canonical(validated.request) };
+}
+export const checkpoint = internalMutation({ args: checkpointArgs, handler: (ctx, args) => checkpointHandler(createAuthorityReadScope(ctx), args) });
+/** Explicit query-recall child only. Same original checkpoint/savepoint and mutable
+ * accounting reads; retain only native raw control/message/graph rows in this invocation. */
+export const checkpointRecall = internalMutation({ args: checkpointArgs,
+  handler: (ctx, args) => checkpointHandler(createMemorySourceReadScope(ctx), args) });
+export const markVisible = internalMutation({ args: { ...attemptArgs, ...visibilityFields }, handler: async (nativeCtx, args) => {
+  // Raw ancestry may repeat inside this one native fence. Every delta still
+  // re-enters currentOperation with fresh invocation-local readers.
+  const ctx = createMemorySourceReadScope(nativeCtx);
+  const { attempt, operation } = await attemptContext(ctx, args.attemptId);
+  await currentOperation(ctx, args.reference, operation);
+  if (attempt.state !== "dispatch_pending" && attempt.state !== "uncertain") fail("POLICY_DENIED");
+  const visible = { outputVisible: attempt.outputVisible || args.outputVisible,
+    toolInputVisible: attempt.toolInputVisible || args.toolInputVisible, toolResultVisible: attempt.toolResultVisible || args.toolResultVisible,
+    toolEffectCommitted: attempt.toolEffectCommitted || args.toolEffectCommitted };
+  // All current fences above still run on every delta, even a monotone no-op.
+  if (Object.entries(visible).some(([key, value]) => attempt[key as keyof typeof visible] !== value)) await ctx.db.patch("runtimeModelAttempts", attempt._id, visible);
+  return { recorded: true };
+} });
+const terminalIdentifier = z.string().min(1).max(256).refine((value) => value.trim() === value
+  && ![...value].some((point) => { const code = point.codePointAt(0)!; return code >= 0xd800 && code <= 0xdfff; }));
+const receiptSchema = z.object({ version: z.literal(1), dispatchIdentity: terminalIdentifier, receiptId: terminalIdentifier, modelId: terminalIdentifier,
+  nativeInterface, outcome: z.enum(["confirmed", "confirmed_rejected"]), proof: z.literal("provider-terminal-v1"),
+  costSource: z.enum(["gateway-aggregate-usd-v1", "unavailable"]), aggregateCostUsd: z.string().regex(/^\d+(?:\.\d+)?$/).optional(),
+  usage: z.object({ inputTokens: count.optional(), outputTokens: count.optional(), totalTokens: count.optional(), cachedInputTokens: count.optional(), reasoningTokens: count.optional() }).strict().optional(),
+  media: z.object({ jobId: terminalIdentifier, status: z.enum(["completed", "failed", "cancelled", "expired"]), contentHash: z.string().regex(/^[a-f0-9]{64}$/).optional(), sizeBytes: count.optional(), mimeType: z.enum(["image/png", "video/mp4", "video/webm"]).optional() }).strict().optional(),
+  actualModel: terminalIdentifier.optional(), privateResultCanonical: z.string().optional() }).strict();
+/** Decimal exact arithmetic, round liability upward to a micro-USD. */
+export function costMicroUnits(usd: string): number {
+  if (!/^\d+(?:\.\d+)?$/.test(usd) || usd.length > 80) fail("INVALID_INPUT");
+  const [whole, fractional = ""] = usd.split(".");
+  const scale = 10n ** BigInt(fractional.length);
+  const numerator = BigInt(whole!) * scale + BigInt(fractional || "0");
+  const cost = (numerator * 1_000_000n + scale - 1n) / scale;
+  if (cost > BigInt(Number.MAX_SAFE_INTEGER)) fail("INVALID_INPUT");
+  return Number(cost);
+}
+async function permittedResult(ctx: ReadCtx, reference: RuntimeAuthorityReference, operation: Operation): Promise<boolean> {
+  try { const checked = await currentOperation(ctx, reference, operation, true); return !operation.cancelled && !checked.run.cancelled; }
+  catch { return false; }
+}
+async function writeUnknown(ctx: WriteCtx, state: Awaited<ReturnType<typeof attemptContext>>, terminalCanonical?: string) {
+  const { attempt, operation, tenant, run } = state;
+  if (capturedAttempt(attempt)) return { state: attempt.state, replayAllowed: false as const };
+  if (attempt.state === "settled" || attempt.state === "not_dispatched" || attempt.state === "confirmed_rejected") return { state: attempt.state, replayAllowed: false as const };
+  if (attempt.state === "reserved") fail("POLICY_DENIED");
+  const newlyUnknown = attempt.state !== "uncertain";
+  const release = Boolean(terminalCanonical) && !attempt.slotReleased;
+  const observation = terminalCanonical ? receiptSchema.safeParse(decode(terminalCanonical)) : undefined;
+  const overrun = observation?.success === true && observationViolation(attempt, state.snapshot, observation.data, state.proof);
+  for (const account of [tenant, run]) await ctx.db.patch("runtimeBudgetAccounts", account._id, {
+    reservedUnits: newlyUnknown ? subtract(account.reservedUnits, attempt.reservationUnits) : account.reservedUnits,
+    uncertainUnits: newlyUnknown ? add(account.uncertainUnits, attempt.reservationUnits) : account.uncertainUnits,
+    activeConcurrency: release ? subtract(account.activeConcurrency, 1) : account.activeConcurrency, overrun: account.overrun || overrun, version: add(account.version, 1),
+  });
+  await ctx.db.patch("runtimeModelOperations", operation._id, {
+    reservedUnits: newlyUnknown ? subtract(operation.reservedUnits, attempt.reservationUnits) : operation.reservedUnits,
+    uncertainUnits: newlyUnknown ? add(operation.uncertainUnits, attempt.reservationUnits) : operation.uncertainUnits, overrun: operation.overrun || overrun,
+  });
+  await ctx.db.patch("runtimeModelAttempts", attempt._id, { state: "uncertain", resultWithheld: true, slotReleased: attempt.slotReleased || release,
+    ...(terminalCanonical ? { terminalEvidenceCanonical: terminalCanonical } : {}),
+    ...(observation?.success === true && observation.data.actualModel !== undefined ? { actualModel: observation.data.actualModel } : {}) });
+  return { state: "uncertain" as const, replayAllowed: false as const };
+}
+async function liabilityAuthority(ctx: ReadCtx, reference: RuntimeAuthorityReference, operation: Operation) {
+  const authority = await recheckAuthority(ctx, reference, { capability: "admin", tenantId: operation.tenantId, memorySpaceId: operation.memorySpaceId });
+  if (authority.resourceAccess === "own" && authority.principalId !== operation.principalId) fail("FORBIDDEN");
+}
+function validatedPrivateResult(snapshot: ModelPolicySnapshotV1, attempt: Attempt, encoded?: string): string | undefined {
+  if (!encoded || new TextEncoder().encode(encoded).length > (snapshot.semanticProfile?.profileId === LARGE_EMBEDDING_PROFILE.profileId ? 131_072 : MODEL_LEDGER_STORAGE_LIMITS.privateResultBytes)) return undefined;
+  try {
+    const result = decode(encoded);
+    if (snapshot.nativeInterface === "chat" && !snapshot.semanticProfile) {
+      if (snapshot.capabilities.includes("tools")) {
+        const original = decode(attempt.canonical);
+        if (!original || typeof original !== "object" || Array.isArray(original)) return undefined;
+        const request = validateModelRequest(snapshot, (original as Record<string, unknown>).request).request;
+        const allowed = request.toolChoice?.type === "none" ? [] : request.tools.map(tool => tool.name);
+        const parsed = parseAgentLanguageResult(result, allowed, request.toolSteps);
+        const choice = request.toolChoice;
+        if (!parsed || canonical(parsed) !== encoded || ((request.toolChoice?.type === "required" || request.toolChoice?.type === "tool") && parsed.finishReason !== "tool-calls")
+          || (choice?.type === "tool" && parsed.content.some(part => part.type === "tool-call" && part.toolName !== choice.toolName))) return undefined;
+      } else if (!z.object({ text: z.string().min(1) }).strict().safeParse(result).success) return undefined;
+    } else if (snapshot.nativeInterface === "embedding" && snapshot.semanticProfile) {
+      const parsed = z.object({ profile: z.object({ profileId: z.string(), modelId: z.string(), dimensions: count, normalization: z.string(), chunking: z.string(), indexName: z.string() }).strict(),
+        vectors: z.array(z.array(z.number().finite())) }).strict().safeParse(result);
+      if (!parsed.success) return undefined;
+      assertProfileMatches(parsed.data.profile, snapshot.semanticProfile);
+      const original = decode(attempt.canonical);
+      if (!original || typeof original !== "object" || Array.isArray(original)) return undefined;
+      const request = validateModelRequest(snapshot, (original as Record<string, unknown>).request).request;
+      if (parsed.data.vectors.length !== request.texts.length) return undefined;
+      parsed.data.vectors.forEach((vector) => assertEmbeddingVector(vector, snapshot.semanticProfile));
+    } else if (snapshot.nativeInterface === "image" || snapshot.nativeInterface === "video") {
+      const parsed = mediaResultSchema.safeParse(result);
+      const terminal = attempt.terminalEvidenceCanonical && receiptSchema.safeParse(decode(attempt.terminalEvidenceCanonical));
+      const original = decode(attempt.canonical) as { request?: { semanticId?: string } };
+      if (!parsed.success || !terminal || !terminal.success || terminal.data.media?.status !== "completed"
+        || parsed.data.jobId !== original.request?.semanticId || parsed.data.jobId !== terminal.data.media.jobId
+        || parsed.data.contentHash !== terminal.data.media.contentHash || parsed.data.sizeBytes !== terminal.data.media.sizeBytes
+        || parsed.data.mimeType !== terminal.data.media.mimeType || (snapshot.nativeInterface === "image") !== (parsed.data.mimeType === "image/png")) return undefined;
+    } else return undefined;
+    return encoded;
+  } catch { return undefined; }
+}
+type TerminalReceipt = z.infer<typeof receiptSchema>;
+type AttemptContext = Awaited<ReturnType<typeof attemptContext>>;
+function completeExtractionUsage(snapshot: ModelPolicySnapshotV1, receipt: Pick<TerminalReceipt, "usage">): boolean {
+  return snapshot.operationKey !== "memory.extract" || (receipt.usage?.inputTokens !== undefined && receipt.usage.outputTokens !== undefined);
+}
+/** Serving observations are qualification facts independently of monetary support. */
+function observationViolation(attempt: Attempt, snapshot: ModelPolicySnapshotV1, receipt: Pick<TerminalReceipt, "actualModel" | "usage">, proof: QualifiedDispatchEvidence): boolean {
+  integer(attempt.measuredInputTokens, 1); integer(attempt.maximumOutputTokens);
+  return (receipt.actualModel !== undefined && receipt.actualModel !== qualifiedTerminalModelId(proof))
+    || (receipt.usage?.inputTokens !== undefined && receipt.usage.inputTokens > attempt.measuredInputTokens)
+    || (receipt.usage?.outputTokens !== undefined && receipt.usage.outputTokens > attempt.maximumOutputTokens);
+}
+/** Defense in depth for captured rows: neither privacy markers nor false account flags
+ * can hide initial/final serving observations. Corrupt evidence grants no privilege.
+ * Inspection is local; unexpected authority/repository read errors still propagate.
+ */
+function storedObservationViolation(attempt: Attempt, snapshot: ModelPolicySnapshotV1, proof: QualifiedDispatchEvidence): boolean {
+  if (snapshot.operationKey === "memory.extract" && attempt.privateResultCanonical !== undefined
+    && attempt.terminalEvidenceCanonical === undefined && attempt.receiptCanonical === undefined) return true;
+  if (observationViolation(attempt, snapshot, { actualModel: attempt.actualModel }, proof)
+    || (attempt.settledCostUnits !== undefined && attempt.settledCostUnits > attempt.reservationUnits)) return true;
+  for (const encoded of [attempt.terminalEvidenceCanonical, attempt.receiptCanonical]) {
+    if (encoded === undefined) continue;
+    const parsed = receiptSchema.omit({ privateResultCanonical: true }).safeParse(decode(encoded));
+    if (!parsed.success || parsed.data.dispatchIdentity !== attempt.dispatchIdentity || parsed.data.modelId !== snapshot.modelId
+      || parsed.data.nativeInterface !== snapshot.nativeInterface || !completeExtractionUsage(snapshot, parsed.data)
+      || observationViolation(attempt, snapshot, parsed.data, proof)) return true;
+  }
+  return false;
+}
+
+/** A partial capture marker is corruption, never a legacy privilege bypass. */
+function capturedAttempt(attempt: Attempt): boolean {
+  const hashPresent = attempt.terminalEvidenceHash !== undefined;
+  const statePresent = attempt.resultAttachmentState !== undefined;
+  if (hashPresent !== statePresent || (hashPresent && (!attempt.terminalEvidenceCanonical || !digest.test(attempt.terminalEvidenceHash!)))) fail("POLICY_DENIED", "uncertain");
+  return hashPresent;
+}
+function knownCost(receipt: TerminalReceipt, proof: QualifiedDispatchEvidence): number | undefined {
+  if (proof.terminalCost !== "gateway-aggregate-usd-v1" || receipt.costSource !== proof.terminalCost || receipt.aggregateCostUsd === undefined) return undefined;
+  try { return costMicroUnits(receipt.aggregateCostUsd); } catch { return undefined; }
+}
+/** Complete serving evidence and unknown money are separate facts. Only a compiled
+ * intentionally unavailable-cost proof with a qualified full-call ceiling can
+ * retain output; a lost expected-known cost or ambiguous terminal cannot. */
+function confirmedUnknownResult(attempt: Attempt, snapshot: ModelPolicySnapshotV1, receipt: TerminalReceipt, proof: QualifiedDispatchEvidence): boolean {
+  if (snapshot.nativeInterface === "image" || snapshot.nativeInterface === "video") {
+    const contract = proof.mediaContract;
+    const original = decode(attempt.canonical) as { request?: { semanticId?: string; media?: unknown } };
+    const media = receipt.media;
+    return !!contract && !!media && original.request?.media !== undefined && media.jobId === original.request.semanticId
+      && media.status === "completed" && media.contentHash !== undefined && media.sizeBytes !== undefined
+      && media.sizeBytes > 0 && media.sizeBytes <= contract.maximumResultBytes
+      && (snapshot.nativeInterface === "image" ? media.mimeType === "image/png" : ["video/mp4", "video/webm"].includes(media.mimeType ?? ""))
+      && (contract.terminalIdentity === "requested-only" ? receipt.actualModel === undefined : receipt.actualModel === qualifiedTerminalModelId(proof))
+      && (contract.usage === "optional" || receipt.usage?.inputTokens !== undefined)
+      && proof.terminalCost === "unavailable" && receipt.costSource === "unavailable" && receipt.aggregateCostUsd === undefined
+      && snapshot.costBound.coversAllProviderCharges && snapshot.costBound.maximumCostUnits === attempt.reservationUnits
+      && proof.checkedAt <= Date.now() && Date.now() < proof.expiresAt && receipt.outcome === "confirmed" && receipt.proof === proof.terminalProof
+      && receipt.dispatchIdentity === attempt.dispatchIdentity && receipt.modelId === snapshot.modelId && receipt.nativeInterface === snapshot.nativeInterface
+      && !observationViolation(attempt, snapshot, receipt, proof);
+  }
+  return proof.terminalCost === "unavailable" && receipt.costSource === "unavailable" && receipt.aggregateCostUsd === undefined
+    && snapshot.costBound.coversAllProviderCharges && snapshot.costBound.maximumCostUnits === attempt.reservationUnits
+    && proof.checkedAt <= Date.now() && Date.now() < proof.expiresAt
+    && receipt.outcome === "confirmed" && receipt.proof === proof.terminalProof
+    && receipt.dispatchIdentity === attempt.dispatchIdentity && receipt.modelId === snapshot.modelId && receipt.nativeInterface === snapshot.nativeInterface
+    && receipt.actualModel === qualifiedTerminalModelId(proof) && receipt.usage?.inputTokens !== undefined
+    && (snapshot.nativeInterface === "embedding" || (snapshot.nativeInterface === "chat" && receipt.usage.outputTokens !== undefined))
+    && !observationViolation(attempt, snapshot, receipt, proof);
+}
+function retainedConfirmedUnknown(attempt: Attempt, snapshot: ModelPolicySnapshotV1, proof: QualifiedDispatchEvidence): boolean {
+  if (attempt.state !== "uncertain" || !attempt.slotReleased || !capturedAttempt(attempt)) return false;
+  const receipt = receiptSchema.omit({ privateResultCanonical: true }).safeParse(decode(attempt.terminalEvidenceCanonical!));
+  return receipt.success && confirmedUnknownResult(attempt, snapshot, receipt.data, proof);
+}
+function chargeOnly(receipt: TerminalReceipt): string {
+  const { privateResultCanonical: _privateResult, ...charge } = receipt;
+  return canonical(charge);
+}
+/** Initial nonmoney facts are immutable; only absent facts may be supplied with complete money. */
+function compatibleRefinement(initialCanonical: string, receipt: TerminalReceipt, proof: QualifiedDispatchEvidence) {
+  const initial = receiptSchema.safeParse(decode(initialCanonical));
+  if (!initial.success || knownCost(initial.data, proof) !== undefined || knownCost(receipt, proof) === undefined) fail("IDEMPOTENCY_CONFLICT", "uncertain");
+  for (const key of ["version", "dispatchIdentity", "receiptId", "modelId", "nativeInterface", "outcome", "proof"] as const) {
+    if (initial.data[key] !== receipt[key]) fail("IDEMPOTENCY_CONFLICT", "uncertain");
+  }
+  if (initial.data.actualModel !== undefined && receipt.actualModel !== initial.data.actualModel) fail("IDEMPOTENCY_CONFLICT", "uncertain");
+  for (const key of ["inputTokens", "outputTokens", "totalTokens", "cachedInputTokens", "reasoningTokens"] as const) {
+    if (initial.data.usage?.[key] !== undefined && receipt.usage?.[key] !== initial.data.usage[key]) fail("IDEMPOTENCY_CONFLICT", "uncertain");
+  }
+}
+async function captureIdentity(attempt: Attempt): Promise<string> {
+  return await semanticHash(canonical(["native-terminal-evidence-v1", attempt._id, attempt.dispatchIdentity, attempt.terminalEvidenceCanonical, attempt.terminalEvidenceHash]));
+}
+async function capturedDuplicate(attempt: Attempt, chargeCanonical: string, receiptHash: string): Promise<boolean> {
+  if (!capturedAttempt(attempt)) return false;
+  if (chargeCanonical === attempt.terminalEvidenceCanonical) {
+    assertModelRequestIdentity({ canonical: attempt.terminalEvidenceCanonical!, hash: attempt.terminalEvidenceHash! }, { canonical: chargeCanonical, hash: receiptHash }, "uncertain");
+    return true;
+  }
+  if (attempt.receiptCanonical) {
+    assertModelRequestIdentity({ canonical: attempt.receiptCanonical, hash: attempt.receiptHash! }, { canonical: chargeCanonical, hash: receiptHash }, "uncertain");
+    return true;
+  }
+  return false;
+}
+/** Every route uses the same original-window, full-cost, once-only transition. */
+async function accountKnown(ctx: WriteCtx, state: AttemptContext, receipt: TerminalReceipt, chargeCanonical: string, receiptHash: string,
+  cost: number, privateResult?: string) {
+  const { attempt, operation, snapshot, proof, tenant, run } = state;
+  const overrun = cost > attempt.reservationUnits || observationViolation(attempt, snapshot, receipt, proof);
+  const deliverResult = privateResult !== undefined && completeExtractionUsage(snapshot, receipt) && !overrun && !operation.overrun && !tenant.overrun && !run.overrun;
+  const fromUnknown = attempt.state === "uncertain";
+  for (const account of [tenant, run]) await ctx.db.patch("runtimeBudgetAccounts", account._id, {
+    reservedUnits: fromUnknown ? account.reservedUnits : subtract(account.reservedUnits, attempt.reservationUnits),
+    uncertainUnits: fromUnknown ? subtract(account.uncertainUnits, attempt.reservationUnits) : account.uncertainUnits,
+    settledUnits: add(account.settledUnits, cost), activeConcurrency: attempt.slotReleased ? account.activeConcurrency : subtract(account.activeConcurrency, 1),
+    overrun: account.overrun || overrun, version: add(account.version, 1),
+  });
+  await ctx.db.patch("runtimeModelOperations", operation._id, { reservedUnits: fromUnknown ? operation.reservedUnits : subtract(operation.reservedUnits, attempt.reservationUnits),
+    uncertainUnits: fromUnknown ? subtract(operation.uncertainUnits, attempt.reservationUnits) : operation.uncertainUnits,
+    settledUnits: add(operation.settledUnits, cost), overrun: operation.overrun || overrun });
+  const finalState = receipt.outcome === "confirmed_rejected" ? "confirmed_rejected" as const : "settled" as const;
+  await ctx.db.patch("runtimeModelAttempts", attempt._id, { state: finalState, slotReleased: true, receiptCanonical: chargeCanonical, receiptHash, settledCostUnits: cost,
+    costProvenance: canonical([proof.evidenceHash, snapshot.pins.priceRevision, receipt.costSource]), resultWithheld: !deliverResult,
+    ...(receipt.actualModel !== undefined ? { actualModel: receipt.actualModel } : {}),
+    ...(capturedAttempt(attempt) && overrun ? { resultAttachmentState: "closed" as const } : {}), ...(deliverResult ? { privateResultCanonical: privateResult } : {}) });
+  return { state: finalState, settledCostUnits: cost, resultWithheld: !deliverResult, overrun };
+}
+async function settleAttempt(ctx: WriteCtx, reference: RuntimeAuthorityReference, attemptId: Id<"runtimeModelAttempts">, receiptCanonical: string, liabilityOnly: boolean, deploymentRetirement = false) {
+  const state = await attemptContext(ctx, attemptId); const { attempt, operation, snapshot, proof } = state;
+  const captured = capturedAttempt(attempt);
+  if (deploymentRetirement) await retiredScope(ctx, operation);
+  else if (liabilityOnly) await liabilityAuthority(ctx, reference, operation);
+  else if (!sameAuthority(reference, operation.reference)) fail("FORBIDDEN");
+  const canDeliver = !liabilityOnly && await permittedResult(ctx, reference, operation);
+  if (!liabilityOnly) await currentAuthority(ctx, reference, operation.operationKey);
+  const parsed = receiptSchema.safeParse(decode(receiptCanonical));
+  if (!parsed.success) return await writeUnknown(ctx, state);
+  const receipt = parsed.data;
+  if (receipt.dispatchIdentity !== attempt.dispatchIdentity || receipt.modelId !== snapshot.modelId || receipt.nativeInterface !== snapshot.nativeInterface
+    || receipt.proof !== proof.terminalProof) fail("IDEMPOTENCY_CONFLICT", "uncertain");
+  const chargeCanonical = chargeOnly(receipt); const receiptHash = await semanticHash(chargeCanonical);
+  if (captured) {
+    if (await capturedDuplicate(attempt, chargeCanonical, receiptHash)) return { state: attempt.state, settledCostUnits: attempt.settledCostUnits, resultWithheld: attempt.resultWithheld || !canDeliver || storedObservationViolation(attempt, snapshot, proof) };
+    if (attempt.state !== "uncertain") fail("IDEMPOTENCY_CONFLICT", "uncertain");
+    compatibleRefinement(attempt.terminalEvidenceCanonical!, receipt, proof);
+  } else if (attempt.receiptCanonical) {
+    assertModelRequestIdentity({ canonical: attempt.receiptCanonical, hash: attempt.receiptHash! }, { canonical: chargeCanonical, hash: receiptHash }, "uncertain");
+    const candidateResult = canDeliver ? validatedPrivateResult(snapshot, attempt, receipt.privateResultCanonical) : undefined;
+    if (attempt.privateResultCanonical && candidateResult && attempt.privateResultCanonical !== candidateResult) fail("IDEMPOTENCY_CONFLICT");
+    return { state: attempt.state, settledCostUnits: attempt.settledCostUnits, resultWithheld: attempt.resultWithheld || !canDeliver };
+  }
+  if (attempt.state !== "dispatch_pending" && attempt.state !== "uncertain") fail("POLICY_DENIED");
+  const cost = knownCost(receipt, proof);
+  if (cost === undefined) return await writeUnknown(ctx, state, chargeCanonical);
+  const privateResult = !captured && canDeliver && receipt.outcome === "confirmed" ? validatedPrivateResult(snapshot, attempt, receipt.privateResultCanonical) : undefined;
+  return await accountKnown(ctx, state, receipt, chargeCanonical, receiptHash, cost, privateResult);
+}
+/** Classify only native structured control denials; never infer eligibility loss from runtime messages/getters. */
+function attachmentDenied(error: unknown): boolean {
+  try {
+    if (!(error instanceof ConvexError) || Object.getPrototypeOf(error) !== ConvexError.prototype) return false;
+    const data = Object.getOwnPropertyDescriptor(error, "data");
+    if (!data || !("value" in data) || typeof data.value !== "object" || data.value === null
+      || Object.getPrototypeOf(data.value) !== Object.prototype) return false;
+    const fields = Object.getOwnPropertyDescriptors(data.value);
+    const ownValue = (key: string): unknown => {
+      const field = fields[key]; return field && "value" in field ? field.value : undefined;
+    };
+    if (ownValue("version") !== 1 || ownValue("retryable") !== false
+      || (ownValue("outcome") !== "not_dispatched" && ownValue("outcome") !== "uncertain")) return false;
+    const code = ownValue("code");
+    return typeof code === "string" && ["FORBIDDEN", "UNAUTHENTICATED", "AUTHORITY_LOOKUP_AMBIGUOUS", "RUN_CANCELLED",
+      "INVALID_INPUT", "POLICY_DENIED", "CAPABILITY_UNAVAILABLE", "CAPABILITY_UNSUPPORTED", "PROFILE_NOT_READY", "IDEMPOTENCY_CONFLICT", "INVALID_STATE", "STALE_CONTEXT", "TOOL_STEP_LIMIT", "TOOL_DENIED",
+      "APPROVAL_REQUIRED", "STALE_TRANSCRIPT", "TRANSCRIPT_CONFLICT", "LEASE_EXPIRED", "MEDIA_JOB_EXPIRED", "STALE_MEDIA_INPUT", "CONTENT_JOB_EXPIRED", "CONTENT_JOB_NOT_FOUND"].includes(code);
+  } catch { return false; }
+}
+async function permittedAttachment(ctx: ReadCtx, reference: RuntimeAuthorityReference, state: AttemptContext): Promise<boolean> {
+  try {
+    if (storedObservationViolation(state.attempt, state.snapshot, state.proof)) return false;
+    const mediaCompletion = await allowMediaCompletion(ctx, reference, state.operation);
+    const checked = await currentOperation(ctx, reference, state.operation, false, false, mediaCompletion);
+    const current = checked.current.snapshot;
+    if (state.proof.checkedAt > Date.now() || Date.now() >= state.proof.expiresAt) return false;
+    if (state.operation.overrun || state.run.overrun || state.tenant.overrun || !current.allowedModels.includes(state.snapshot.modelId)
+      || current.nativeInterface !== state.snapshot.nativeInterface
+      || !checked.current.manifest.qualifications.some((q) => q.receiptId === state.snapshot.qualificationReceiptId && q.modelId === state.snapshot.modelId
+        && q.nativeInterface === state.snapshot.nativeInterface && q.priceRevision === state.snapshot.pins.priceRevision && q.boundRevision === state.snapshot.pins.boundRevision)) return false;
+    const original = decode(state.attempt.canonical) as { request: unknown };
+    validateModelRequest({ ...state.snapshot, limits: current.limits, allowedOptions: current.allowedOptions, allowedTools: current.allowedTools }, original.request);
+    await finalActor(ctx, reference, state.operation.operationKey);
+    return true;
+  } catch (error: unknown) {
+    if (attachmentDenied(error)) return false;
+    throw error;
+  }
+}
+/** Artifact publication reuses the exact current attachment authority after the
+ * asynchronous storage gap. This check never reserves or changes accounting. */
+export async function mediaResultPublicationAllowed(ctx: ReadCtx, reference: RuntimeAuthorityReference,
+  attemptId: Id<"runtimeModelAttempts">, operationId: Id<"runtimeModelOperations">, resultCanonical: string): Promise<boolean> {
+  const state = await attemptContext(ctx, attemptId);
+  if (state.operation._id !== operationId || !["media.image.generate", "media.video.generate"].includes(state.operation.operationKey)
+    || state.attempt.resultAttachmentState !== "attached" || state.attempt.resultWithheld
+    || state.attempt.privateResultCanonical !== resultCanonical) return false;
+  return permittedAttachment(ctx, reference, state);
+}
+/** Trusted compiled terminal producers only. This authority accounts liability, never grants data access. */
+export async function captureTerminalEvidenceHandler(ctx: MutationCtx, args: { attemptId: Id<"runtimeModelAttempts">; dispatchIdentity: string; receiptCanonical: string }) {
+  const state = await attemptContext(ctx, args.attemptId); const { attempt, operation, snapshot, proof } = state;
+  const captured = capturedAttempt(attempt);
+  if (attempt.checkpointAt === undefined || args.dispatchIdentity !== attempt.dispatchIdentity) fail("POLICY_DENIED", "uncertain");
+  const parsed = receiptSchema.omit({ privateResultCanonical: true }).safeParse(decode(args.receiptCanonical));
+  if (!parsed.success) fail("INVALID_INPUT", "uncertain");
+  const receipt = parsed.data;
+  if (receipt.dispatchIdentity !== attempt.dispatchIdentity || receipt.modelId !== snapshot.modelId || receipt.nativeInterface !== snapshot.nativeInterface
+    || receipt.proof !== proof.terminalProof) fail("IDEMPOTENCY_CONFLICT", "uncertain");
+  const chargeCanonical = canonical(receipt); const receiptHash = await semanticHash(chargeCanonical);
+  const result = async () => ({ evidenceId: await captureIdentity(attempt), state: attempt.state as "settled" | "confirmed_rejected" | "uncertain",
+    ...(attempt.settledCostUnits !== undefined ? { settledCostUnits: attempt.settledCostUnits } : {}), overrun: operation.overrun });
+  if (captured) {
+    if (await capturedDuplicate(attempt, chargeCanonical, receiptHash)) return await result();
+    if (attempt.state !== "uncertain") fail("IDEMPOTENCY_CONFLICT", "uncertain");
+    compatibleRefinement(attempt.terminalEvidenceCanonical!, receipt, proof);
+  } else if (attempt.state !== "dispatch_pending" && attempt.state !== "uncertain") {
+    // Legacy terminal rows can acknowledge exact stored charge only; no attachment privilege is created.
+    if (!attempt.receiptCanonical || (attempt.state !== "settled" && attempt.state !== "confirmed_rejected")) fail("POLICY_DENIED", "uncertain");
+    assertModelRequestIdentity({ canonical: attempt.receiptCanonical, hash: attempt.receiptHash! }, { canonical: chargeCanonical, hash: receiptHash }, "uncertain");
+    return { evidenceId: await semanticHash(canonical(["legacy-terminal-evidence-v1", attempt._id, chargeCanonical])), state: attempt.state,
+      settledCostUnits: attempt.settledCostUnits, overrun: operation.overrun };
+  }
+  if (!captured && attempt.state === "uncertain" && attempt.terminalEvidenceCanonical) {
+    // A legacy genuine terminal observation is already terminal, not a fresh capture transition.
+    assertModelRequestIdentity({ canonical: attempt.terminalEvidenceCanonical, hash: await semanticHash(attempt.terminalEvidenceCanonical) },
+      { canonical: chargeCanonical, hash: receiptHash }, "uncertain");
+    return { evidenceId: await semanticHash(canonical(["legacy-terminal-evidence-v1", attempt._id, chargeCanonical])), state: "uncertain" as const, overrun: operation.overrun };
+  }
+  const cost = knownCost(receipt, proof);
+  if (captured && cost === undefined) fail("IDEMPOTENCY_CONFLICT", "uncertain");
+  const deliverable = !captured && !attempt.terminalEvidenceCanonical
+    && ((cost !== undefined && cost <= attempt.reservationUnits && receipt.outcome === "confirmed") || confirmedUnknownResult(attempt, snapshot, receipt, proof))
+    && completeExtractionUsage(snapshot, receipt) && !observationViolation(attempt, snapshot, receipt, proof)
+    && await permittedAttachment(ctx, operation.reference, state);
+  const accounted = cost === undefined ? await writeUnknown(ctx, state, chargeCanonical)
+    : await accountKnown(ctx, state, receipt, chargeCanonical, receiptHash, cost);
+  if (!captured) await ctx.db.patch("runtimeModelAttempts", attempt._id, {
+    terminalEvidenceCanonical: chargeCanonical, terminalEvidenceHash: receiptHash, resultAttachmentState: deliverable ? "pending" : "closed" });
+  const latest = await attemptContext(ctx, args.attemptId);
+  return { evidenceId: await captureIdentity(latest.attempt), state: accounted.state as "settled" | "confirmed_rejected" | "uncertain",
+    ...(latest.attempt.settledCostUnits !== undefined ? { settledCostUnits: latest.attempt.settledCostUnits } : {}), overrun: latest.operation.overrun };
+}
+const terminalCaptureArgs = { attemptId: v.id("runtimeModelAttempts"), dispatchIdentity: v.string(), receiptCanonical: v.string() };
+export const captureTerminalEvidence = internalMutation({ args: terminalCaptureArgs, handler: captureTerminalEvidenceHandler });
+/** Compiled private V8 producers opt in without adding an access gate before accounting. */
+export const captureTerminalEvidenceV8 = internalMutation({ args: terminalCaptureArgs,
+  handler: (ctx, args) => captureTerminalEvidenceHandler(createV8AuthorityReadScope(ctx, { managedSources: true }), args) });
+/** Private delivery is independently fenced by exact current original authority. Closed never reopens. */
+export async function attachTerminalResultHandler(ctx: MutationCtx, args: { reference: RuntimeAuthorityReference; attemptId: Id<"runtimeModelAttempts">; evidenceId: string; privateResultCanonical: string }) {
+  const state = await attemptContext(ctx, args.attemptId); const { attempt, operation, snapshot } = state;
+  if (!capturedAttempt(attempt)) return { attached: false, resultWithheld: true };
+  if (args.evidenceId !== await captureIdentity(attempt)) fail("IDEMPOTENCY_CONFLICT", "uncertain");
+  if (attempt.resultAttachmentState === "closed") return { attached: false, resultWithheld: true };
+  const settled = attempt.state === "settled" && attempt.settledCostUnits !== undefined;
+  if ((!settled && !retainedConfirmedUnknown(attempt, snapshot, state.proof)) || operation.overrun) return { attached: false, resultWithheld: true };
+  if (!sameAuthority(args.reference, operation.reference)) return { attached: false, resultWithheld: true };
+  if (!await permittedAttachment(ctx, args.reference, state)) {
+    if (attempt.resultAttachmentState === "pending") await ctx.db.patch("runtimeModelAttempts", attempt._id, { resultAttachmentState: "closed", resultWithheld: true });
+    return { attached: false, resultWithheld: true };
+  }
+  const privateResult = validatedPrivateResult(snapshot, attempt, args.privateResultCanonical);
+  if (privateResult === undefined || new TextEncoder().encode(privateResult).length > state.proof.resultBound.maximumPrivateResultBytes) return { attached: false, resultWithheld: true };
+  if (attempt.resultAttachmentState === "attached") {
+    if (attempt.privateResultCanonical !== privateResult) fail("IDEMPOTENCY_CONFLICT", "uncertain");
+    return { attached: true, resultWithheld: false };
+  }
+  await ctx.db.patch("runtimeModelAttempts", attempt._id, { privateResultCanonical: privateResult, resultWithheld: false, resultAttachmentState: "attached", outputVisible: true });
+  return { attached: true, resultWithheld: false };
+}
+const terminalAttachmentArgs = { ...attemptArgs, evidenceId: v.string(), privateResultCanonical: v.string() };
+export const attachTerminalResult = internalMutation({ args: terminalAttachmentArgs, handler: attachTerminalResultHandler });
+/** A new native invocation repeats the original independent private-result fence. */
+export const attachTerminalResultV8 = internalMutation({ args: terminalAttachmentArgs,
+  handler: (ctx, args) => attachTerminalResultHandler(createV8AuthorityReadScope(ctx, { managedSources: true }), args) });
+/** Positive canonical retirement evidence; absence alone is never deployment authority. */
+async function retiredScope(ctx: ReadCtx, operation: Operation) {
+  const reader = createAuthorityReader(ctx);
+  const tenant = await reader.getScope(operation.tenantId);
+  const space = await reader.getScope(operation.tenantId, operation.memorySpaceId);
+  const retired = tenant?.deletedAt !== undefined || space?.deletedAt !== undefined
+    || await reader.hasTombstone({ tenantId: operation.tenantId, resourceType: "tenant", resourceId: operation.tenantId })
+    || await reader.hasTombstone({ tenantId: operation.tenantId, memorySpaceId: operation.memorySpaceId, resourceType: "memorySpace", resourceId: operation.memorySpaceId });
+  if (!retired) fail("FORBIDDEN");
+}
+/** Trusted deployment operator control plane only, like runtimeAuth.provision. No public proxy.
+ * Retired scopes cannot authorize application actors. This route accounts already incurred
+ * liability against immutable original windows, never hydrates/delivers results or revives scope.
+ */
+export const reconcileDeploymentLiability = internalMutation({ args: { attemptId: v.id("runtimeModelAttempts"), receiptCanonical: v.string() }, handler: async (ctx, args) => {
+  const { operation } = await attemptContext(ctx, args.attemptId);
+  return await settleAttempt(ctx, operation.reference, args.attemptId, args.receiptCanonical, true, true);
+} });
+export const settle = internalMutation({ args: { ...attemptArgs, receiptCanonical: v.string() }, handler: async (ctx, args) =>
+  await settleAttempt(ctx, args.reference, args.attemptId, args.receiptCanonical, false) });
+export const recover = internalMutation({ args: { ...attemptArgs, receiptCanonical: v.optional(v.string()) }, handler: async (ctx, args) => {
+  if (args.receiptCanonical !== undefined) return await settleAttempt(ctx, args.reference, args.attemptId, args.receiptCanonical, true);
+  const state = await attemptContext(ctx, args.attemptId);
+  await liabilityAuthority(ctx, args.reference, state.operation);
+  if (state.attempt.state === "reserved" && state.attempt.checkpointAt === undefined) {
+    // Native state proves no permit was issued; admin reconciliation never hydrates private results.
+    for (const account of [state.tenant, state.run]) await ctx.db.patch("runtimeBudgetAccounts", account._id, {
+      reservedUnits: subtract(account.reservedUnits, state.attempt.reservationUnits), activeConcurrency: subtract(account.activeConcurrency, 1), version: add(account.version, 1) });
+    await ctx.db.patch("runtimeModelOperations", state.operation._id, { reservedUnits: subtract(state.operation.reservedUnits, state.attempt.reservationUnits) });
+    await ctx.db.patch("runtimeModelAttempts", state.attempt._id, { state: "not_dispatched", slotReleased: true, resultWithheld: true,
+      terminalEvidenceCanonical: canonical({ kind: "native-no-checkpoint-v1", actorReference: args.reference, reconciledAt: Date.now() }) });
+    return { state: "not_dispatched" as const, replayAllowed: false as const };
+  }
+  return await writeUnknown(ctx, state);
+} });
+export const releaseNotDispatched = internalMutation({ args: attemptArgs, handler: async (ctx, args) => {
+  const { attempt, operation, tenant, run } = await attemptContext(ctx, args.attemptId);
+  await currentOperation(ctx, args.reference, operation, true);
+  if (attempt.state === "not_dispatched") return { state: "not_dispatched" as const };
+  if (attempt.state !== "reserved" || attempt.checkpointAt !== undefined) fail("UNCERTAIN_OUTCOME", "uncertain");
+  for (const account of [tenant, run]) await ctx.db.patch("runtimeBudgetAccounts", account._id, {
+    reservedUnits: subtract(account.reservedUnits, attempt.reservationUnits), activeConcurrency: subtract(account.activeConcurrency, 1), version: add(account.version, 1) });
+  await ctx.db.patch("runtimeModelOperations", operation._id, { reservedUnits: subtract(operation.reservedUnits, attempt.reservationUnits) });
+  await ctx.db.patch("runtimeModelAttempts", attempt._id, { state: "not_dispatched", slotReleased: true });
+  return { state: "not_dispatched" as const };
+} });
+export const cancelBudget = internalMutation({ args: { reference: runtimeAuthorityReference, runBudgetId: v.string() }, handler: async (ctx, args) => {
+  const run = await runAccount(ctx, args.reference, args.runBudgetId);
+  await recheckAuthority(ctx, args.reference, { capability: "run", tenantId: run.tenantId, memorySpaceId: args.reference.memorySpaceId });
+  await ctx.db.patch("runtimeBudgetAccounts", run._id, { cancelled: true, version: add(run.version, 1) });
+  return { cancelled: true };
+} });
+/** Current resource authority may retire an Agent budget after its execution grant
+ * changes. This grants no execution, settlement, refund or replacement budget. */
+export const cancelAgentBudget = internalMutation({ args: { reference: runtimeAuthorityReference, runId: v.string() }, handler: async (ctx, args) => {
+  const { row } = await currentControlRun(ctx, args.reference, args.runId, "write");
+  const account = await runAccount(ctx, row.authorityReference, row.runBudgetId);
+  if (account._id !== row.runAccountId) fail("FORBIDDEN");
+  if (!account.cancelled) await ctx.db.patch("runtimeBudgetAccounts", account._id, { cancelled: true, version: add(account.version, 1) });
+  return { cancelled: true };
+} });
+function fallbackAllowed(attempt: Attempt, operation: Operation, snapshot: ModelPolicySnapshotV1, candidateModelId: string): boolean {
+  return !operation.overrun && candidateModelId !== snapshot.modelId && canFallbackModel(snapshot, candidateModelId, {
+    outcome: attempt.state === "not_dispatched" ? "not_dispatched" : attempt.state === "confirmed_rejected" ? "confirmed_rejected" : "uncertain",
+    proof: attempt.state === "not_dispatched" ? "pre_dispatch" : attempt.state === "confirmed_rejected" && attempt.receiptCanonical ? "qualified_rejection" : "none",
+    outputVisible: attempt.outputVisible, toolInputVisible: attempt.toolInputVisible, toolResultVisible: attempt.toolResultVisible, toolEffectCommitted: attempt.toolEffectCommitted,
+    paidLiabilityUncertain: attempt.state === "uncertain" || attempt.state === "dispatch_pending", cancelled: operation.cancelled,
+    priorAttemptAccounted: attempt.state === "not_dispatched" || attempt.state === "confirmed_rejected", currentAuthorityChecked: true, currentSourceChecked: true, currentPolicyChecked: true });
+}
+/** Explicit compatible retry only after stored safe proof; both accounts reserve the new candidate once. */
+export const admitFallback = internalMutation({ args: { ...attemptArgs, candidateModelId: v.string() }, handler: async (ctx, args) => {
+  const state = await attemptContext(ctx, args.attemptId); const { attempt, operation, run, tenant, snapshot } = state;
+  const checked = await currentOperation(ctx, args.reference, operation);
+  if (!fallbackAllowed(attempt, operation, snapshot, args.candidateModelId) || !fallbackAllowed(attempt, operation, checked.current.snapshot, args.candidateModelId)) fail("POLICY_DENIED");
+  const nextNumber = add(attempt.attemptNumber, 1);
+  if (nextNumber > 64) fail("POLICY_DENIED");
+  const candidate = single(checked.current.manifest.qualifications.filter((q) => q.modelId === args.candidateModelId && q.nativeInterface === snapshot.nativeInterface
+    && snapshot.fallbackCandidates.some((entry) => entry.qualificationReceiptId === q.receiptId)));
+  if (!candidate) fail("CAPABILITY_UNAVAILABLE");
+  const nextSnapshot = { ...snapshotOf(operation), modelId: candidate.modelId, qualificationReceiptId: candidate.receiptId, costBound: candidate.costBound };
+  const proof = evidence(checked.current.manifest, nextSnapshot);
+  assertCurrentEvidence(proof);
+  const existing = single(await ctx.db.query("runtimeModelAttempts").withIndex("by_child_attempt", (q) => q.eq("operationDocumentId", operation._id)
+    .eq("childCallId", attempt.childCallId).eq("attemptNumber", nextNumber)).take(2));
+  if (existing) {
+    if (existing.priorAttemptId !== attempt._id || existing.fallbackModelId !== args.candidateModelId) fail("IDEMPOTENCY_CONFLICT");
+    return { status: "inflight" as const, attemptId: existing._id };
+  }
+  const decoded = decode(attempt.canonical);
+  if (!decoded || typeof decoded !== "object" || Array.isArray(decoded)) fail("POLICY_DENIED");
+  const old = validateModelRequest(snapshot, (decoded as Record<string, unknown>).request);
+  const next = validateModelRequest(nextSnapshot, { ...old.request, inputTokens: deriveQualifiedInputBound(proof, old.request), reservationUnits: candidate.costBound.maximumCostUnits });
+  const ceiling = candidate.costBound.maximumCostUnits;
+  capacity(tenant, ceiling, Math.min(nextSnapshot.limits.tenantBudgetUnits, checked.current.snapshot.limits.tenantBudgetUnits), checked.current.snapshot.limits.concurrency);
+  capacity(run, ceiling, Math.min(nextSnapshot.limits.runBudgetUnits, checked.current.snapshot.limits.runBudgetUnits), checked.current.snapshot.limits.concurrency);
+  if (operation.overrun || add(operation.reservedUnits, operation.uncertainUnits, operation.settledUnits, ceiling) > Math.min(nextSnapshot.limits.operationBudgetUnits, checked.current.snapshot.limits.operationBudgetUnits)) fail("BUDGET_EXCEEDED");
+  await finalActor(ctx, args.reference, operation.operationKey);
+  assertCurrentEvidence(proof);
+  const nextId = await ctx.db.insert("runtimeModelAttempts", { operationDocumentId: operation._id, childCallId: attempt.childCallId, ordinal: attempt.ordinal,
+    attemptNumber: nextNumber, fallbackModelId: candidate.modelId, priorAttemptId: attempt._id, canonical: next.canonical, hash: await semanticHash(next.canonical),
+    resolutionCanonical: operation.resolutionCanonical, snapshotCanonical: canonical(nextSnapshot), inputProofCanonical: canonical({ proof, requestCanonical: canonical(next.request), inputTokens: next.request.inputTokens, outputTokens: next.request.outputTokens }),
+    measuredInputTokens: next.request.inputTokens, maximumOutputTokens: next.request.outputTokens, tenantAccountId: tenant._id, runAccountId: run._id, reservationUnits: ceiling, state: "reserved", dispatchIdentity: await semanticHash(canonical([operation.operationId, attempt.childCallId, nextNumber, candidate.modelId])),
+    slotReleased: false, outputVisible: false, toolInputVisible: false, toolResultVisible: false, toolEffectCommitted: false, resultWithheld: false, createdAt: Date.now() });
+  for (const account of [tenant, run]) await ctx.db.patch("runtimeBudgetAccounts", account._id, { reservedUnits: add(account.reservedUnits, ceiling), activeConcurrency: add(account.activeConcurrency, 1), version: add(account.version, 1) });
+  await ctx.db.patch("runtimeModelOperations", operation._id, { reservedUnits: add(operation.reservedUnits, ceiling) });
+  return { status: "reserved" as const, operationId: operation._id, attemptId: nextId, snapshot: nextSnapshot, requestCanonical: canonical(next.request) };
+} });
+export const checkFallback = internalQuery({ args: { ...attemptArgs, candidateModelId: v.string() }, handler: async (ctx, args) => {
+  const { attempt, operation, snapshot } = await attemptContext(ctx, args.attemptId);
+  const checked = await currentOperation(ctx, args.reference, operation);
+  const candidate = single(checked.current.manifest.qualifications.filter((q) => q.modelId === args.candidateModelId && q.nativeInterface === snapshot.nativeInterface
+    && snapshot.fallbackCandidates.some((entry) => entry.qualificationReceiptId === q.receiptId)));
+  const proof = candidate ? evidence(checked.current.manifest, { ...snapshot, modelId: candidate.modelId, qualificationReceiptId: candidate.receiptId, costBound: candidate.costBound }) : undefined;
+  const now = Date.now();
+  return { allowed: !!proof && proof.checkedAt <= now && now < proof.expiresAt
+    && fallbackAllowed(attempt, operation, snapshot, args.candidateModelId) && fallbackAllowed(attempt, operation, checked.current.snapshot, args.candidateModelId) };
+} });

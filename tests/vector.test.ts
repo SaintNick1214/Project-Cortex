@@ -9,8 +9,8 @@
  * - Memory space isolation
  */
 
-import { Cortex } from "../src";
-import { ConvexClient } from "convex/browser";
+import { Cortex } from "./helpers/deployment-operator";
+import { ConvexClient } from "./helpers/deployment-operator";
 import { api } from "../convex-dev/_generated/api";
 import { TestCleanup } from "./helpers";
 import { createTestRunContext } from "./helpers/isolation";
@@ -446,7 +446,8 @@ describe("Vector Memory API (Layer 2)", () => {
 
       await expect(
         cortex.vector.delete(otherSpace, memory.memoryId),
-      ).rejects.toThrow("PERMISSION_DENIED");
+      ).rejects.toThrow("MEMORY_NOT_FOUND");
+      expect(await cortex.vector.get(deleteSpace, memory.memoryId)).toEqual(memory);
     });
   });
 
@@ -902,7 +903,7 @@ describe("Vector Memory API (Layer 2)", () => {
         ).rejects.toThrow("MEMORY_NOT_FOUND");
       });
 
-      it("should throw PERMISSION_DENIED for wrong memorySpaceId", async () => {
+      it("conceals a memory outside the selected space and leaves it active", async () => {
         const otherSpace = ctx.memorySpaceId("archive-other");
 
         const memory = await cortex.vector.store(archiveSpace, {
@@ -914,7 +915,8 @@ describe("Vector Memory API (Layer 2)", () => {
 
         await expect(
           cortex.vector.archive(otherSpace, memory.memoryId),
-        ).rejects.toThrow("PERMISSION_DENIED");
+        ).rejects.toThrow("MEMORY_NOT_FOUND");
+        expect(await cortex.vector.get(archiveSpace, memory.memoryId)).toEqual(memory);
       });
 
       it("should handle already-archived memory gracefully (idempotent)", async () => {
@@ -965,6 +967,8 @@ describe("Vector Memory API (Layer 2)", () => {
 
         expect(result.restored).toBe(true);
         expect(result.memoryId).toBe(memory.memoryId);
+        expect("memory" in result).toBe(true);
+        if (!("memory" in result)) throw new Error("Administrative restore must return the hydrated memory");
         expect(result.memory).toBeDefined();
       });
 
@@ -1026,10 +1030,14 @@ describe("Vector Memory API (Layer 2)", () => {
 
         await expect(
           cortex.vector.restoreFromArchive(restoreSpace, memory.memoryId),
-        ).rejects.toThrow("MEMORY_NOT_ARCHIVED");
+        ).rejects.toMatchObject({
+          partial: { confirmedCount: 0, possibleCount: 0, outcomes: [expect.objectContaining({ disposition: "knownRolledBack" })] },
+          originalCause: expect.objectContaining({ data: "MEMORY_NOT_ARCHIVED" }),
+        });
+        expect(await cortex.vector.get(restoreSpace, memory.memoryId)).toEqual(memory);
       });
 
-      it("should throw PERMISSION_DENIED for wrong memorySpaceId", async () => {
+      it("conceals a memory outside the selected space and leaves it archived", async () => {
         const otherSpace = ctx.memorySpaceId("restore-other");
 
         const memory = await cortex.vector.store(restoreSpace, {
@@ -1040,10 +1048,12 @@ describe("Vector Memory API (Layer 2)", () => {
         });
 
         await cortex.vector.archive(restoreSpace, memory.memoryId);
+        const before = await cortex.vector.get(restoreSpace, memory.memoryId);
 
         await expect(
           cortex.vector.restoreFromArchive(otherSpace, memory.memoryId),
-        ).rejects.toThrow("PERMISSION_DENIED");
+        ).rejects.toThrow("MEMORY_NOT_FOUND");
+        expect(await cortex.vector.get(restoreSpace, memory.memoryId)).toEqual(before);
       });
 
       it("restored memory should preserve version", async () => {
@@ -1190,7 +1200,7 @@ describe("Vector Memory API (Layer 2)", () => {
       });
 
       // Verify all fields stored correctly
-      const stored = await client.query(api.memories.get, {
+      const stored = await client.mutation(api.memories.get, {
         memorySpaceId: "memspace-test",
         memoryId: memory.memoryId,
       });
@@ -1767,10 +1777,10 @@ describe("Vector Memory API (Layer 2)", () => {
         ).rejects.toThrow("must be between 0 and 1");
       });
 
-      it("should throw on invalid limit (0)", async () => {
+      it("returns the empty search window for limit zero", async () => {
         await expect(
           cortex.vector.search("memspace-test", "query", { limit: 0 }),
-        ).rejects.toThrow("must be a positive integer");
+        ).resolves.toEqual([]);
       });
 
       it("should throw on invalid limit (negative)", async () => {
@@ -1852,10 +1862,10 @@ describe("Vector Memory API (Layer 2)", () => {
         ).rejects.toThrow("Invalid sourceType");
       });
 
-      it("should throw on invalid limit", async () => {
+      it("returns the empty list window for limit zero", async () => {
         await expect(
           cortex.vector.list({ memorySpaceId: "memspace-test", limit: 0 }),
-        ).rejects.toThrow("must be a positive integer");
+        ).resolves.toEqual([]);
       });
     });
 

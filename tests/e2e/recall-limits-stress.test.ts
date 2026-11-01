@@ -13,8 +13,8 @@
  */
 
 import { jest } from "@jest/globals";
-import { Cortex } from "../../src";
-import { ConvexClient } from "convex/browser";
+import { Cortex } from "../helpers/deployment-operator";
+import { ConvexClient } from "../helpers/deployment-operator";
 import { createTestRunContext } from "../helpers/isolation";
 
 // Create test run context for parallel execution isolation

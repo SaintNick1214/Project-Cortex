@@ -1,3 +1,5 @@
+// Controlled legacy administration; no native authentication or services run in these mocks.
+const legacyCredentials = { deploymentKey: "unit-controlled-key" };
 /**
  * Integration Tests: Memory Flow
  *
@@ -17,6 +19,7 @@ let storedMemories: any[] = [];
 let storedConversations: any[] = [];
 
 const mockCortex = {
+  deploymentOperator: true,
   memory: {
     search: jest.fn().mockImplementation(() => storedMemories),
     remember: jest.fn().mockImplementation(async (params: any) => {
@@ -97,7 +100,7 @@ describe("Memory Flow Integration", () => {
         enableMemoryStorage: true,
       });
       const mockLLM = createMockLLM();
-      const provider = new CortexMemoryProvider(mockLLM, config);
+      const provider = new CortexMemoryProvider(mockLLM, config, undefined, undefined, legacyCredentials);
 
       // Execute doGenerate
       const result = await provider.doGenerate({
@@ -137,7 +140,7 @@ describe("Memory Flow Integration", () => {
         enableMemoryStorage: true,
       });
       const mockLLM = createMockLLM();
-      const provider = new CortexMemoryProvider(mockLLM, config);
+      const provider = new CortexMemoryProvider(mockLLM, config, undefined, undefined, legacyCredentials);
 
       await provider.doGenerate({
         prompt: [{ role: "user", content: [{ type: "text", text: "Hello" }] }],
@@ -153,7 +156,7 @@ describe("Memory Flow Integration", () => {
         enableMemoryStorage: false,
       });
       const mockLLM = createMockLLM();
-      const provider = new CortexMemoryProvider(mockLLM, config);
+      const provider = new CortexMemoryProvider(mockLLM, config, undefined, undefined, legacyCredentials);
 
       await provider.doGenerate({
         prompt: [{ role: "user", content: [{ type: "text", text: "Hello" }] }],
@@ -174,7 +177,7 @@ describe("Memory Flow Integration", () => {
         enableMemoryStorage: true,
       });
       const mockLLM = createMockLLM();
-      const provider = new CortexMemoryProvider(mockLLM, config);
+      const provider = new CortexMemoryProvider(mockLLM, config, undefined, undefined, legacyCredentials);
 
       // Should not throw
       const result = await provider.doGenerate({
@@ -197,7 +200,7 @@ describe("Memory Flow Integration", () => {
         enableMemoryStorage: true,
       });
       const mockLLM = createMockLLM();
-      const provider = new CortexMemoryProvider(mockLLM, config);
+      const provider = new CortexMemoryProvider(mockLLM, config, undefined, undefined, legacyCredentials);
 
       // Should not throw
       const result = await provider.doGenerate({
@@ -232,7 +235,7 @@ describe("Memory Flow Integration", () => {
         contextInjectionStrategy: "system",
       });
       const mockLLM = createMockLLM();
-      const provider = new CortexMemoryProvider(mockLLM, config);
+      const provider = new CortexMemoryProvider(mockLLM, config, undefined, undefined, legacyCredentials);
 
       await provider.doGenerate({
         prompt: [
@@ -264,7 +267,7 @@ describe("Memory Flow Integration", () => {
         contextInjectionStrategy: "system",
       });
       const mockLLM = createMockLLM();
-      const provider = new CortexMemoryProvider(mockLLM, config);
+      const provider = new CortexMemoryProvider(mockLLM, config, undefined, undefined, legacyCredentials);
 
       await provider.doGenerate({
         prompt: [{ role: "user", content: [{ type: "text", text: "Hello" }] }],
@@ -291,7 +294,7 @@ describe("Memory Flow Integration", () => {
         embeddingProvider: { generate: generateMock },
       });
       const mockLLM = createMockLLM();
-      const provider = new CortexMemoryProvider(mockLLM, config);
+      const provider = new CortexMemoryProvider(mockLLM, config, undefined, undefined, legacyCredentials);
 
       await provider.doGenerate({
         prompt: [
@@ -313,7 +316,7 @@ describe("Memory Flow Integration", () => {
         embeddingProvider: { generate: generateMock },
       });
       const mockLLM = createMockLLM();
-      const provider = new CortexMemoryProvider(mockLLM, config);
+      const provider = new CortexMemoryProvider(mockLLM, config, undefined, undefined, legacyCredentials);
 
       // Should not throw
       await provider.doGenerate({
@@ -342,7 +345,7 @@ describe("Memory Flow Integration", () => {
         layerObserver,
       });
       const mockLLM = createMockLLM();
-      const provider = new CortexMemoryProvider(mockLLM, config);
+      const provider = new CortexMemoryProvider(mockLLM, config, undefined, undefined, legacyCredentials);
 
       await provider.doGenerate({
         prompt: [{ role: "user", content: [{ type: "text", text: "Hello" }] }],
@@ -367,7 +370,7 @@ describe("Memory Flow Integration", () => {
         beliefRevision: { enabled: true, slotMatching: true },
       });
       const mockLLM = createMockLLM();
-      const provider = new CortexMemoryProvider(mockLLM, config);
+      const provider = new CortexMemoryProvider(mockLLM, config, undefined, undefined, legacyCredentials);
 
       await provider.doGenerate({
         prompt: [{ role: "user", content: [{ type: "text", text: "Hello" }] }],
@@ -386,7 +389,7 @@ describe("Memory Flow Integration", () => {
         beliefRevision: false,
       });
       const mockLLM = createMockLLM();
-      const provider = new CortexMemoryProvider(mockLLM, config);
+      const provider = new CortexMemoryProvider(mockLLM, config, undefined, undefined, legacyCredentials);
 
       await provider.doGenerate({
         prompt: [{ role: "user", content: [{ type: "text", text: "Hello" }] }],
@@ -411,7 +414,7 @@ describe("Memory Flow Integration", () => {
         conversationId: "explicit-conv-123",
       });
       const mockLLM = createMockLLM();
-      const provider = new CortexMemoryProvider(mockLLM, config);
+      const provider = new CortexMemoryProvider(mockLLM, config, undefined, undefined, legacyCredentials);
 
       await provider.doGenerate({
         prompt: [{ role: "user", content: [{ type: "text", text: "Hello" }] }],
@@ -434,7 +437,7 @@ describe("Memory Flow Integration", () => {
       delete (config as any).conversationId;
 
       const mockLLM = createMockLLM();
-      const provider = new CortexMemoryProvider(mockLLM, config);
+      const provider = new CortexMemoryProvider(mockLLM, config, undefined, undefined, legacyCredentials);
 
       await provider.doGenerate({
         prompt: [{ role: "user", content: [{ type: "text", text: "Hello" }] }],
@@ -459,7 +462,7 @@ describe("Memory Flow Integration", () => {
         conversationId: "persistent-conv-456",
       });
       const mockLLM = createMockLLM();
-      const provider = new CortexMemoryProvider(mockLLM, config);
+      const provider = new CortexMemoryProvider(mockLLM, config, undefined, undefined, legacyCredentials);
 
       await provider.doGenerate({
         prompt: [
@@ -496,7 +499,7 @@ describe("Memory Flow Integration", () => {
         },
       });
       const mockLLM = createMockLLM();
-      const provider = new CortexMemoryProvider(mockLLM, config);
+      const provider = new CortexMemoryProvider(mockLLM, config, undefined, undefined, legacyCredentials);
 
       await provider.doGenerate({
         prompt: [{ role: "user", content: [{ type: "text", text: "Hello" }] }],
@@ -517,7 +520,7 @@ describe("Memory Flow Integration", () => {
         conversationId: "tracked-conv-789",
       });
       const mockLLM = createMockLLM();
-      const provider = new CortexMemoryProvider(mockLLM, config);
+      const provider = new CortexMemoryProvider(mockLLM, config, undefined, undefined, legacyCredentials);
 
       await provider.doGenerate({
         prompt: [{ role: "user", content: [{ type: "text", text: "Hello" }] }],

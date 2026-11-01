@@ -5,394 +5,264 @@ on:
     branches: [main, dev]
   pull_request:
     branches: [main, dev, chore/cortex-0.37-modernization]
+    types: [opened, synchronize, reopened, ready_for_review]
   schedule:
-    # Run weekly security scans every Monday at 3 AM UTC
     - cron: "0 3 * * 1"
-  workflow_dispatch: # Allow manual runs
+  workflow_dispatch:
 
-# Prevent parallel execution to avoid Convex deployment conflicts
-# Use different groups for push vs PR to allow both to run independently
+# Scanners do not mutate Convex. Superseded scans may be cancelled; a cancelled
+# mandatory job cannot pass the current run's summary.
 concurrency:
   group: security-${{ github.event_name == 'pull_request' && format('pr-{0}', github.event.pull_request.number) || format('branch-{0}', github.ref) }}
   cancel-in-progress: true
 
-# Default permissions: read-only
-# Write permissions are granted explicitly at job level
 permissions:
   contents: read
 
-# IMPORTANT: Dependabot PRs are explicitly excluded from most jobs in this workflow
-# Each relevant job has a condition to skip when github.actor == 'dependabot[bot]'
+# Required on every event, including draft/fork/Dependabot PRs: CodeQL, Trivy,
+# Gitleaks and Semgrep execution + valid results. Dependency Review is PR-only.
+# GitHub permits code-scanning PR uploads with read-only fork/Dependabot tokens:
+# https://docs.github.com/en/code-security/reference/code-scanning/troubleshoot-analysis-errors/resource-not-accessible
+# Only non-PR Dependabot uploads are unavailable; local coverage still runs and
+# the summary reports the missing uploaded alert coverage. No vendor secrets.
+# Findings: Gitleaks blocks leaks; Dependency Review retains the reviewed high
+# severity + license policy. CodeQL/Trivy/Semgrep preserve existing GitHub alert
+# enforcement. Trivy/Semgrep CLI completion is not a zero-vulnerability claim.
 
 jobs:
-  # CodeQL static analysis
   codeql-analysis:
     name: CodeQL Analysis
     runs-on: ubuntu-latest
-    if: github.actor != 'dependabot[bot]'
     permissions:
       actions: read
       contents: read
       security-events: write
-
     strategy:
       fail-fast: false
       matrix:
         language: ["javascript-typescript"]
-
     steps:
       - name: Checkout repository
         uses: actions/checkout@v6
         with:
           fetch-depth: 0
-
+          persist-credentials: false
       - name: Initialize CodeQL
         uses: github/codeql-action/init@v4
         with:
           languages: ${{ matrix.language }}
           config-file: ./.github/codeql/codeql-config.yml
           queries: +security-extended
-
-      - name: Setup Node.js (for JS/TS)
-        if: matrix.language == 'javascript-typescript'
-        uses: actions/setup-node@v6
+      - uses: ./.github/actions/cortex-setup
         with:
-          node-version: "24"
-          cache: "npm"
-
-      - name: Install dependencies (for JS/TS)
-        if: matrix.language == 'javascript-typescript'
+          cache: "false"
+      - name: Install dependencies
         run: npm ci
-
       - name: Autobuild
         uses: github/codeql-action/autobuild@v4
-
       - name: Perform CodeQL Analysis
         uses: github/codeql-action/analyze@v4
         with:
           category: "/language:${{ matrix.language }}"
-          upload: true
+          output: codeql-results
+          upload: ${{ github.event_name == 'pull_request' || github.actor != 'dependabot[bot]' }}
+      - name: Validate CodeQL results
+        run: |
+          for file in codeql-results/*.sarif; do
+            node scripts/security-contract.mjs sarif "$file" CodeQL
+          done
+      - name: Preserve CodeQL results
+        uses: actions/upload-artifact@v4
+        with:
+          name: codeql-results-${{ matrix.language }}
+          path: codeql-results/*.sarif
+          if-no-files-found: error
 
-  # Consolidated dependency scanning
   dependency-scan:
     name: Dependency Vulnerability Scan
     runs-on: ubuntu-latest
-    # Skip for Dependabot PRs
-    if: github.actor != 'dependabot[bot]'
     permissions:
       contents: read
       security-events: write
-
     steps:
       - name: Checkout code
         uses: actions/checkout@v6
         with:
           fetch-depth: 0
-
+          persist-credentials: false
+      - uses: ./.github/actions/cortex-setup
+        with:
+          cache: "false"
       - name: Run Trivy vulnerability scanner
-        uses: aquasecurity/trivy-action@v0.36.0
+        uses: aquasecurity/trivy-action@ed142fd0673e97e23eac54620cfb913e5ce36c25 # v0.36.0; retain dev SHA-pinning policy
         with:
           scan-type: "fs"
           scan-ref: "."
           format: "sarif"
           output: "trivy-results.sarif"
           severity: "CRITICAL,HIGH,MEDIUM"
-
+          # Existing GitHub alert policy is the finding gate; this is execution.
+          exit-code: "0"
+      - name: Validate Trivy results
+        run: node scripts/security-contract.mjs sarif trivy-results.sarif Trivy
       - name: Upload Trivy results to GitHub Security tab
+        if: github.event_name == 'pull_request' || github.actor != 'dependabot[bot]'
         uses: github/codeql-action/upload-sarif@v4
-        if: always()
         with:
           sarif_file: "trivy-results.sarif"
           category: "trivy-dependencies"
+      - name: Preserve Trivy results
+        uses: actions/upload-artifact@v4
+        with:
+          name: trivy-results
+          path: trivy-results.sarif
+          if-no-files-found: error
 
-  # Secret scanning (in addition to GitHub's built-in)
   secret-scan:
     name: Secret Scanning
     runs-on: ubuntu-latest
-    if: github.actor != 'dependabot[bot]'
     permissions:
       contents: read
-      security-events: write
-
+      pull-requests: read
     steps:
       - name: Checkout code
         uses: actions/checkout@v6
         with:
           fetch-depth: 0
-
+          persist-credentials: false
+      - uses: ./.github/actions/cortex-setup
+        with:
+          cache: "false"
       - name: Run Gitleaks
         uses: gitleaks/gitleaks-action@v2
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_TOKEN: ${{ github.token }}
+          GITLEAKS_ENABLE_COMMENTS: false
+          GITLEAKS_ENABLE_UPLOAD_ARTIFACT: false
           GITLEAKS_ENABLE_SUMMARY: true
+      - name: Validate Gitleaks results
+        if: always()
+        run: node scripts/security-contract.mjs sarif results.sarif Gitleaks
+      - name: Preserve Gitleaks results
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: gitleaks-results
+          path: results.sarif
+          if-no-files-found: error
 
-  # Dependency review for PRs
   dependency-review:
     name: Dependency Review
     runs-on: ubuntu-latest
-    # Skip for Dependabot PRs (they create PRs that would trigger this)
-    if: github.event_name == 'pull_request' && github.actor != 'dependabot[bot]'
+    if: github.event_name == 'pull_request'
     permissions:
       contents: read
-      pull-requests: write
-
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v6
-
-      - name: Dependency Review
-        uses: actions/dependency-review-action@v4
-        with:
-          config-file: .github/dependency-review-config.yml
-          comment-summary-in-pr: always
-
-  # License compliance check
-  license-check:
-    name: License Compliance
-    runs-on: ubuntu-latest
-    # Skip for Dependabot PRs (they only update dependencies)
-    if: github.event_name == 'pull_request' && github.actor != 'dependabot[bot]'
-    permissions:
-      contents: read
-      pull-requests: write
-
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v6
-
-      - name: Setup Node.js
-        uses: actions/setup-node@v6
-        with:
-          node-version: "24"
-
-      - name: Install dependencies
-        run: npm ci
-
-      - name: Check licenses
-        run: |
-          npx license-checker --summary --onlyAllow 'MIT;Apache-2.0;BSD-2-Clause;BSD-3-Clause;ISC;0BSD;CC0-1.0;Unlicense;Python-2.0' || true
-          echo "⚠️ Review license check results above"
-
-  # OSSF Scorecard for supply chain security (main branch only)
-  scorecard:
-    name: Supply Chain Security (Scorecard)
-    runs-on: ubuntu-latest
-    # Only run on main branch pushes (Scorecard requirement)
-    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
-    permissions:
-      security-events: write
-      id-token: write
-      contents: read
-      actions: read
-
     steps:
       - name: Checkout code
         uses: actions/checkout@v6
         with:
           persist-credentials: false
+      - name: Dependency Review
+        uses: actions/dependency-review-action@v4
+        with:
+          config-file: .github/dependency-review-config.yml
+          # Job summary works on forks/bots without PR write permission.
+          comment-summary-in-pr: never
 
+  # Advisory scores: failed analysis/upload is reported, not a mandatory gate.
+  scorecard:
+    name: Supply Chain Security (Scorecard)
+    runs-on: ubuntu-latest
+    if: github.event_name == 'schedule' || (github.event_name == 'push' && github.ref == 'refs/heads/main')
+    continue-on-error: true
+    permissions:
+      security-events: write
+      id-token: write
+      contents: read
+      actions: read
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v6
+        with:
+          persist-credentials: false
       - name: Run analysis
         uses: ossf/scorecard-action@v2.4.3
         with:
           results_file: results.sarif
           results_format: sarif
           publish_results: true
-
       - name: Upload SARIF results
         uses: github/codeql-action/upload-sarif@v4
         with:
           sarif_file: results.sarif
           category: "scorecard"
+      - name: Report advisory outcome
+        if: always()
+        env:
+          SCORECARD_STEPS: ${{ toJSON(steps) }}
+        run: |
+          echo '### Scorecard (advisory)' >> "$GITHUB_STEP_SUMMARY"
+          echo "$SCORECARD_STEPS" >> "$GITHUB_STEP_SUMMARY"
 
-  # API Security scanning
   api-security:
     name: API Security Scan (Semgrep)
     runs-on: ubuntu-latest
-    if: github.actor != 'dependabot[bot]'
     permissions:
       contents: read
       security-events: write
-      actions: read
-
+    outputs:
+      scanned: ${{ steps.scan.outputs.scanned }}
+      findings: ${{ steps.scan.outputs.findings }}
+      partial_parsing: ${{ steps.scan.outputs.partial_parsing }}
     steps:
       - name: Checkout code
         uses: actions/checkout@v6
-
-      - name: Run Semgrep
-        uses: semgrep/semgrep-action@v1
         with:
-          config: >-
-            p/security-audit
-            p/secrets
-            p/owasp-top-ten
-            p/nodejs
-            p/typescript
-            p/python
-          publishToken: ${{ secrets.SEMGREP_APP_TOKEN }}
-        env:
-          SEMGREP_SARIF_OUTPUT: semgrep.sarif
-        continue-on-error: true
-
-      - name: Upload SARIF file
+          persist-credentials: false
+      - uses: ./.github/actions/cortex-setup
+        with:
+          cache: "false"
+      - name: Setup Python for Semgrep CE
+        uses: actions/setup-python@v6
+        with:
+          python-version: "3.12"
+      - name: Install supported Semgrep CLI
+        run: python -m pip install semgrep==1.179.0
+      - name: Run Semgrep and enforce execution/result contract
+        id: scan
+        run: node scripts/security-contract.mjs semgrep
+      - name: Upload Semgrep SARIF
+        if: github.event_name == 'pull_request' || github.actor != 'dependabot[bot]'
         uses: github/codeql-action/upload-sarif@v4
-        if: always() && hashFiles('semgrep.sarif') != ''
         with:
           sarif_file: semgrep.sarif
           category: "semgrep-api-security"
-
-  # OpenAPI/Swagger security audit (if specs exist)
-  openapi-security:
-    name: OpenAPI Security Audit
-    runs-on: ubuntu-latest
-    if: github.actor != 'dependabot[bot]'
-    permissions:
-      contents: read
-      security-events: write
-
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v6
-
-      - name: Check for OpenAPI specs
-        id: check-specs
-        run: |
-          if find . -name "*.yaml" -o -name "*.yml" -o -name "openapi.json" | grep -E "(openapi|swagger)" > /dev/null; then
-            echo "has_specs=true" >> $GITHUB_OUTPUT
-            echo "✅ Found OpenAPI/Swagger specs"
-          else
-            echo "has_specs=false" >> $GITHUB_OUTPUT
-            echo "ℹ️  No OpenAPI/Swagger specs found - skipping"
-          fi
-
-      - name: Run 42Crunch API Security Audit
-        if: steps.check-specs.outputs.has_specs == 'true'
-        uses: 42Crunch/api-security-audit-action@v4
+      - name: Preserve Semgrep results
+        if: always()
+        uses: actions/upload-artifact@v4
         with:
-          api-token: ${{ secrets.API_SECURITY_TOKEN }}
-          platform-url: https://platform.42crunch.com
-          default-collection-name: Project-Cortex
-          # Upload results to code scanning
-          upload-to-code-scanning: true
-          github-token: ${{ github.token }}
-        continue-on-error: true
+          name: semgrep-results
+          path: |
+            semgrep.json
+            semgrep.sarif
+          if-no-files-found: error
 
-  # Commit signature verification
-  commit-signature-check:
-    name: Commit Signature Verification
-    runs-on: ubuntu-latest
-    if: github.actor != 'dependabot[bot]'
-    permissions:
-      contents: read
-
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v6
-        with:
-          fetch-depth: 0 # Need full history to check all commits
-
-      - name: Verify commit signatures
-        env:
-          GH_TOKEN: ${{ github.token }}
-        run: |
-          echo "════════════════════════════════════════════════════════════"
-          echo "  Commit Signature Verification"
-          echo "════════════════════════════════════════════════════════════"
-          echo ""
-
-          # Determine commits to check based on event type
-          if [ "${{ github.event_name }}" = "pull_request" ]; then
-            # For PRs, check all commits in the PR
-            BASE_SHA="${{ github.event.pull_request.base.sha }}"
-            HEAD_SHA="${{ github.event.pull_request.head.sha }}"
-            echo "📋 Checking PR commits: $BASE_SHA..$HEAD_SHA"
-            COMMITS=$(git rev-list "$BASE_SHA".."$HEAD_SHA")
-          else
-            # For pushes, check just the pushed commit
-            echo "📋 Checking pushed commit: ${{ github.sha }}"
-            COMMITS="${{ github.sha }}"
-          fi
-
-          echo ""
-
-          UNSIGNED_COUNT=0
-          SIGNED_COUNT=0
-
-          for COMMIT in $COMMITS; do
-            # Get commit verification status from GitHub API
-            VERIFICATION=$(gh api repos/${{ github.repository }}/commits/$COMMIT --jq '.commit.verification')
-            VERIFIED=$(echo "$VERIFICATION" | jq -r '.verified')
-            REASON=$(echo "$VERIFICATION" | jq -r '.reason')
-            
-            SHORT_SHA=$(echo "$COMMIT" | cut -c1-7)
-            AUTHOR=$(git log -1 --format='%an' "$COMMIT")
-            
-            if [ "$VERIFIED" = "true" ]; then
-              echo "✅ $SHORT_SHA ($AUTHOR): Verified - $REASON"
-              SIGNED_COUNT=$((SIGNED_COUNT + 1))
-            else
-              echo "❌ $SHORT_SHA ($AUTHOR): NOT VERIFIED - $REASON"
-              UNSIGNED_COUNT=$((UNSIGNED_COUNT + 1))
-            fi
-          done
-
-          echo ""
-          echo "════════════════════════════════════════════════════════════"
-          echo "  Summary: $SIGNED_COUNT verified, $UNSIGNED_COUNT unverified"
-          echo "════════════════════════════════════════════════════════════"
-
-          if [ "$UNSIGNED_COUNT" -gt 0 ]; then
-            echo ""
-            echo "❌ Found $UNSIGNED_COUNT unsigned commit(s)!"
-            echo ""
-            echo "To sign your commits:"
-            echo "  1. Set up GPG: https://docs.github.com/en/authentication/managing-commit-signature-verification"
-            echo "  2. Or use SSH signing: git config gpg.format ssh"
-            echo "  3. Re-sign commits: git rebase --exec 'git commit --amend --no-edit -S' HEAD~N"
-            echo ""
-            exit 1
-          fi
-
-          echo ""
-          echo "✅ All commits have verified signatures!"
-
-  # All security checks summary
   security-summary:
     name: Security Checks Summary
-    needs:
-      [
-        codeql-analysis,
-        dependency-scan,
-        secret-scan,
-        api-security,
-        commit-signature-check,
-      ]
-    # Skip for Dependabot PRs (no security checks run)
-    if: always() && github.actor != 'dependabot[bot]'
+    needs: [codeql-analysis, dependency-scan, secret-scan, api-security, dependency-review, scorecard]
+    if: always()
     runs-on: ubuntu-latest
     permissions:
       contents: read
-
     steps:
-      - name: Check results
-        run: |
-          echo "📊 Security Scan Results:"
-          echo "  CodeQL Analysis:      ${{ needs.codeql-analysis.result }}"
-          echo "  Dependency Scan:      ${{ needs.dependency-scan.result }}"
-          echo "  Secret Scan:          ${{ needs.secret-scan.result }}"
-          echo "  API Security:         ${{ needs.api-security.result }}"
-          echo "  Commit Signatures:    ${{ needs.commit-signature-check.result }}"
-          echo ""
-          echo "ℹ️  Scorecard (supply chain) and OpenAPI scans run conditionally"
-          echo ""
-
-          # Only fail on actual failures, not skipped jobs
-          # API security is continue-on-error, so don't block on it
-          if [[ "${{ needs.codeql-analysis.result }}" == "failure" ]] || \
-             [[ "${{ needs.dependency-scan.result }}" == "failure" ]] || \
-             [[ "${{ needs.secret-scan.result }}" == "failure" ]] || \
-             [[ "${{ needs.commit-signature-check.result }}" == "failure" ]]; then
-            echo "❌ Security checks failed"
-            exit 1
-          fi
-
-          echo "✅ All critical security checks passed!"
+      - name: Checkout security contract
+        uses: actions/checkout@v6
+        with:
+          persist-credentials: false
+      - uses: ./.github/actions/cortex-setup
+        with:
+          cache: "false"
+      - name: Enforce required security coverage
+        env:
+          SECURITY_NEEDS: ${{ toJSON(needs) }}
+        run: node scripts/security-contract.mjs summary

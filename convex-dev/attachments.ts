@@ -1,706 +1,83 @@
-/**
- * Cortex SDK - Attachments API
- *
- * Multi-modal file storage for images, PDFs, audio, video, and generic files.
- * Memory space-scoped with multi-tenancy support.
- *
- * Features:
- * - Convex native file storage integration
- * - Upload URL generation for direct client uploads
- * - Signed download URLs
- * - Memory space isolation
- * - Multi-tenancy support
- * - Conversation/message/memory/artifact linkage
- */
-
-import { ConvexError, v } from "convex/values";
-import { mutation, query } from "./_generated/server";
-
-// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-// Shared Validators
-// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-
-const attachmentTypeValidator = v.union(
-  v.literal("image"),
-  v.literal("audio"),
-  v.literal("video"),
-  v.literal("file"),
-  v.literal("pdf"),
-);
-
-// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-// Helper Functions
-// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-
-/**
- * Generate a unique attachment ID
- */
-function generateAttachmentId(): string {
-  const timestamp = Date.now().toString(36);
-  const random = Math.random().toString(36).substring(2, 11);
-  return `attach-${timestamp}-${random}`;
+/** Attachments retain immutable catalog versions; they never own a bearer URL. */
+import { v } from "convex/values";
+import { mutation, internalMutation, internalQuery } from "./_generated/server";
+import type { MutationCtx } from "./_generated/server";
+import type { Doc } from "./_generated/dataModel";
+import { requireDataAuthority, dataAuthorityReference, managedConversationAccess } from "./runtimeDataAuth";
+import { recheckAuthority } from "./runtimeAuth";
+import { canonicalModelJson } from "../src/domain/model-policy";
+import { assetVersion, authorizeAsset, publicAsset, versionById, addAssetReference, releaseAssetReferences, assetDenied } from "./runtimeAssetCatalog";
+import type { RuntimeAuthorityReference } from "../src/auth/verified";
+const scopeArgs = { tenantId: v.optional(v.string()), memorySpaceId: v.optional(v.string()) };
+const attachmentTypeValidator = v.union(v.literal("image"), v.literal("audio"), v.literal("video"), v.literal("file"), v.literal("pdf"));
+type ScopeArgs = { tenantId?: string; memorySpaceId?: string };
+async function current(ctx: MutationCtx, args: ScopeArgs, id: string, write = false) {
+  const actor = await requireDataAuthority(ctx, args, write ? "storage:write" : "storage:read"); const reference = dataAuthorityReference(actor);
+  const row = await ctx.db.query("attachments").withIndex("by_runtime_key", q => q.eq("tenantId", actor.tenantId).eq("memorySpaceId", actor.memorySpaceId!).eq("attachmentId", id)).unique();
+  if (!row || row.tombstonedAt !== undefined || !row.ownerPrincipalId || !row.assetVersionId) assetDenied();
+  await recheckAuthority(ctx, reference, { tenantId: actor.tenantId, memorySpaceId: actor.memorySpaceId, capability: write ? "storage:write" : "storage:read", resource: { tenantId: actor.tenantId, memorySpaceId: actor.memorySpaceId, resourceType: "attachment", resourceId: id, ownerPrincipalId: row.ownerPrincipalId } });
+  await conversation(ctx, reference, row.conversationId, write); const value = await versionById(ctx, { tenantId: actor.tenantId, memorySpaceId: actor.memorySpaceId! }, row.assetVersionId); if (!value) assetDenied();
+  await authorizeAsset(ctx, reference, value, write ? "storage:write" : "storage:read"); return { row, reference, value };
 }
-
-/**
- * Helper to lookup attachment with tenant awareness
- */
-async function lookupAttachment(
-  ctx: { db: any },
-  attachmentId: string,
-  tenantId?: string,
-) {
-  if (tenantId) {
-    return await ctx.db
-      .query("attachments")
-      .withIndex("by_tenant_attachmentId", (q: any) =>
-        q.eq("tenantId", tenantId).eq("attachmentId", attachmentId),
-      )
-      .first();
+async function conversation(ctx: MutationCtx, reference: RuntimeAuthorityReference, id?: string, write = false) {
+  if (!id) return;
+  const row = await ctx.db.query("runtimeConversations").withIndex("by_scoped_id", q => q.eq("tenantId", reference.tenantId).eq("memorySpaceId", reference.memorySpaceId!).eq("conversationId", id)).unique();
+  if (!row) assetDenied();
+  await managedConversationAccess(ctx, reference, row, write ? "storage:write" : "storage:read", write ? "canContinue" : "canExport");
+}
+type AttachmentMetadata = { filename?: string; dimensions?: { width: number; height: number }; duration?: number; metadata?: unknown };
+function checkedMetadata(input: AttachmentMetadata, kind: Doc<"attachments">["type"]) {
+  if (input.filename !== undefined && (!input.filename || input.filename.length > 256 || /[\r\n\x00]/.test(input.filename))) assetDenied("INVALID_ASSET_METADATA");
+  if (input.dimensions && (!["image", "video"].includes(kind) || !Number.isSafeInteger(input.dimensions.width) || input.dimensions.width < 1 || !Number.isSafeInteger(input.dimensions.height) || input.dimensions.height < 1)) assetDenied("INVALID_ASSET_METADATA");
+  if (input.duration !== undefined && (!["audio", "video"].includes(kind) || !Number.isFinite(input.duration) || input.duration < 0)) assetDenied("INVALID_ASSET_METADATA");
+  if (input.metadata !== undefined) {
+    if (typeof input.metadata !== "object" || input.metadata === null || Array.isArray(input.metadata)) assetDenied("INVALID_ASSET_METADATA");
+    try { if (new TextEncoder().encode(canonicalModelJson(input.metadata)).byteLength > 16384) assetDenied("INVALID_ASSET_METADATA"); } catch { assetDenied("INVALID_ASSET_METADATA"); }
   }
-
-  const candidate = await ctx.db
-    .query("attachments")
-    .withIndex("by_attachmentId", (q: any) =>
-      q.eq("attachmentId", attachmentId),
-    )
-    .first();
-
-  // Security: Only match global records (no tenantId) to prevent cross-tenant access
-  return candidate && !candidate.tenantId ? candidate : null;
+  return { ...(input.filename !== undefined ? { filename: input.filename } : {}), ...(input.dimensions ? { dimensions: input.dimensions } : {}), ...(input.duration !== undefined ? { duration: input.duration } : {}), ...(input.metadata !== undefined ? { metadata: input.metadata } : {}) };
 }
-
-// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-// Mutations (Write Operations)
-// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-
-/**
- * Generate a pre-signed upload URL for file upload.
- *
- * This mutation creates a short-lived (1 hour) upload URL that clients
- * can use to upload files directly to Convex storage.
- *
- * @example
- * ```typescript
- * const { uploadUrl } = await cortex.attachments.generateUploadUrl();
- *
- * // Client uploads file to uploadUrl via POST
- * const response = await fetch(uploadUrl, { method: 'POST', body: file });
- * const { storageId } = await response.json();
- *
- * // Then register the attachment
- * await cortex.attachments.attach({ storageId, ... });
- * ```
- */
-export const generateUploadUrl = mutation({
-  args: {
-    // Multi-tenancy (optional - passed by SDKs for consistency/auditing)
-    tenantId: v.optional(v.string()),
-  },
-  handler: async (ctx) => {
-    // Generate upload URL (expires in 1 hour per Convex docs)
-    // Note: tenantId is accepted for SDK consistency but not used here
-    // since Convex storage is global; tenant isolation happens at attach()
-    const uploadUrl = await ctx.storage.generateUploadUrl();
-
-    return {
-      uploadUrl,
-    };
-  },
-});
-
-/**
- * Register an uploaded file as an attachment.
- *
- * Call this after successfully uploading a file using the URL from generateUploadUrl.
- */
-export const attach = mutation({
-  args: {
-    // Required fields
-    storageId: v.id("_storage"), // Convex storage ID from upload
-    memorySpaceId: v.string(), // Memory space isolation
-    userId: v.string(), // User who owns this attachment
-    type: attachmentTypeValidator, // Attachment type
-    mimeType: v.string(), // MIME type (e.g., "image/png")
-    filename: v.string(), // Original filename
-    size: v.number(), // File size in bytes
-
-    // Optional linkage
-    conversationId: v.optional(v.string()), // Link to conversation
-    messageId: v.optional(v.string()), // Link to specific message
-    memoryId: v.optional(v.string()), // Link to memory
-    artifactId: v.optional(v.string()), // Link to artifact
-
-    // Optional type-specific metadata
-    dimensions: v.optional(
-      v.object({
-        width: v.number(),
-        height: v.number(),
-      }),
-    ), // Image/video dimensions
-    duration: v.optional(v.number()), // Audio/video duration in seconds
-
-    // Generic metadata
-    metadata: v.optional(v.any()),
-
-    // Multi-tenancy
-    tenantId: v.optional(v.string()),
-  },
-  handler: async (ctx, args) => {
-    const now = Date.now();
-    const attachmentId = generateAttachmentId();
-
-    // Verify the storage ID exists
-    const storageMetadata = await ctx.storage.getMetadata(args.storageId);
-    if (!storageMetadata) {
-      throw new ConvexError({
-        code: "INVALID_STORAGE_ID",
-        message: "The provided storageId does not exist or has expired.",
-      });
-    }
-
-    const _id = await ctx.db.insert("attachments", {
-      attachmentId,
-      memorySpaceId: args.memorySpaceId,
-      tenantId: args.tenantId,
-      userId: args.userId,
-      conversationId: args.conversationId,
-      messageId: args.messageId,
-      memoryId: args.memoryId,
-      artifactId: args.artifactId,
-      storageId: args.storageId,
-      type: args.type,
-      mimeType: args.mimeType,
-      filename: args.filename,
-      size: args.size,
-      dimensions: args.dimensions,
-      duration: args.duration,
-      metadata: args.metadata,
-      createdAt: now,
-      updatedAt: now,
-    });
-
-    return await ctx.db.get(_id);
-  },
-});
-
-/**
- * Delete a single attachment.
- *
- * Removes both the metadata record and the file from storage.
- */
-export const remove = mutation({
-  args: {
-    attachmentId: v.string(),
-    tenantId: v.optional(v.string()),
-  },
-  handler: async (ctx, args) => {
-    const attachment = await lookupAttachment(
-      ctx,
-      args.attachmentId,
-      args.tenantId,
-    );
-
-    if (!attachment) {
-      throw new ConvexError({
-        code: "ATTACHMENT_NOT_FOUND",
-        message: `Attachment with ID '${args.attachmentId}' not found.`,
-      });
-    }
-
-    // Delete file from storage
-    try {
-      await ctx.storage.delete(attachment.storageId);
-    } catch (error) {
-      // Log but don't fail - file might already be deleted or inaccessible
-      console.warn(
-        `Failed to delete file ${attachment.storageId}:`,
-        error,
-      );
-    }
-
-    // Delete the attachment record
-    await ctx.db.delete(attachment._id);
-
-    return {
-      deleted: true,
-      attachmentId: args.attachmentId,
-      deletedAt: Date.now(),
-    };
-  },
-});
-
-/**
- * Bulk delete multiple attachments.
- *
- * Removes both the metadata records and files from storage.
- * Returns the count of successfully deleted attachments.
- */
-export const removeMany = mutation({
-  args: {
-    attachmentIds: v.array(v.string()),
-    tenantId: v.optional(v.string()),
-  },
-  handler: async (ctx, args) => {
-    let deleted = 0;
-    const errors: Array<{ attachmentId: string; error: string }> = [];
-
-    for (const attachmentId of args.attachmentIds) {
-      try {
-        const attachment = await lookupAttachment(
-          ctx,
-          attachmentId,
-          args.tenantId,
-        );
-
-        if (!attachment) {
-          errors.push({
-            attachmentId,
-            error: "ATTACHMENT_NOT_FOUND",
-          });
-          continue;
-        }
-
-        // Delete file from storage
-        try {
-          await ctx.storage.delete(attachment.storageId);
-        } catch (error) {
-          console.warn(
-            `Failed to delete file ${attachment.storageId}:`,
-            error,
-          );
-        }
-
-        // Delete the attachment record
-        await ctx.db.delete(attachment._id);
-        deleted++;
-      } catch (error) {
-        errors.push({
-          attachmentId,
-          error: error instanceof Error ? error.message : "Unknown error",
-        });
-      }
-    }
-
-    return {
-      deleted,
-      total: args.attachmentIds.length,
-      errors: errors.length > 0 ? errors : undefined,
-    };
-  },
-});
-
-/**
- * Purge ALL attachments (TEST/DEV ONLY)
- *
- * WARNING: Permanently deletes all attachments and their files!
- */
-export const purgeAll = mutation({
-  args: {
-    memorySpaceId: v.optional(v.string()), // Limit to memory space if provided
-    tenantId: v.optional(v.string()), // Limit to tenant if provided
-  },
-  handler: async (ctx, args) => {
-    // Safety check: Only allow in test/dev environments
-    const siteUrl = process.env.CONVEX_SITE_URL || "";
-    const isLocal =
-      siteUrl.includes("localhost") || siteUrl.includes("127.0.0.1");
-    const isDevDeployment =
-      siteUrl.includes(".convex.site") ||
-      siteUrl.includes("dev-") ||
-      siteUrl.includes("-dev") ||
-      siteUrl.includes("preview") ||
-      siteUrl.includes("staging");
-    const isTestEnv =
-      process.env.NODE_ENV === "test" ||
-      process.env.CONVEX_ENVIRONMENT === "test" ||
-      process.env.CONVEX_ENVIRONMENT === "development";
-
-    if (!isLocal && !isDevDeployment && !isTestEnv) {
-      throw new Error(
-        "PURGE_DISABLED_IN_PRODUCTION: purgeAll is only available in test/dev environments.",
-      );
-    }
-
-    let attachments;
-    if (args.tenantId && args.memorySpaceId) {
-      attachments = await ctx.db
-        .query("attachments")
-        .withIndex("by_tenant_space", (q) =>
-          q
-            .eq("tenantId", args.tenantId!)
-            .eq("memorySpaceId", args.memorySpaceId!),
-        )
-        .collect();
-    } else if (args.tenantId) {
-      attachments = await ctx.db
-        .query("attachments")
-        .withIndex("by_tenantId", (q) => q.eq("tenantId", args.tenantId!))
-        .collect();
-    } else if (args.memorySpaceId) {
-      attachments = await ctx.db
-        .query("attachments")
-        .withIndex("by_memorySpace", (q) =>
-          q.eq("memorySpaceId", args.memorySpaceId!),
-        )
-        .collect();
-    } else {
-      attachments = await ctx.db.query("attachments").collect();
-    }
-
-    let filesDeleted = 0;
-    for (const attachment of attachments) {
-      // Delete file from storage
-      try {
-        await ctx.storage.delete(attachment.storageId);
-        filesDeleted++;
-      } catch (error) {
-        console.warn(
-          `Failed to delete file ${attachment.storageId}:`,
-          error,
-        );
-      }
-
-      // Delete the attachment record
-      await ctx.db.delete(attachment._id);
-    }
-
-    return {
-      deleted: attachments.length,
-      filesDeleted,
-    };
-  },
-});
-
-// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-// Queries (Read Operations)
-// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-
-/**
- * Get a single attachment by ID.
- */
-export const get = query({
-  args: {
-    attachmentId: v.string(),
-    tenantId: v.optional(v.string()),
-  },
-  handler: async (ctx, args) => {
-    return await lookupAttachment(ctx, args.attachmentId, args.tenantId);
-  },
-});
-
-/**
- * Get signed download URL for an attachment.
- */
-export const getUrl = query({
-  args: {
-    attachmentId: v.string(),
-    tenantId: v.optional(v.string()),
-  },
-  handler: async (ctx, args) => {
-    const attachment = await lookupAttachment(
-      ctx,
-      args.attachmentId,
-      args.tenantId,
-    );
-
-    if (!attachment) {
-      return null;
-    }
-
-    // Get signed URL from storage
-    const url = await ctx.storage.getUrl(attachment.storageId);
-
-    if (!url) {
-      return null;
-    }
-
-    return {
-      url,
-      attachmentId: attachment.attachmentId,
-      mimeType: attachment.mimeType,
-      filename: attachment.filename,
-      size: attachment.size,
-    };
-  },
-});
-
-/**
- * List attachments with comprehensive filters and pagination.
- */
-export const list = query({
-  args: {
-    memorySpaceId: v.string(), // Required - memory space isolation
-    tenantId: v.optional(v.string()),
-
-    // Optional filters
-    conversationId: v.optional(v.string()),
-    messageId: v.optional(v.string()),
-    memoryId: v.optional(v.string()),
-    artifactId: v.optional(v.string()),
-    userId: v.optional(v.string()),
-    type: v.optional(attachmentTypeValidator),
-
-    // Pagination
-    limit: v.optional(v.number()),
-    cursor: v.optional(v.string()),
-
-    // Sorting
-    sortBy: v.optional(v.union(v.literal("createdAt"), v.literal("updatedAt"))),
-    sortOrder: v.optional(v.union(v.literal("asc"), v.literal("desc"))),
-  },
-  handler: async (ctx, args) => {
-    const limit = Math.min(args.limit || 50, 1000); // Max 1000 (matches SDK validators)
-
-    // Select optimal index based on provided filters
-    let attachments;
-
-    if (args.tenantId) {
-      attachments = await ctx.db
-        .query("attachments")
-        .withIndex("by_tenant_space", (q) =>
-          q
-            .eq("tenantId", args.tenantId!)
-            .eq("memorySpaceId", args.memorySpaceId),
-        )
-        .collect();
-    } else if (args.type) {
-      attachments = await ctx.db
-        .query("attachments")
-        .withIndex("by_memorySpace_type", (q) =>
-          q.eq("memorySpaceId", args.memorySpaceId).eq("type", args.type!),
-        )
-        .collect();
-      // Security: Only match global records when no tenantId provided
-      attachments = attachments.filter((a) => !a.tenantId);
-    } else {
-      attachments = await ctx.db
-        .query("attachments")
-        .withIndex("by_memorySpace", (q) =>
-          q.eq("memorySpaceId", args.memorySpaceId),
-        )
-        .collect();
-      // Security: Only match global records when no tenantId provided
-      attachments = attachments.filter((a) => !a.tenantId);
-    }
-
-    // Apply post-filters
-    if (args.conversationId) {
-      attachments = attachments.filter(
-        (a) => a.conversationId === args.conversationId,
-      );
-    }
-    if (args.messageId) {
-      attachments = attachments.filter((a) => a.messageId === args.messageId);
-    }
-    if (args.memoryId) {
-      attachments = attachments.filter((a) => a.memoryId === args.memoryId);
-    }
-    if (args.artifactId) {
-      attachments = attachments.filter((a) => a.artifactId === args.artifactId);
-    }
-    if (args.userId) {
-      attachments = attachments.filter((a) => a.userId === args.userId);
-    }
-    // Filter by type if not already filtered by index
-    if (args.type && args.tenantId) {
-      attachments = attachments.filter((a) => a.type === args.type);
-    }
-
-    // Get total before pagination
-    const total = attachments.length;
-
-    // Sort
-    const sortBy = args.sortBy || "createdAt";
-    const sortOrder = args.sortOrder || "desc";
-    const multiplier = sortOrder === "desc" ? -1 : 1;
-
-    attachments.sort((a, b) => {
-      const aVal = sortBy === "updatedAt" ? a.updatedAt : a.createdAt;
-      const bVal = sortBy === "updatedAt" ? b.updatedAt : b.createdAt;
-      return (aVal - bVal) * multiplier;
-    });
-
-    // Handle cursor-based pagination
-    let offset = 0;
-    if (args.cursor) {
-      try {
-        const cursorData = JSON.parse(
-          Buffer.from(args.cursor, "base64").toString("utf-8"),
-        );
-        offset = cursorData.offset || 0;
-      } catch {
-        // Invalid cursor, start from beginning
-        offset = 0;
-      }
-    }
-
-    // Paginate
-    const paginated = attachments.slice(offset, offset + limit);
-
-    // Generate next cursor
-    const hasMore = offset + limit < total;
-    const nextCursor = hasMore
-      ? Buffer.from(JSON.stringify({ offset: offset + limit })).toString(
-          "base64",
-        )
-      : undefined;
-
-    return {
-      attachments: paginated,
-      total,
-      cursor: nextCursor,
-      hasMore,
-    };
-  },
-});
-
-/**
- * Count attachments matching filters.
- */
-export const count = query({
-  args: {
-    memorySpaceId: v.string(),
-    tenantId: v.optional(v.string()),
-    conversationId: v.optional(v.string()),
-    messageId: v.optional(v.string()),
-    userId: v.optional(v.string()),
-    type: v.optional(attachmentTypeValidator),
-  },
-  handler: async (ctx, args) => {
-    let attachments;
-
-    if (args.tenantId) {
-      attachments = await ctx.db
-        .query("attachments")
-        .withIndex("by_tenant_space", (q) =>
-          q
-            .eq("tenantId", args.tenantId!)
-            .eq("memorySpaceId", args.memorySpaceId),
-        )
-        .collect();
-    } else {
-      attachments = await ctx.db
-        .query("attachments")
-        .withIndex("by_memorySpace", (q) =>
-          q.eq("memorySpaceId", args.memorySpaceId),
-        )
-        .collect();
-      // Security: Only match global records when no tenantId provided
-      attachments = attachments.filter((a) => !a.tenantId);
-    }
-
-    // Apply filters
-    if (args.conversationId) {
-      attachments = attachments.filter(
-        (a) => a.conversationId === args.conversationId,
-      );
-    }
-    if (args.messageId) {
-      attachments = attachments.filter((a) => a.messageId === args.messageId);
-    }
-    if (args.userId) {
-      attachments = attachments.filter((a) => a.userId === args.userId);
-    }
-    if (args.type) {
-      attachments = attachments.filter((a) => a.type === args.type);
-    }
-
-    return attachments.length;
-  },
-});
-
-/**
- * Get multiple attachments by IDs.
- */
-export const getByIds = query({
-  args: {
-    attachmentIds: v.array(v.string()),
-    tenantId: v.optional(v.string()),
-  },
-  handler: async (ctx, args) => {
-    const results: Array<any> = [];
-
-    for (const attachmentId of args.attachmentIds) {
-      const attachment = await lookupAttachment(
-        ctx,
-        attachmentId,
-        args.tenantId,
-      );
-      if (attachment) {
-        results.push(attachment);
-      }
-    }
-
-    return results;
-  },
-});
-
-/**
- * Get attachments for a specific conversation.
- */
-export const getByConversation = query({
-  args: {
-    conversationId: v.string(),
-    tenantId: v.optional(v.string()),
-    type: v.optional(attachmentTypeValidator),
-    limit: v.optional(v.number()),
-  },
-  handler: async (ctx, args) => {
-    const limit = Math.min(args.limit || 50, 100);
-
-    let attachments = await ctx.db
-      .query("attachments")
-      .withIndex("by_conversation", (q) =>
-        q.eq("conversationId", args.conversationId),
-      )
-      .collect();
-
-    // Tenant filtering
-    if (args.tenantId) {
-      attachments = attachments.filter((a) => a.tenantId === args.tenantId);
-    } else {
-      // Security: Only match global records when no tenantId provided
-      attachments = attachments.filter((a) => !a.tenantId);
-    }
-
-    // Type filtering
-    if (args.type) {
-      attachments = attachments.filter((a) => a.type === args.type);
-    }
-
-    // Sort by createdAt descending (newest first)
-    attachments.sort((a, b) => b.createdAt - a.createdAt);
-
-    // Apply limit
-    return attachments.slice(0, limit);
-  },
-});
-
-/**
- * Get attachments for a specific message.
- */
-export const getByMessage = query({
-  args: {
-    messageId: v.string(),
-    tenantId: v.optional(v.string()),
-  },
-  handler: async (ctx, args) => {
-    let attachments = await ctx.db
-      .query("attachments")
-      .withIndex("by_message", (q) => q.eq("messageId", args.messageId))
-      .collect();
-
-    // Tenant filtering
-    if (args.tenantId) {
-      attachments = attachments.filter((a) => a.tenantId === args.tenantId);
-    } else {
-      // Security: Only match global records when no tenantId provided
-      attachments = attachments.filter((a) => !a.tenantId);
-    }
-
-    // Sort by createdAt ascending (order added)
-    attachments.sort((a, b) => a.createdAt - b.createdAt);
-
-    return attachments;
-  },
-});
+function attachmentKind(value: { mediaKind: string; mimeType: string }): Doc<"attachments">["type"] { return value.mediaKind === "document" ? value.mimeType === "application/pdf" ? "pdf" : "file" : value.mediaKind === "binary" ? "file" : value.mediaKind as "image" | "audio" | "video"; }
+function output(row: Doc<"attachments">, asset: ReturnType<typeof publicAsset>) { return { _id: String(row._id), storageId: String(row.storageId), updatedAt: row.updatedAt, attachmentId: row.attachmentId, tenantId: row.tenantId, memorySpaceId: row.memorySpaceId, userId: row.userId, type: row.type, filename: row.filename, mimeType: asset.mimeType, size: asset.sizeBytes, asset, createdAt: row.createdAt, ...(row.conversationId ? { conversationId: row.conversationId } : {}), ...(row.messageId ? { messageId: row.messageId } : {}), ...(row.dimensions ? { dimensions: row.dimensions } : {}), ...(row.duration !== undefined ? { duration: row.duration } : {}), ...(row.metadata !== undefined ? { metadata: row.metadata } : {}) }; }
+async function link(ctx: MutationCtx, args: ScopeArgs & { assetId: string; version: number; attachmentId?: string; conversationId?: string; messageId?: string } & AttachmentMetadata) {
+  const actor = await requireDataAuthority(ctx, args, "storage:write"); const reference = dataAuthorityReference(actor); const value = await assetVersion(ctx, { tenantId: actor.tenantId, memorySpaceId: actor.memorySpaceId! }, args.assetId, args.version); if (!value) assetDenied();
+  await authorizeAsset(ctx, reference, value); await conversation(ctx, reference, args.conversationId, true);
+  const info = checkedMetadata(args, attachmentKind(value));
+  const id = args.attachmentId ?? `attachment:${crypto.randomUUID()}`;
+  const old = await ctx.db.query("attachments").withIndex("by_runtime_key", q => q.eq("tenantId", actor.tenantId).eq("memorySpaceId", actor.memorySpaceId!).eq("attachmentId", id)).unique();
+  if (old) { if (old.tombstonedAt !== undefined || old.ownerPrincipalId !== actor.principalId || old.assetVersionId !== value.versionId || old.conversationId !== args.conversationId || old.messageId !== args.messageId || old.filename !== (info.filename ?? value.filename ?? "asset") || canonicalModelJson(old.dimensions ?? null) !== canonicalModelJson(info.dimensions ?? null) || old.duration !== info.duration || canonicalModelJson(old.metadata ?? null) !== canonicalModelJson(info.metadata ?? null)) assetDenied("ASSET_IDEMPOTENCY_CONFLICT"); return output(old, publicAsset(value)); }
+  const now = Date.now(); const rowId = await ctx.db.insert("attachments", { tenantId: actor.tenantId, memorySpaceId: actor.memorySpaceId!, attachmentId: id, ownerPrincipalId: actor.principalId, assetVersionId: value.versionId, userId: actor.userId, storageId: value.storageId, type: attachmentKind(value), mimeType: value.mimeType, filename: info.filename ?? value.filename ?? "asset", size: value.sizeBytes, ...info, ...(args.conversationId ? { conversationId: args.conversationId } : {}), ...(args.messageId ? { messageId: args.messageId } : {}), createdAt: now, updatedAt: now });
+  await addAssetReference(ctx, value, { kind: "attachment", ownerId: id, ownerVersion: "current", ownerPrincipalId: actor.principalId, ...(args.conversationId ? { conversationId: args.conversationId } : {}) });
+  return output((await ctx.db.get("attachments", rowId))!, publicAsset(value));
+}
+export const create = mutation({ args: { ...scopeArgs, assetId: v.string(), version: v.number(), attachmentId: v.optional(v.string()), conversationId: v.optional(v.string()), messageId: v.optional(v.string()) }, handler: link });
+/** Legacy storage selectors can only name a ready catalog version with exact metadata. */
+export const attach = mutation({ args: { tenantId: v.optional(v.string()), memorySpaceId: v.string(), storageId: v.id("_storage"), userId: v.string(), type: attachmentTypeValidator, mimeType: v.string(), filename: v.string(), size: v.number(), conversationId: v.optional(v.string()), messageId: v.optional(v.string()), memoryId: v.optional(v.string()), artifactId: v.optional(v.string()), dimensions: v.optional(v.object({ width: v.number(), height: v.number() })), duration: v.optional(v.number()), metadata: v.optional(v.any()) }, handler: async (ctx, args) => {
+  const actor = await requireDataAuthority(ctx, args, "storage:write"); if (actor.userId !== args.userId || args.memoryId || args.artifactId) assetDenied();
+  const value = await ctx.db.query("runtimeAssetVersions").withIndex("by_storage", q => q.eq("storageId", args.storageId)).unique();
+  if (!value || value.tenantId !== actor.tenantId || value.memorySpaceId !== actor.memorySpaceId || value.mimeType !== args.mimeType || value.sizeBytes !== args.size || attachmentKind(value) !== args.type) assetDenied("ASSET_REFERENCE_CONFLICT");
+  return link(ctx, { tenantId: actor.tenantId, memorySpaceId: actor.memorySpaceId, assetId: value.assetId, version: value.assetVersion, ...checkedMetadata(args, args.type), ...(args.conversationId ? { conversationId: args.conversationId } : {}), ...(args.messageId ? { messageId: args.messageId } : {}) });
+} });
+export const get = mutation({ args: { ...scopeArgs, attachmentId: v.string() }, handler: async (ctx, args) => { const held = await current(ctx, args, args.attachmentId); return output(held.row, publicAsset(held.value)); } });
+async function removeOne(ctx: MutationCtx, args: ScopeArgs, id: string) { const held = await current(ctx, args, id, true); await ctx.db.patch("attachments", held.row._id, { tombstonedAt: Date.now(), updatedAt: Date.now() }); await releaseAssetReferences(ctx, { tenantId: held.row.tenantId!, memorySpaceId: held.row.memorySpaceId }, "attachment", id); return { deleted: true, attachmentId: id }; }
+export const remove = mutation({ args: { ...scopeArgs, attachmentId: v.string() }, handler: async (ctx, args) => await removeOne(ctx, args, args.attachmentId) });
+export const removeMany = mutation({ args: { ...scopeArgs, attachmentIds: v.array(v.string()) }, handler: async (ctx, args) => { if (args.attachmentIds.length > 100) assetDenied("ASSET_REFERENCE_LIMIT"); for (const id of args.attachmentIds) await removeOne(ctx, args, id); return { deleted: args.attachmentIds.length }; } });
+const filters = { ...scopeArgs, conversationId: v.optional(v.string()), messageId: v.optional(v.string()), userId: v.optional(v.string()), type: v.optional(attachmentTypeValidator), limit: v.optional(v.number()), cursor: v.optional(v.string()), memoryId: v.optional(v.string()), artifactId: v.optional(v.string()), sortBy: v.optional(v.string()), sortOrder: v.optional(v.string()) };
+async function listRows(ctx: MutationCtx, args: ScopeArgs & { conversationId?: string; messageId?: string; userId?: string; type?: Doc<"attachments">["type"]; limit?: number; cursor?: string; memoryId?: string; artifactId?: string; sortBy?: string; sortOrder?: string }) {
+  const actor = await requireDataAuthority(ctx, args, "storage:read"); if (args.userId && args.userId !== actor.userId || args.cursor || args.memoryId || args.artifactId || args.sortBy && !["createdAt", "updatedAt", "size", "filename"].includes(args.sortBy) || args.sortOrder && !["asc", "desc"].includes(args.sortOrder)) assetDenied("INVALID_ASSET_METADATA");
+  const rows = await ctx.db.query("attachments").withIndex("by_memorySpace", q => q.eq("memorySpaceId", actor.memorySpaceId!)).filter(q => q.and(q.eq(q.field("tenantId"), actor.tenantId), q.eq(q.field("tombstonedAt"), undefined), actor.resourceAccess === "own" ? q.eq(q.field("ownerPrincipalId"), actor.principalId) : q.eq(1, 1))).take(101);
+  if (rows.length > 100) assetDenied("ASSET_REFERENCE_LIMIT"); const result = [];
+  for (const row of rows) if ((!args.conversationId || row.conversationId === args.conversationId) && (!args.messageId || row.messageId === args.messageId) && (!args.type || row.type === args.type)) {
+    const held = await current(ctx, args, row.attachmentId); result.push(output(held.row, publicAsset(held.value)));
+  }
+  const sortBy = args.sortBy ?? "createdAt"; const direction = args.sortOrder === "desc" ? -1 : 1;
+  result.sort((a, b) => { const x = a[sortBy as "createdAt" | "updatedAt" | "size" | "filename"]; const y = b[sortBy as "createdAt" | "updatedAt" | "size" | "filename"]; return direction * (x < y ? -1 : x > y ? 1 : a.attachmentId.localeCompare(b.attachmentId)); });
+  const limit = args.limit ?? 100; if (!Number.isInteger(limit) || limit < 1 || limit > 100) assetDenied("INVALID_ASSET_METADATA"); return result.slice(0, limit);
+}
+export const list = mutation({ args: filters, handler: async (ctx, args) => { const rows = await listRows(ctx, args); return { attachments: rows, total: rows.length, hasMore: false }; } });
+export const count = mutation({ args: filters, handler: async (ctx, args) => (await listRows(ctx, args)).length });
+export const getByConversation = mutation({ args: { ...filters, conversationId: v.string() }, handler: listRows });
+export const getByMessage = mutation({ args: { ...filters, messageId: v.string() }, handler: listRows });
+export const getByIds = mutation({ args: { ...scopeArgs, attachmentIds: v.array(v.string()) }, handler: async (ctx, args) => { if (args.attachmentIds.length > 100) assetDenied("ASSET_REFERENCE_LIMIT"); const result = []; for (const id of args.attachmentIds) { const held = await current(ctx, args, id); result.push(output(held.row, publicAsset(held.value))); } return result; } });
+export const generateUploadUrl = internalMutation({ args: { tenantId: v.optional(v.string()) }, handler: () => assetDenied("PRIVATE_ASSET_HTTP_REQUIRED") });
+export const getUrl = internalQuery({ args: { ...scopeArgs, attachmentId: v.string() }, handler: () => assetDenied("PRIVATE_ASSET_HTTP_REQUIRED") });
+export const purgeAll = internalMutation({ args: { tenantId: v.optional(v.string()), memorySpaceId: v.optional(v.string()) }, handler: () => assetDenied("PRIVATE_ASSET_HTTP_REQUIRED") });

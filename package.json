@@ -1,6 +1,6 @@
 {
   "name": "@cortexmemory/sdk",
-  "version": "0.37.0",
+  "version": "0.39.0",
   "description": "AI agent memory SDK built on Convex - ACID storage, vector search, and conversation management",
   "type": "module",
   "workspaces": [
@@ -15,6 +15,16 @@
       "types": "./dist/index.d.ts",
       "import": "./dist/index.js",
       "require": "./dist/index.cjs"
+    },
+    "./runtime": {
+      "types": "./dist/client-runtime/index.d.ts",
+      "import": "./dist/client-runtime/index.js",
+      "require": "./dist/client-runtime/index.cjs"
+    },
+    "./runtime/graph": {
+      "types": "./dist/graph-runtime/index.d.ts",
+      "import": "./dist/graph-runtime/index.js",
+      "require": "./dist/graph-runtime/index.cjs"
     }
   },
   "files": [
@@ -58,7 +68,7 @@
     "provenance": true
   },
   "scripts": {
-    "build": "tsup src/index.ts --format cjs,esm --dts --clean",
+    "build": "tsup src/index.ts --format cjs,esm --dts --clean && tsup src/client-runtime/index.ts --format cjs,esm --dts --out-dir dist/client-runtime && tsup src/graph/runtime/index.ts --format cjs,esm --dts --out-dir dist/graph-runtime && node scripts/backend/build-distribution.mjs",
     "build:watch": "tsup src/index.ts --format cjs,esm --dts --watch",
     "clean": "rimraf dist",
     "prepublishOnly": "npm test && npm run build",
@@ -85,7 +95,10 @@
     "test:stress": "npx tsx tests/resilience-stress.manual.ts",
     "update-deps": "node scripts/update-deps.mjs",
     "update-deps:dry": "node scripts/update-deps.mjs --dry-run",
-    "test:contracts": "node scripts/verify-public-contracts.mjs"
+    "test:contracts": "node scripts/verify-public-contracts.mjs",
+    "build:backend": "node scripts/backend/build-distribution.mjs",
+    "build:runtime:watch": "tsup src/client-runtime/index.ts --format cjs,esm --dts --out-dir dist/client-runtime --watch",
+    "test:release": "node --test tests/release-pipeline.test.mjs"
   },
   "peerDependencies": {
     "@anthropic-ai/sdk": "^0.131.0",
@@ -122,7 +135,14 @@
     "typescript": "~6.0.3"
   },
   "dependencies": {
-    "neo4j-driver": "^6.2.0"
+    "@convex-dev/agent": "0.7.3",
+    "@convex-dev/ai-sdk-provider": "0.2.1",
+    "@convex-dev/workflow": "0.4.8",
+    "@convex-dev/workpool": "0.4.13",
+    "ai": "7.0.127",
+    "fast-sha256": "1.3.0",
+    "neo4j-driver": "^6.2.0",
+    "zod": "4.6.5"
   },
   "engines": {
     "node": ">=24.15.0"

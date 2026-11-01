@@ -24,7 +24,7 @@ import {
   useSidebar,
 } from "@/components/ui/sidebar";
 import type { Chat } from "@/lib/types";
-import { fetcher } from "@/lib/utils";
+import { fetcher, fetchWithErrorHandlers } from "@/lib/utils";
 import { LoaderIcon } from "./icons";
 import { ChatItem } from "./sidebar-history-item";
 
@@ -130,7 +130,7 @@ export function SidebarHistory({ user }: { user: User | undefined }) {
 
     setShowDeleteDialog(false);
 
-    const deletePromise = fetch(`/api/chat?id=${chatToDelete}`, {
+    const deletePromise = fetchWithErrorHandlers(`/api/chat?id=${chatToDelete}`, {
       method: "DELETE",
     });
 

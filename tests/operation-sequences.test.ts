@@ -9,7 +9,9 @@
  */
 
 import { describe, it, expect, beforeAll, afterAll, jest } from "@jest/globals";
-import { Cortex } from "../src/index";
+import { Cortex, testDeploymentKey } from "./helpers/deployment-operator";
+import { createErasureTransport, type ErasureTransport } from "../src/users/erasure";
+import { createRuntimeFixture } from "./helpers/runtime-fixture";
 import { createNamedTestRunContext, waitForCondition } from "./helpers";
 
 // Retry failed tests once - Convex backend can have transient errors under parallel load
@@ -19,15 +21,37 @@ describe("Operation Sequence Validation", () => {
   // Create unique test run context for parallel-safe execution
   const ctx = createNamedTestRunContext("opseq");
   let cortex: Cortex;
+  let profileSequenceCortex: Cortex;
+  let erasureTransport: ErasureTransport;
   const TEST_AGENT_ID = ctx.agentId("test");
+  const RUNTIME_USER_ID = ctx.userId("runtime-owner");
+  let runtime: Awaited<ReturnType<typeof createRuntimeFixture>>;
+  const CONTEXT_SCOPES = ["ctx-lifecycle", "ctx-hierarchy-seq", "cross-layer", "journey", "long-seq"].map(suffix => `${ctx.runId}-${suffix}`);
 
-  beforeAll(() => {
+  beforeAll(async () => {
     console.log(`\n🧪 Operation Sequence Tests - Run ID: ${ctx.runId}\n`);
     cortex = new Cortex({ convexUrl: process.env.CONVEX_URL! });
+    // This actual cascade owns its legacy tenant. Unrelated unscoped provenance
+    // retained by other suites must not become part of this profile's plan.
+    profileSequenceCortex = new Cortex({
+      convexUrl: process.env.CONVEX_URL!,
+      auth: { userId: ctx.userId("profile-sequence-operator"), tenantId: `${ctx.runId}-profile-sequence` },
+    });
+    erasureTransport = createErasureTransport({ url: process.env.CONVEX_URL!, deploymentKey: testDeploymentKey(process.env.CONVEX_URL!) });
+    runtime = await createRuntimeFixture(ctx.runId, CONTEXT_SCOPES, RUNTIME_USER_ID);
+    Object.defineProperty(cortex, "contexts", { value: runtime.cortex.contexts });
   });
 
   afterAll(async () => {
-    // Note: With TestRunContext, cleanup is less critical since IDs are unique
+    const cleanups = await Promise.allSettled([
+      () => erasureTransport.close(),
+      () => runtime.close(),
+      () => cortex.shutdown(),
+      () => profileSequenceCortex.shutdown(),
+    ].map(cleanup => Promise.resolve().then(cleanup)));
+    const failed = cleanups.find(cleanup => cleanup.status === "rejected");
+    if (failed?.status === "rejected") throw failed.reason;
+    // All IDs belong to this test run; deployment cleanup is owned by CI reset.
     console.log(`\n🧹 Operation Sequence Tests - Run ${ctx.runId} complete\n`);
   });
 
@@ -426,12 +450,11 @@ describe("Operation Sequence Validation", () => {
   describe("Contexts: Full Lifecycle Sequence", () => {
     it("create→get→update→get→complete→get→delete→get", async () => {
       const spaceId = `${ctx.runId}-ctx-lifecycle`;
-      const userId = "lifecycle-user";
 
       // STEP 1: Create
       const created = await cortex.contexts.create({
         memorySpaceId: spaceId,
-        userId,
+        userId: RUNTIME_USER_ID,
         purpose: "Lifecycle test",
         status: "active",
         data: { progress: 0 },
@@ -487,18 +510,17 @@ describe("Operation Sequence Validation", () => {
       await cortex.contexts.delete(created.contextId);
 
       // STEP 8: Get (validate delete)
-      const afterDelete = await cortex.contexts.get(created.contextId);
-      expect(afterDelete).toBeNull();
+      await expect(cortex.contexts.get(created.contextId)).rejects.toMatchObject({ data: { code: "FORBIDDEN", outcome: "not_dispatched" } });
+      expect(await cortex.contexts.list({ memorySpaceId: spaceId })).toEqual([]);
     });
 
     it("hierarchical operations maintain parent-child integrity", async () => {
       const spaceId = `${ctx.runId}-ctx-hierarchy-seq`;
-      const userId = "hierarchy-user";
 
       // Create parent
       const parent = await cortex.contexts.create({
         memorySpaceId: spaceId,
-        userId,
+        userId: RUNTIME_USER_ID,
         purpose: "Parent",
         status: "active",
       });
@@ -519,7 +541,7 @@ describe("Operation Sequence Validation", () => {
       // Create child
       const child = await cortex.contexts.create({
         memorySpaceId: spaceId,
-        userId,
+        userId: RUNTIME_USER_ID,
         purpose: "Child",
         status: "active",
         parentId: parent.contextId,
@@ -840,6 +862,7 @@ describe("Operation Sequence Validation", () => {
       // STEP 4: Delete
       await cortex.memorySpaces.delete(spaceId, {
         cascade: true,
+        erasureTransport,
         reason: "test cleanup",
       });
 
@@ -904,9 +927,11 @@ describe("Operation Sequence Validation", () => {
   describe("Users: Data Evolution Sequence", () => {
     it("update→get→merge→get→delete validates profile changes", async () => {
       const userId = `user-seq-${Date.now()}`;
+      const users = profileSequenceCortex.users;
+      const foreign = await cortex.users.update(userId, { name: "Foreign profile" });
 
       // STEP 1: Create via update
-      const created = await cortex.users.update(userId, {
+      const created = await users.update(userId, {
         name: "Test User",
         email: "test@example.com",
       });
@@ -914,11 +939,11 @@ describe("Operation Sequence Validation", () => {
       expect(created.version).toBe(1);
 
       // STEP 2: Get
-      const afterCreate = await cortex.users.get(userId);
+      const afterCreate = await users.get(userId);
       expect(afterCreate!.data.name).toBe("Test User");
 
       // STEP 3: Merge additional data using merge() method
-      const merged = await cortex.users.merge(userId, {
+      const merged = await users.merge(userId, {
         preferences: { theme: "dark" },
       });
 
@@ -926,16 +951,18 @@ describe("Operation Sequence Validation", () => {
       expect((merged.data as any)?.preferences?.theme).toBe("dark"); // Added
 
       // STEP 4: Get (validate merge)
-      const afterMerge = await cortex.users.get(userId);
+      const afterMerge = await users.get(userId);
       expect(afterMerge!.data.name).toBe("Test User");
       expect((afterMerge!.data as any)?.preferences?.theme).toBe("dark");
 
       // STEP 5: Delete
-      await cortex.users.delete(userId, { cascade: true });
+      const deleted = await users.delete(userId, { cascade: true, erasureTransport });
+      expect(deleted.erasure).toMatchObject({ executed: true, complete: true, totalDeleted: 1, unknown: [] });
 
       // STEP 6: Get (validate delete)
-      const afterDelete = await cortex.users.get(userId);
+      const afterDelete = await users.get(userId);
       expect(afterDelete).toBeNull();
+      expect(await cortex.users.get(userId)).toEqual(foreign);
     });
 
     it("version increments with each update", async () => {
@@ -1163,13 +1190,22 @@ describe("Operation Sequence Validation", () => {
       expect(fact.sourceRef!.memoryId).toBe(mem.memoryId);
 
       // STEP 5: Create context
-      const testCtx = await cortex.contexts.create({
+      const contextsBefore = await cortex.contexts.list({ memorySpaceId: spaceId });
+      await expect(cortex.contexts.create({
         memorySpaceId: spaceId,
-        userId,
+        userId: RUNTIME_USER_ID,
         purpose: "Handle preference update",
         conversationRef: {
           conversationId: conv.conversationId,
         },
+        data: { factId: fact.factId },
+      })).rejects.toThrow("CAPABILITY_NOT_READY");
+      expect(await cortex.contexts.list({ memorySpaceId: spaceId })).toEqual(contextsBefore);
+      // The current public registry supports an unlinked workflow context.
+      const testCtx = await cortex.contexts.create({
+        memorySpaceId: spaceId,
+        userId: RUNTIME_USER_ID,
+        purpose: "Handle preference update",
         data: { factId: fact.factId },
       });
 
@@ -1484,14 +1520,23 @@ describe("Operation Sequence Validation", () => {
       });
 
       // Step 6: Create workflow context
-      const testCtx = await cortex.contexts.create({
+      const contextsBefore = await cortex.contexts.list({ memorySpaceId: spaceId });
+      await expect(cortex.contexts.create({
         memorySpaceId: spaceId,
-        userId,
+        userId: RUNTIME_USER_ID,
         purpose: "Handle food preferences",
         conversationRef: {
           conversationId: conv.conversationId,
           messageIds: [],
         },
+        data: { factId: fact.factId },
+      })).rejects.toThrow("CAPABILITY_NOT_READY");
+      expect(await cortex.contexts.list({ memorySpaceId: spaceId })).toEqual(contextsBefore);
+      // The current public registry supports an unlinked workflow context.
+      const testCtx = await cortex.contexts.create({
+        memorySpaceId: spaceId,
+        userId: RUNTIME_USER_ID,
+        purpose: "Handle food preferences",
         data: { factId: fact.factId },
       });
 
@@ -1516,9 +1561,8 @@ describe("Operation Sequence Validation", () => {
         conv.conversationId,
       );
       expect(factCheck!.sourceRef!.conversationId).toBe(conv.conversationId);
-      expect((ctxCheck as any).conversationRef!.conversationId).toBe(
-        conv.conversationId,
-      );
+      expect(ctxCheck!.conversationRef).toBeUndefined();
+      expect(ctxCheck!.data?.factId).toBe(fact.factId);
     });
 
     it("cascade delete cleans entire workflow", async () => {
@@ -1556,6 +1600,7 @@ describe("Operation Sequence Validation", () => {
       // Delete space with cascade
       await cortex.memorySpaces.delete(spaceId, {
         cascade: true,
+        erasureTransport,
         reason: "test cleanup",
       });
 
@@ -1654,12 +1699,11 @@ describe("Operation Sequence Validation", () => {
 
     it("long sequence maintains data integrity", async () => {
       const spaceId = `${ctx.runId}-long-seq`;
-      const userId = "long-user";
 
       // 20-step sequence
       let context = await cortex.contexts.create({
         memorySpaceId: spaceId,
-        userId,
+        userId: RUNTIME_USER_ID,
         purpose: "Long sequence test",
         status: "active",
         data: { step: 0 },

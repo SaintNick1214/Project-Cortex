@@ -1,0 +1,76 @@
+{
+  "version": 1,
+  "codec": "official Convex canonical",
+  "cases": [
+    {
+      "domain": {
+        "kind": "user",
+        "tenantId": "A",
+        "userId": "u"
+      },
+      "domainCanonical": "{\"kind\":\"user\",\"tenantId\":\"A\",\"userId\":\"u\"}",
+      "domainDigest": "f1fb6734af97380fe26891526f13c4dc4adaa8c7660ef261ed0929cc93f98660",
+      "request": {
+        "domain": {
+          "kind": "user",
+          "tenantId": "A",
+          "userId": "u"
+        },
+        "table": "memories",
+        "id": "physical-example",
+        "expectedFingerprint": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        "operationId": "operation-example",
+        "itemKey": "memories:physical-example",
+        "domainDigest": "f1fb6734af97380fe26891526f13c4dc4adaa8c7660ef261ed0929cc93f98660"
+      },
+      "requestCanonical": "{\"domain\":{\"kind\":\"user\",\"tenantId\":\"A\",\"userId\":\"u\"},\"domainDigest\":\"f1fb6734af97380fe26891526f13c4dc4adaa8c7660ef261ed0929cc93f98660\",\"expectedFingerprint\":\"aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa\",\"id\":\"physical-example\",\"itemKey\":\"memories:physical-example\",\"operationId\":\"operation-example\",\"table\":\"memories\"}",
+      "requestDigest": "c321ef92b7ef6339e63bcb1ae4a10a18f2e5d33e918840667cd7df83ca32b1e3"
+    },
+    {
+      "domain": {
+        "kind": "user",
+        "userId": "é🌱"
+      },
+      "domainCanonical": "{\"kind\":\"user\",\"userId\":\"é🌱\"}",
+      "domainDigest": "a99cff4d908a47036e0970e2ffb4caeb97678b8f40c4453920563abbb741c483",
+      "request": {
+        "domain": {
+          "kind": "user",
+          "userId": "é🌱"
+        },
+        "table": "memories",
+        "id": "physical-example",
+        "expectedFingerprint": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        "operationId": "operation-example",
+        "itemKey": "memories:physical-example",
+        "domainDigest": "a99cff4d908a47036e0970e2ffb4caeb97678b8f40c4453920563abbb741c483"
+      },
+      "requestCanonical": "{\"domain\":{\"kind\":\"user\",\"userId\":\"é🌱\"},\"domainDigest\":\"a99cff4d908a47036e0970e2ffb4caeb97678b8f40c4453920563abbb741c483\",\"expectedFingerprint\":\"aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa\",\"id\":\"physical-example\",\"itemKey\":\"memories:physical-example\",\"operationId\":\"operation-example\",\"table\":\"memories\"}",
+      "requestDigest": "a4a6f7931a37e1307957266c85b87aae967b695e1e89ef6f22d1eb06134aa24e"
+    },
+    {
+      "domain": {
+        "kind": "space",
+        "tenantId": "B",
+        "memorySpaceId": "s"
+      },
+      "domainCanonical": "{\"kind\":\"space\",\"memorySpaceId\":\"s\",\"tenantId\":\"B\"}",
+      "domainDigest": "cf5184414ed9d787d15c14445f60c05044d51dda18fda4bc79507b6dadd325d1",
+      "request": {
+        "domain": {
+          "kind": "space",
+          "tenantId": "B",
+          "memorySpaceId": "s"
+        },
+        "table": "memories",
+        "id": "physical-example",
+        "expectedFingerprint": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        "operationId": "operation-example",
+        "itemKey": "memories:physical-example",
+        "domainDigest": "cf5184414ed9d787d15c14445f60c05044d51dda18fda4bc79507b6dadd325d1"
+      },
+      "requestCanonical": "{\"domain\":{\"kind\":\"space\",\"memorySpaceId\":\"s\",\"tenantId\":\"B\"},\"domainDigest\":\"cf5184414ed9d787d15c14445f60c05044d51dda18fda4bc79507b6dadd325d1\",\"expectedFingerprint\":\"aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa\",\"id\":\"physical-example\",\"itemKey\":\"memories:physical-example\",\"operationId\":\"operation-example\",\"table\":\"memories\"}",
+      "requestDigest": "701ac0c2a80fbbde82982c524f991d9b1e36ec0d1f73b63c057cf74011a76267"
+    }
+  ]
+}

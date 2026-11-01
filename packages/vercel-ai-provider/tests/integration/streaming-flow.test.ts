@@ -1,3 +1,5 @@
+// Controlled legacy administration; no native authentication or services run in these mocks.
+const legacyCredentials = { deploymentKey: "unit-controlled-key" };
 /**
  * Integration Tests: Streaming Flow
  *
@@ -24,6 +26,7 @@ type StreamChunk = {
 
 // Mock Cortex SDK
 const mockCortex = {
+  deploymentOperator: true,
   memory: {
     recall: jest.fn().mockResolvedValue({
       context: "",
@@ -75,7 +78,7 @@ describe("Streaming Flow Integration", () => {
         rawCall: { rawPrompt: null, rawSettings: {} },
       });
 
-      const provider = new CortexMemoryProvider(mockLLM, config);
+      const provider = new CortexMemoryProvider(mockLLM, config, undefined, undefined, legacyCredentials);
 
       const result = await provider.doStream({
         prompt: [
@@ -105,7 +108,7 @@ describe("Streaming Flow Integration", () => {
         rawCall: {},
       });
 
-      const provider = new CortexMemoryProvider(mockLLM, config);
+      const provider = new CortexMemoryProvider(mockLLM, config, undefined, undefined, legacyCredentials);
 
       const result = await provider.doStream({
         prompt: [{ role: "user", content: [{ type: "text", text: "Test" }] }],
@@ -126,7 +129,7 @@ describe("Streaming Flow Integration", () => {
         rawCall: {},
       });
 
-      const provider = new CortexMemoryProvider(mockLLM, config);
+      const provider = new CortexMemoryProvider(mockLLM, config, undefined, undefined, legacyCredentials);
 
       const result = await provider.doStream({
         prompt: [{ role: "user", content: [{ type: "text", text: "Test" }] }],
@@ -148,7 +151,7 @@ describe("Streaming Flow Integration", () => {
         rawCall: {},
       });
 
-      const provider = new CortexMemoryProvider(mockLLM, config);
+      const provider = new CortexMemoryProvider(mockLLM, config, undefined, undefined, legacyCredentials);
 
       const result = await provider.doStream({
         prompt: [{ role: "user", content: [{ type: "text", text: "Test" }] }],
@@ -185,7 +188,7 @@ describe("Streaming Flow Integration", () => {
         enableMemoryStorage: true,
       });
       const mockLLM = createMockLLM();
-      const provider = new CortexMemoryProvider(mockLLM, config);
+      const provider = new CortexMemoryProvider(mockLLM, config, undefined, undefined, legacyCredentials);
 
       await provider.doStream({
         prompt: [
@@ -219,7 +222,7 @@ describe("Streaming Flow Integration", () => {
         contextInjectionStrategy: "system",
       });
       const mockLLM = createMockLLM();
-      const provider = new CortexMemoryProvider(mockLLM, config);
+      const provider = new CortexMemoryProvider(mockLLM, config, undefined, undefined, legacyCredentials);
 
       await provider.doStream({
         prompt: [{ role: "user", content: [{ type: "text", text: "Hello" }] }],
@@ -239,7 +242,7 @@ describe("Streaming Flow Integration", () => {
     it("should not call rememberStream when storage disabled", async () => {
       const config = createTestConfig({ enableMemoryStorage: false });
       const mockLLM = createMockLLM();
-      const provider = new CortexMemoryProvider(mockLLM, config);
+      const provider = new CortexMemoryProvider(mockLLM, config, undefined, undefined, legacyCredentials);
 
       const result = await provider.doStream({
         prompt: [{ role: "user", content: [{ type: "text", text: "Test" }] }],
@@ -260,7 +263,7 @@ describe("Streaming Flow Integration", () => {
         rawCall: {},
       });
 
-      const provider = new CortexMemoryProvider(mockLLM, config);
+      const provider = new CortexMemoryProvider(mockLLM, config, undefined, undefined, legacyCredentials);
 
       const result = await provider.doStream({
         prompt: [{ role: "system", content: "System prompt only" }],
@@ -284,7 +287,7 @@ describe("Streaming Flow Integration", () => {
 
       const config = createTestConfig({ enableMemoryStorage: true });
       const mockLLM = createMockLLM();
-      const provider = new CortexMemoryProvider(mockLLM, config);
+      const provider = new CortexMemoryProvider(mockLLM, config, undefined, undefined, legacyCredentials);
 
       const result = await provider.doStream({
         prompt: [{ role: "user", content: [{ type: "text", text: "Test" }] }],
@@ -306,7 +309,7 @@ describe("Streaming Flow Integration", () => {
         enableMemoryStorage: true,
       });
       const mockLLM = createMockLLM();
-      const provider = new CortexMemoryProvider(mockLLM, config);
+      const provider = new CortexMemoryProvider(mockLLM, config, undefined, undefined, legacyCredentials);
 
       const result = await provider.doStream({
         prompt: [{ role: "user", content: [{ type: "text", text: "Test" }] }],
@@ -332,7 +335,7 @@ describe("Streaming Flow Integration", () => {
         },
       });
       const mockLLM = createMockLLM();
-      const provider = new CortexMemoryProvider(mockLLM, config);
+      const provider = new CortexMemoryProvider(mockLLM, config, undefined, undefined, legacyCredentials);
 
       const result = await provider.doStream({
         prompt: [{ role: "user", content: [{ type: "text", text: "Test" }] }],
@@ -362,7 +365,7 @@ describe("Streaming Flow Integration", () => {
         },
       });
       const mockLLM = createMockLLM();
-      const provider = new CortexMemoryProvider(mockLLM, config);
+      const provider = new CortexMemoryProvider(mockLLM, config, undefined, undefined, legacyCredentials);
 
       const result = await provider.doStream({
         prompt: [{ role: "user", content: [{ type: "text", text: "Test" }] }],
@@ -383,7 +386,7 @@ describe("Streaming Flow Integration", () => {
         enableGraphMemory: true,
       });
       const mockLLM = createMockLLM();
-      const provider = new CortexMemoryProvider(mockLLM, config);
+      const provider = new CortexMemoryProvider(mockLLM, config, undefined, undefined, legacyCredentials);
 
       const result = await provider.doStream({
         prompt: [{ role: "user", content: [{ type: "text", text: "Test" }] }],
@@ -418,7 +421,7 @@ describe("Streaming Flow Integration", () => {
         layerObserver,
       });
       const mockLLM = createMockLLM();
-      const provider = new CortexMemoryProvider(mockLLM, config);
+      const provider = new CortexMemoryProvider(mockLLM, config, undefined, undefined, legacyCredentials);
 
       const result = await provider.doStream({
         prompt: [{ role: "user", content: [{ type: "text", text: "Test" }] }],
@@ -451,7 +454,7 @@ describe("Streaming Flow Integration", () => {
         rawCall: {},
       });
 
-      const provider = new CortexMemoryProvider(mockLLM, config);
+      const provider = new CortexMemoryProvider(mockLLM, config, undefined, undefined, legacyCredentials);
 
       const result = await provider.doStream({
         prompt: [{ role: "user", content: [{ type: "text", text: "Test" }] }],
@@ -473,7 +476,7 @@ describe("Streaming Flow Integration", () => {
         rawCall: {},
       });
 
-      const provider = new CortexMemoryProvider(mockLLM, config);
+      const provider = new CortexMemoryProvider(mockLLM, config, undefined, undefined, legacyCredentials);
 
       const result = await provider.doStream({
         prompt: [{ role: "user", content: [{ type: "text", text: "Test" }] }],

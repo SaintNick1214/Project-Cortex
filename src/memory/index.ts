@@ -1,8 +1,19 @@
+import { randomUUID } from "../common/crypto";
+import { writeGraphMutation, mutateGraphSelected, requestedGraph, isGraphWriteFailure } from "../graph/erasure";
+import type { GraphSyncPolicy } from "../graph/types";
+import type { FunctionReference, FunctionArgs, FunctionReturnType } from "convex/server";
+import type { GraphPrimary } from "../graph/erasure";
+import { isDomainGraphIdentity, domainLoader, collectDomain, selectDomain, domainPages, sameSelection, waitDomainOperation, partialFrom, assertDomainActive, resolveDomainTenant, immutableDomainIntent, type SelectedRecord } from "../common/domainPaging";
+import { memoryExport } from "../common/domainExport";
+import { DomainOperationPartialError, type DomainReadOptions, type DomainItemOutcome, type DomainPartial, type MemoryArchiveIntent, type ArchiveFactIntent } from "../types";
+import { ConvexError } from "convex/values";
+import type { Id } from "../../convex-dev/_generated/dataModel";
 /**
  * Layer 3: Memory Convenience API
  *
  * High-level helpers that orchestrate Layer 1 (ACID) and Layer 2 (Vector) automatically.
- * Recommended API for most use cases.
+ * App-side orchestration is available only in explicit deployment-operator mode.
+ * Public managed memory uses CortexRuntimeClient and the backend runtime.
  *
  * ## Orchestration Flow
  *
@@ -33,8 +44,10 @@
  */
 
 import { resolveTenantId } from "../auth/tenant";
+import { isDeploymentOperatorClient } from "../common/deploymentOperator";
+import {managedRemember} from './managedRemember';
 import type { ConvexClient } from "convex/browser";
-import { api } from "../../convex-dev/_generated/api";
+import { api } from "../common/backendApi";
 import { ConversationsAPI } from "../conversations";
 import { VectorAPI } from "../vector";
 import { FactsAPI, type ConflictAction } from "../facts";
@@ -159,6 +172,7 @@ export interface MemoryAPIDependencies {
   embedding?: EmbeddingConfig;
   /** Auth context for tenant isolation */
   authContext?: AuthContext;
+  graphSyncPolicy?: GraphSyncPolicy;
 }
 
 export class MemoryAPI {
@@ -176,10 +190,19 @@ export class MemoryAPI {
   private readonly llmConfig?: LLMConfig;
   private readonly embeddingConfig?: EmbeddingConfig;
   private readonly authContext?: AuthContext;
+  private readonly graphSyncPolicy?: GraphSyncPolicy;
   private llmClient?: LLMClient | null;
 
   // Cached embedding generator function (created from config)
   private embeddingGenerator?: (text: string) => Promise<number[] | null>;
+
+  private assertOperatorOrchestration(operation: string): void {
+    if (!isDeploymentOperatorClient(this.client)) {
+      throw Object.assign(new Error(
+        `MemoryAPI.${operation} app-side orchestration is unavailable for public clients. Use CortexRuntimeClient for managed memory.`,
+      ), {code: "CAPABILITY_UNAVAILABLE", outcome: "not_dispatched", retryable: false});
+    }
+  }
 
   constructor(
     client: ConvexClient,
@@ -198,6 +221,7 @@ export class MemoryAPI {
     this.llmConfig = dependencies?.llm;
     this.embeddingConfig = dependencies?.embedding;
     this.authContext = dependencies?.authContext;
+    this.graphSyncPolicy = dependencies?.graphSyncPolicy;
 
     // Create embedding generator from config (v0.30.0+)
     if (this.embeddingConfig) {
@@ -210,8 +234,9 @@ export class MemoryAPI {
       graphAdapter,
       resilience,
       this.authContext,
+      this.graphSyncPolicy,
     );
-    this.vector = new VectorAPI(client, graphAdapter, resilience);
+    this.vector = new VectorAPI(client, graphAdapter, resilience, this.authContext, this.graphSyncPolicy);
 
     // Create belief revision LLM client adapter if LLM is configured
     let beliefRevisionLLMClient: BeliefRevisionLLMClient | undefined;
@@ -231,6 +256,8 @@ export class MemoryAPI {
       resilience,
       this.authContext,
       beliefRevisionLLMClient,
+      undefined,
+      this.graphSyncPolicy,
     );
   }
 
@@ -299,6 +326,9 @@ export class MemoryAPI {
   /**
    * Execute an operation through the resilience layer (if available)
    */
+  private mutateGraph<M extends FunctionReference<"mutation", "public">>(reference:M,args:FunctionArgs<M>,explicit?:boolean):Promise<GraphPrimary<FunctionReturnType<M>>> {
+    return writeGraphMutation(this.client,this.graphAdapter,this.graphSyncPolicy,reference,args,explicit);
+  }
   private async executeWithResilience<T>(
     operation: () => Promise<T>,
     operationName: string,
@@ -317,89 +347,77 @@ export class MemoryAPI {
    * Helper: Find and cascade delete facts linked to a memory
    * Graph sync is automatic when CORTEX_GRAPH_SYNC=true and graphAdapter is configured
    */
-  private async cascadeDeleteFacts(
-    memorySpaceId: string,
-    memoryId: string,
-    conversationId?: string,
-  ): Promise<{ count: number; factIds: string[] }> {
-    const allFacts = await this.facts.list({
-      memorySpaceId,
-      limit: 10000,
-    });
-
-    const factsToDelete = allFacts.filter(
-      (fact) =>
-        fact.sourceRef?.memoryId === memoryId ||
-        (conversationId && fact.sourceRef?.conversationId === conversationId),
-    );
-
-    const deletedFactIds: string[] = [];
-    for (const fact of factsToDelete) {
+  private async cascadeDeleteFacts(memorySpaceId: string, memoryId: string, _conversationId?: string, prepared?: {memory: SelectedRecord<MemoryEntry>; facts: SelectedRecord<FactRecord>[]}, options?: DomainReadOptions): Promise<{count: number; factIds: string[]; partial: DomainPartial}> {
+    const tenantId = resolveDomainTenant(this.authContext?.tenantId, options?.tenantId);
+    let plan = prepared;
+    if (!plan) {
+      const memories = (await selectDomain<MemoryEntry>(domainLoader(this.client, "memories", {memorySpaceId, tenantId}), options)).filter(row => row.document.memoryId === memoryId);
+      if (memories.length > 1) throw new Error("DOMAIN_SCOPE_AMBIGUOUS");
+      if (!memories.length) throw new Error("MEMORY_NOT_FOUND");
+      plan = {memory: memories[0], facts: await selectDomain<FactRecord>(domainLoader(this.client, "facts", {memorySpaceId, tenantId, sourceMemoryId: memoryId, selectedMemoryDocumentId: memories[0].physicalId, selectionMode: "delete", includeSuperseded: true}), options)};
+    }
+    const outcomes: DomainItemOutcome[] = plan.facts.map(row => ({physicalId: row.physicalId, disposition: "unstarted"}));
+    const intents = plan.facts.map(row => {if (!row.deleteIntent) throw new Error("DOMAIN_INVALID_DELETE_INTENT"); return row.deleteIntent;});
+    for (let i=0; i<plan.facts.length; i++) {
+      try {assertDomainActive(options);} catch (cause) {throw new DomainOperationPartialError("memory:cascade", partialFrom(outcomes, intents), cause);}
       try {
-        await this.facts.delete(memorySpaceId, fact.factId);
-        deletedFactIds.push(fact.factId);
-      } catch (error) {
-        console.warn("Failed to delete linked fact:", error);
+        const result = await waitDomainOperation(this.mutateGraph(api.facts.deleteMany, intents[i].request as Parameters<ConvexClient["mutation"]>[1]), options);
+        outcomes[i].disposition = result.deleted ? "knownCommitted" : "alreadyAbsent";
+        if ("graphIdentity" in result && isDomainGraphIdentity(result.graphIdentity)) outcomes[i].graphIdentity = result.graphIdentity;
+      } catch (cause) {
+        outcomes[i].disposition = cause instanceof ConvexError ? "knownRolledBack" : "outcomeUnknown";
+        if (!(cause instanceof ConvexError)) {
+          try {const receipt = await waitDomainOperation(this.client.query(api.factHistory.getOperationReceipt, {memorySpaceId, operationId: intents[i].operationId, phase: "physical_delete", tenantId}), options); if (receipt?.affectedFactIds.includes(plan.facts[i].physicalId as Id<"facts">) && receipt.events.every(event => event.pending?.payload.requestDigest === intents[i].requestDigest)) outcomes[i].disposition = "knownCommitted";} catch { /* Original cause and unknown are retained. */ }
+        }
+        throw new DomainOperationPartialError("memory:cascade", partialFrom(outcomes, intents), cause);
       }
     }
-
-    return { count: deletedFactIds.length, factIds: deletedFactIds };
+    const partial = partialFrom(outcomes, intents);
+    return {count: partial.confirmedCount, factIds: plan.facts.filter(row => partial.confirmedPhysicalIds.includes(row.physicalId)).map(row => row.document.factId), partial};
   }
 
   /**
    * Helper: Archive facts (mark as expired)
    * Graph sync is automatic when CORTEX_GRAPH_SYNC=true and graphAdapter is configured
    */
-  private async archiveFacts(
-    memorySpaceId: string,
-    memoryId: string,
-    conversationId?: string,
-  ): Promise<{ count: number; factIds: string[] }> {
-    const allFacts = await this.facts.list({
-      memorySpaceId,
-      limit: 10000,
-    });
-
-    const factsToArchive = allFacts.filter(
-      (fact) =>
-        fact.sourceRef?.memoryId === memoryId ||
-        (conversationId && fact.sourceRef?.conversationId === conversationId),
-    );
-
-    const archivedFactIds: string[] = [];
-    for (const fact of factsToArchive) {
+  private async archiveFacts(memorySpaceId: string, _memoryId: string, _conversationId?: string, prepared?: MemoryArchiveIntent, options?: DomainReadOptions): Promise<{count: number; factIds: string[]; partial: DomainPartial}> {
+    if (!prepared) throw new Error("DOMAIN_ARCHIVE_PREFLIGHT_REQUIRED");
+    const outcomes: DomainItemOutcome[] = prepared.facts.map(row => ({physicalId: row.physicalId, disposition: "unstarted"}));
+    const partial = () => partialFrom(outcomes, [prepared]);
+    for (let i=0; i<prepared.facts.length; i++) {
+      const item = prepared.facts[i];
+      try { assertDomainActive(options); } catch (cause) {throw new DomainOperationPartialError("memory:archive", partial(), cause);}
+      let sent = false;
       try {
-        await this.facts.update(memorySpaceId, fact.factId, {
-          validUntil: Date.now(),
-          tags: [...fact.tags, "archived"],
-        });
-        archivedFactIds.push(fact.factId);
-      } catch (error) {
-        console.warn("Failed to archive linked fact:", error);
+        const prior = await waitDomainOperation(this.client.query(api.factHistory.getOperationReceipt, {memorySpaceId, operationId: item.operationId, phase: "update", tenantId: item.tenantId}), options);
+        if (prior) {
+          if (!prior.affectedFactIds.includes(item.physicalId as Id<"facts">) || prior.events.some(event => event.pending?.payload.requestDigest !== item.requestDigest)) throw new Error("FACT_HISTORY_OPERATION_CONFLICT");
+          outcomes[i].disposition = "knownCommitted"; continue;
+        }
+        assertDomainActive(options);
+        sent = true;
+        await waitDomainOperation(this.facts.update(memorySpaceId, item.factId, {validUntil: item.validUntil, tags: item.tags}, {tenantId: item.tenantId, operationId: item.operationId, expectedSourceFactId: item.physicalId, expectedSourceFingerprint: item.expectedSourceFingerprint}), options);
+        outcomes[i].disposition = "knownCommitted";
+      } catch (cause) {
+        const original = cause && typeof cause === "object" && "originalCause" in cause ? cause.originalCause : cause;
+        outcomes[i].disposition = !sent ? "unstarted" : original instanceof ConvexError ? "knownRolledBack" : "outcomeUnknown";
+        if (sent && !(original instanceof ConvexError)) {
+          try {
+            const receipt = await waitDomainOperation(this.client.query(api.factHistory.getOperationReceipt, {memorySpaceId, operationId: item.operationId, phase: "update", tenantId: item.tenantId}), options);
+            if (receipt && receipt.affectedFactIds.includes(item.physicalId as Id<"facts">) && receipt.events.every(event => event.pending?.payload.requestDigest === item.requestDigest)) outcomes[i].disposition = "knownCommitted";
+          } catch { /* Exact receipt unavailable: retain unknown without resending. */ }
+        }
+        throw new DomainOperationPartialError("memory:archive", partial(), cause);
       }
     }
-
-    return { count: archivedFactIds.length, factIds: archivedFactIds };
+    return {count: partial().confirmedCount, factIds: prepared.facts.map(row => row.factId), partial: partial()};
   }
 
   /**
    * Helper: Fetch facts for a memory or conversation
    */
-  private async fetchFactsForMemory(
-    memorySpaceId: string,
-    memoryId: string,
-    conversationId?: string,
-  ): Promise<FactRecord[]> {
-    const allFacts = await this.facts.list({
-      memorySpaceId,
-      limit: 10000,
-    });
-
-    return allFacts.filter(
-      (fact) =>
-        fact.sourceRef?.memoryId === memoryId ||
-        (conversationId && fact.sourceRef?.conversationId === conversationId),
-    );
+  private async fetchFactsForMemory(memorySpaceId: string, memoryId: string, _conversationId?: string, options?: DomainReadOptions): Promise<FactRecord[]> {
+    return collectDomain<FactRecord>(domainLoader(this.client, "facts", {memorySpaceId, tenantId: resolveDomainTenant(this.authContext?.tenantId, options?.tenantId), sourceMemoryId: memoryId, includeSuperseded: false}), options);
   }
 
   // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
@@ -693,7 +711,7 @@ export class MemoryAPI {
    * Ensure memory space exists, auto-register if not
    * Graph sync is automatic when CORTEX_GRAPH_SYNC=true and graphAdapter is configured
    */
-  private async ensureMemorySpaceExists(memorySpaceId: string): Promise<void> {
+  private async ensureMemorySpaceExists(memorySpaceId: string, syncToGraph?: boolean): Promise<void> {
     if (!this.memorySpacesAPI) {
       // No memorySpaces API available - skip auto-registration
       return;
@@ -705,7 +723,7 @@ export class MemoryAPI {
         memorySpaceId,
         type: "custom",
         name: memorySpaceId,
-      });
+      }, {syncToGraph});
     }
   }
 
@@ -899,6 +917,8 @@ export class MemoryAPI {
     params: RememberParams,
     options?: RememberOptions,
   ): Promise<RememberResult> {
+    if(!isDeploymentOperatorClient(this.client))return managedRemember(this.client,params,options,resolveTenantId(this.authContext?.tenantId,params.tenantId));
+    this.assertOperatorOrchestration("remember");
     // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
     // ORCHESTRATION OBSERVER SETUP
     // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
@@ -935,7 +955,7 @@ export class MemoryAPI {
     // Determine if we should sync to graph (automatic when graphAdapter is configured)
     // Graph sync is controlled by CORTEX_GRAPH_SYNC env var at Cortex initialization
     const shouldSyncToGraph =
-      this.graphAdapter !== undefined &&
+      requestedGraph(this.graphAdapter, options?.syncToGraph) &&
       !this.shouldSkipLayer("graph", skipLayers);
 
     // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
@@ -954,7 +974,7 @@ export class MemoryAPI {
     }
 
     try {
-      await this.ensureMemorySpaceExists(memorySpaceId);
+      await this.ensureMemorySpaceExists(memorySpaceId, shouldSyncToGraph);
       if (observer && !isPartialOrchestration) {
         const event = this.createLayerEvent(
           "memorySpace",
@@ -1235,7 +1255,7 @@ export class MemoryAPI {
             content: params.userMessage,
             metadata: { userId: params.userId },
           },
-        });
+        }, {syncToGraph:shouldSyncToGraph});
         userMsgId = userMsg.messages[userMsg.messages.length - 1].id;
 
         // Store agent response in ACID
@@ -1247,7 +1267,7 @@ export class MemoryAPI {
             participantId: params.participantId || params.agentId,
             metadata: {},
           },
-        });
+        }, {syncToGraph:shouldSyncToGraph});
         agentMsgId = agentMsg.messages[agentMsg.messages.length - 1].id;
 
         if (observer) {
@@ -1536,7 +1556,7 @@ export class MemoryAPI {
                   // BELIEF REVISION PATH (intelligent fact management)
                   // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
                   const reviseResult = await this.facts.revise({
-                    memorySpaceId,
+                    syncToGraph:shouldSyncToGraph,                    memorySpaceId,
                     userId: params.userId,
                     participantId: params.participantId,
                     // Include source provenance for traceability
@@ -1618,17 +1638,18 @@ export class MemoryAPI {
                   if (dedupConfig) {
                     const result = await this.facts.storeWithDedup(
                       storeParams,
-                      { deduplication: dedupConfig },
+                      { deduplication: dedupConfig, syncToGraph:shouldSyncToGraph },
                     );
                     extractedFacts.push(result.fact);
                   } else {
                     // Deduplication disabled - use regular store
-                    const storedFact = await this.facts.store(storeParams);
+                    const storedFact = await this.facts.store(storeParams, {syncToGraph:shouldSyncToGraph});
                     extractedFacts.push(storedFact);
                   }
                 }
               } catch (error) {
-                console.warn("Failed to store fact:", error);
+                if(isGraphWriteFailure(error))throw error;
+            console.warn("Failed to store fact:", error);
               }
             }
           }
@@ -1662,6 +1683,7 @@ export class MemoryAPI {
             this.notifyLayerUpdate(observer, event);
           }
         } catch (error) {
+          if(isGraphWriteFailure(error))throw error;
           console.warn("Failed to extract facts:", error);
           if (observer) {
             const event = this.createLayerEvent(
@@ -1818,6 +1840,7 @@ export class MemoryAPI {
     params: RememberStreamParams,
     options?: import("../types/streaming").StreamingOptions,
   ): Promise<import("../types/streaming").EnhancedRememberStreamResult> {
+    this.assertOperatorOrchestration("rememberStream");
     // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
     // VALIDATION: Same validation as remember() but without agentResponse
     // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
@@ -1920,8 +1943,12 @@ export class MemoryAPI {
     // Determine if we should sync to graph (automatic when graphAdapter is configured)
     // Graph sync is controlled by CORTEX_GRAPH_SYNC env var at Cortex initialization
     const shouldSyncToGraph =
-      this.graphAdapter !== undefined &&
+      requestedGraph(this.graphAdapter, options?.syncToGraph) &&
       !this.shouldSkipLayer("graph", skipLayers);
+    if(options?.progressiveGraphSync && shouldSyncToGraph && !options.storePartialResponse) {
+      throw new Error("GRAPH_PARTIAL_STORAGE_REQUIRED: progressive graph sync requires native partial persistence");
+    }
+
 
     // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
     // ORCHESTRATION: Same as remember() - auto-register entities
@@ -1950,7 +1977,7 @@ export class MemoryAPI {
     }
 
     try {
-      await this.ensureMemorySpaceExists(memorySpaceId);
+      await this.ensureMemorySpaceExists(memorySpaceId, shouldSyncToGraph);
       if (observer) {
         const event = this.createLayerEvent(
           "memorySpace",
@@ -2163,7 +2190,6 @@ export class MemoryAPI {
       options?.hooks || {},
       metrics,
     );
-    const errorRecovery = new StreamErrorRecovery(this.client);
 
     // Progressive storage handler (if enabled)
     let storageHandler: InstanceType<typeof ProgressiveStorageHandler> | null =
@@ -2174,7 +2200,9 @@ export class MemoryAPI {
         memorySpaceId,
         params.conversationId,
         params.userId || params.agentId || ownerId, // Use owner
-        options.partialResponseInterval || 3000,
+        options.partialResponseInterval ?? 3000,
+        {tenantId:this.authContext?.tenantId,adapter:options.progressiveGraphSync && shouldSyncToGraph ? this.graphAdapter : undefined,
+          policy:this.graphSyncPolicy,syncToGraph:options.progressiveGraphSync && shouldSyncToGraph ? true : false},
       );
     }
 
@@ -2210,13 +2238,15 @@ export class MemoryAPI {
 
     // Progressive graph sync (if enabled)
     let graphSync: InstanceType<typeof ProgressiveGraphSync> | null = null;
-    if (options?.progressiveGraphSync && this.graphAdapter) {
+    if (options?.progressiveGraphSync && shouldSyncToGraph && this.graphAdapter) {
       graphSync = new ProgressiveGraphSync(
         this.graphAdapter,
-        options.graphSyncInterval || 5000,
+        options.graphSyncInterval ?? 5000,
+        storageHandler ?? undefined,
       );
     }
 
+    const errorRecovery = new StreamErrorRecovery(this.client, storageHandler ?? undefined);
     const progressiveFacts: import("../types/streaming").ProgressiveFact[] = [];
     let fullResponse = "";
 
@@ -2252,6 +2282,7 @@ export class MemoryAPI {
           tags: params.tags,
         });
         context.partialMemoryId = partialMemoryId;
+        context.partialSource = storageHandler.getPartialSourceEvidence();
 
         // Initialize graph node if enabled
         if (graphSync) {
@@ -2265,10 +2296,17 @@ export class MemoryAPI {
       }
 
       // Step 3: Process stream with all features
-      fullResponse = await processor.processStream(
-        params.responseStream,
-        options || {},
-      );
+      const sourceStream = params.responseStream;
+      // Internal persistence is awaited in the input path, outside warning-only user hooks.
+      const persistedStream:AsyncIterable<string> = {async *[Symbol.asyncIterator]() {
+        let accumulated="",chunks=0;
+        const save=async(chunk:string)=>{accumulated+=chunk;chunks++;await storageHandler!.updatePartialContent(accumulated,chunks);
+          context.partialSource=storageHandler!.getPartialSourceEvidence();await graphSync!.updatePartialNode(accumulated,context);};
+        if("getReader" in sourceStream) {
+          const reader=sourceStream.getReader();try{while(true){const item=await reader.read();if(item.done)break;if(item.value){await save(item.value);yield item.value;}}}finally{reader.releaseLock();}
+        }else{for await(const chunk of sourceStream){if(chunk){await save(chunk);yield chunk;}}}
+      }};
+      fullResponse = await processor.processStream(graphSync ? persistedStream : sourceStream,options || {});
 
       // Step 4: Progressive processing during stream
       // (This is handled by StreamProcessor hooks and integrated components)
@@ -2338,6 +2376,7 @@ export class MemoryAPI {
           ],
         },
         {
+          syncToGraph:shouldSyncToGraph,
           // Translate streaming beliefRevision (boolean) to remember() format
           // true → { enabled: true }, false → false, undefined → undefined
           beliefRevision:
@@ -2350,9 +2389,7 @@ export class MemoryAPI {
       );
 
       // Step 8: Finalize graph sync
-      if (graphSync && rememberResult.memories.length > 0) {
-        await graphSync.finalizeNode(rememberResult.memories[0]);
-      }
+      if (graphSync)graphSync.recordFinalizedPartial();
 
       // Step 9: Generate performance insights
       const metricsSnapshot = metrics.getSnapshot();
@@ -2364,6 +2401,7 @@ export class MemoryAPI {
         fullResponse,
         streamMetrics: metricsSnapshot,
         progressiveProcessing: {
+          partialSource:storageHandler?.getPartialSourceEvidence(),
           factsExtractedDuringStream: progressiveFacts,
           partialStorageHistory: storageHandler?.getUpdateHistory() || [],
           graphSyncEvents: graphSync?.getSyncEvents(),
@@ -2375,6 +2413,8 @@ export class MemoryAPI {
         },
       };
     } catch (error) {
+      context.partialSource=storageHandler?.getPartialSourceEvidence();
+      context.partialOutcomeUnknown=storageHandler?.isOutcomeUnknown();
       // Error recovery
       const _streamError = errorRecovery.createStreamError(
         error instanceof Error ? error : new Error(String(error)),
@@ -2405,7 +2445,9 @@ export class MemoryAPI {
 
       // Cleanup on failure
       if (storageHandler) {
-        await storageHandler.rollback();
+        try {await storageHandler.rollback();}catch(cleanupError){
+          if(error && typeof error==="object")Object.defineProperty(error,"partialCleanupError",{value:cleanupError,enumerable:false});
+        }
       }
       if (graphSync) {
         await graphSync.rollback();
@@ -2475,15 +2517,15 @@ export class MemoryAPI {
     // Graph sync is automatic when graphAdapter is configured
     // (controlled by CORTEX_GRAPH_SYNC env var at Cortex initialization)
 
-    // Delete from vector (graph sync handled automatically)
-    await this.vector.delete(memorySpaceId, memoryId);
-
     // Cascade delete associated facts (graph sync handled automatically)
     const { count: factsDeleted, factIds } = await this.cascadeDeleteFacts(
       memorySpaceId,
       memoryId,
       memory.conversationRef?.conversationId,
     );
+
+    // Delete from vector (graph sync handled automatically)
+    await this.vector.delete(memorySpaceId, memoryId);
 
     let conversationDeleted = false;
     let messagesDeleted = 0;
@@ -2551,7 +2593,7 @@ export class MemoryAPI {
     validateMemoryId(memoryId);
 
     // Get from vector
-    const memory = await this.vector.get(memorySpaceId, memoryId);
+    const memory = await this.vector.get(memorySpaceId, memoryId, options);
 
     if (!memory) {
       return null;
@@ -2568,7 +2610,7 @@ export class MemoryAPI {
 
     if (memory.conversationRef) {
       const conv = await this.conversations.get(
-        memory.conversationRef.conversationId,
+        memory.conversationRef.conversationId, options,
       );
 
       conversation = conv ?? undefined;
@@ -2585,6 +2627,7 @@ export class MemoryAPI {
       memorySpaceId,
       memoryId,
       memory.conversationRef?.conversationId,
+      options,
     );
 
     return {
@@ -2622,6 +2665,9 @@ export class MemoryAPI {
     query: string,
     options?: SearchMemoryOptions,
   ): Promise<MemoryEntry[] | EnrichedMemory[]> {
+    if (!options?.embedding && this.embeddingGenerator) {
+      this.assertOperatorOrchestration("search with automatic embedding");
+    }
     // Client-side validation
     validateMemorySpaceId(memorySpaceId, "memorySpaceId");
     validateContent(query, "query");
@@ -2643,6 +2689,7 @@ export class MemoryAPI {
 
     // Search vector
     const memories = await this.vector.search(memorySpaceId, query, {
+      tenantId: options?.tenantId, participantId: options?.participantId, queryCategory: options?.queryCategory,
       embedding: effectiveEmbedding, // BATTERIES INCLUDED: use auto-generated or provided embedding
       userId: options?.userId,
       tags: options?.tags,
@@ -2667,7 +2714,7 @@ export class MemoryAPI {
     const conversations = new Map();
 
     for (const convId of conversationIds) {
-      const conv = await this.conversations.get(convId);
+      const conv = await this.conversations.get(convId, {tenantId: options?.tenantId});
 
       if (conv) {
         conversations.set(convId, conv);
@@ -2676,8 +2723,8 @@ export class MemoryAPI {
 
     // Batch fetch all facts for this memory space
     const allFacts = await this.facts.list({
-      memorySpaceId: memorySpaceId,
-      limit: 10000,
+      memorySpaceId: memorySpaceId, tenantId: options?.tenantId,
+
     });
 
     // Create lookup maps for efficient fact matching
@@ -2720,10 +2767,6 @@ export class MemoryAPI {
       // Add facts
       const relatedFacts = [
         ...(factsByMemoryId.get(memory.memoryId) || []),
-        ...(memory.conversationRef
-          ? factsByConversationId.get(memory.conversationRef.conversationId) ||
-            []
-          : []),
       ];
 
       // Deduplicate facts by factId
@@ -2783,6 +2826,7 @@ export class MemoryAPI {
    * ```
    */
   async recall(params: RecallParams): Promise<RecallResult> {
+    this.assertOperatorOrchestration("recall");
     const startTime = Date.now();
 
     // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
@@ -2991,6 +3035,7 @@ export class MemoryAPI {
           this.facts,
           graphExpansionConfig,
           params.query, // NEW: Pass query text for entity extraction
+          {tenantKnown:true,tenantId:this.authContext?.tenantId??null,memorySpaceId:params.memorySpaceId},
         );
 
         graphExpandedMemories = expansion.relatedMemories;
@@ -3195,6 +3240,7 @@ export class MemoryAPI {
     memorySpaceId: string,
     input: StoreMemoryInput,
   ): Promise<StoreMemoryResult> {
+    if (input.extractFacts) this.assertOperatorOrchestration("store with extraction");
     // Client-side validation
     validateMemorySpaceId(memorySpaceId, "memorySpaceId");
     validateStoreMemoryInput(input);
@@ -3241,6 +3287,7 @@ export class MemoryAPI {
 
             extractedFacts.push(storedFact);
           } catch (error) {
+            if(isGraphWriteFailure(error))throw error;
             console.warn("Failed to store fact:", error);
           }
         }
@@ -3285,6 +3332,9 @@ export class MemoryAPI {
     },
     options?: UpdateMemoryOptions,
   ): Promise<UpdateMemoryResult> {
+    if (options?.reextractFacts && updates.content && options.extractFacts) {
+      this.assertOperatorOrchestration("update with re-extraction");
+    }
     // Client-side validation
     validateMemorySpaceId(memorySpaceId, "memorySpaceId");
     validateMemoryId(memoryId);
@@ -3362,48 +3412,26 @@ export class MemoryAPI {
    * console.log(`Deleted ${result.factsDeleted} associated facts`);
    * ```
    */
-  async delete(
-    memorySpaceId: string,
-    memoryId: string,
-    options?: DeleteMemoryOptions,
-  ): Promise<DeleteMemoryResult> {
-    // Client-side validation
-    validateMemorySpaceId(memorySpaceId, "memorySpaceId");
-    validateMemoryId(memoryId);
-
-    const memory = await this.vector.get(memorySpaceId, memoryId);
-
-    if (!memory) {
-      throw new Error("MEMORY_NOT_FOUND");
+  async delete(memorySpaceId: string, memoryId: string, options?: DeleteMemoryOptions & DomainReadOptions): Promise<DeleteMemoryResult & {partial?: DomainPartial}> {
+    validateMemorySpaceId(memorySpaceId, "memorySpaceId"); validateMemoryId(memoryId);
+    const tenantId = resolveDomainTenant(this.authContext?.tenantId, options?.tenantId);
+    const selected = (await selectDomain<MemoryEntry>(domainLoader(this.client, "memories", {memorySpaceId, tenantId}), options)).filter(row => row.document.memoryId === memoryId);
+    if (selected.length > 1) throw new Error("DOMAIN_SCOPE_AMBIGUOUS");
+    if (!selected.length) throw new Error("MEMORY_NOT_FOUND");
+    const facts = options?.cascadeDeleteFacts === false ? [] : await selectDomain<FactRecord>(domainLoader(this.client, "facts", {memorySpaceId, tenantId, sourceMemoryId: memoryId, selectedMemoryDocumentId: selected[0].physicalId, selectionMode: "delete", includeSuperseded: true}), options);
+    let cascaded: {count: number; factIds: string[]; partial: DomainPartial};
+    try { cascaded = await this.cascadeDeleteFacts(memorySpaceId, memoryId, undefined, {memory: selected[0], facts}, options); }
+    catch (cause) {
+      if (cause instanceof DomainOperationPartialError) throw new DomainOperationPartialError("memory:delete", partialFrom([...cause.partial.outcomes, {physicalId: selected[0].physicalId, disposition: "unstarted"}], cause.partial.originalIntents), cause.originalCause);
+      throw cause;
     }
-
-    // Graph sync is automatic when graphAdapter is configured
-    // (controlled by CORTEX_GRAPH_SYNC env var at Cortex initialization)
-    const shouldCascade = options?.cascadeDeleteFacts !== false; // Default: true
-
-    // Delete facts if cascade enabled (graph sync handled automatically)
-    let factsDeleted = 0;
-    let factIds: string[] = [];
-
-    if (shouldCascade) {
-      const result = await this.cascadeDeleteFacts(
-        memorySpaceId,
-        memoryId,
-        memory.conversationRef?.conversationId,
-      );
-      factsDeleted = result.count;
-      factIds = result.factIds;
+    try {
+      const primary = await mutateGraphSelected("memory:delete", selected, row => this.mutateGraph(api.memories.eraseSelected, {memorySpaceId, tenantId, physicalId: row.physicalId as Id<"memories">, expectedFingerprint: row.fingerprint, requireNoLinkedFacts: options?.cascadeDeleteFacts !== false}), options, this.graphAdapter);
+      return {deleted: primary.confirmedCount === 1, memoryId, factsDeleted: cascaded.count, factIds: cascaded.factIds, partial: partialFrom([...cascaded.partial.outcomes, ...primary.outcomes])};
+    } catch (cause) {
+      if (cause instanceof DomainOperationPartialError) throw new DomainOperationPartialError("memory:delete", partialFrom([...cascaded.partial.outcomes, ...cause.partial.outcomes]), cause.originalCause);
+      throw cause;
     }
-
-    // Delete from vector (graph sync handled automatically)
-    await this.vector.delete(memorySpaceId, memoryId);
-
-    return {
-      deleted: true,
-      memoryId,
-      factsDeleted,
-      factIds,
-    };
   }
 
   /**
@@ -3426,7 +3454,7 @@ export class MemoryAPI {
       validateSourceType(filter.sourceType);
     }
 
-    if (filter.limit !== undefined) {
+    if (filter.limit !== undefined && filter.limit !== 0) {
       validateLimit(filter.limit);
     }
 
@@ -3438,8 +3466,8 @@ export class MemoryAPI {
 
     // Batch fetch facts
     const allFacts = await this.facts.list({
-      memorySpaceId: filter.memorySpaceId,
-      limit: 10000,
+      memorySpaceId: filter.memorySpaceId, tenantId: filter.tenantId,
+
     });
 
     const factsByMemoryId = new Map<string, FactRecord[]>();
@@ -3525,105 +3553,58 @@ export class MemoryAPI {
   /**
    * Delete many memories with batch cascade delete of facts
    */
-  async deleteMany(filter: {
-    memorySpaceId: string;
-    userId?: string;
-    sourceType?: SourceType;
-  }): Promise<DeleteManyResult> {
-    // Client-side validation
-    validateMemorySpaceId(filter.memorySpaceId);
-    validateFilterCombination(filter);
-
-    if (filter.userId !== undefined) {
-      validateUserId(filter.userId, "userId");
+  async deleteMany(filter: {memorySpaceId: string; tenantId?: string; participantId?: string; userId?: string; sourceType?: SourceType}, options?: DomainReadOptions): Promise<DeleteManyResult & {partial?: DomainPartial}> {
+    validateMemorySpaceId(filter.memorySpaceId); validateFilterCombination(filter);
+    if (filter.userId !== undefined) validateUserId(filter.userId, "userId");
+    if (filter.sourceType !== undefined) validateSourceType(filter.sourceType);
+    const tenantId = resolveDomainTenant(this.authContext?.tenantId, filter.tenantId);
+    const load = domainLoader(this.client, "memories", {...filter, tenantId});
+    const selected = await selectDomain<MemoryEntry>(load, options);
+    if (new Set(selected.map(row => row.document.memoryId)).size !== selected.length) throw new Error("DOMAIN_SCOPE_AMBIGUOUS");
+    const plans: Array<{memory: SelectedRecord<MemoryEntry>; facts: SelectedRecord<FactRecord>[]}> = [];
+    for (const memory of selected) plans.push({memory, facts: await selectDomain<FactRecord>(domainLoader(this.client, "facts", {memorySpaceId: filter.memorySpaceId, tenantId, sourceMemoryId: memory.document.memoryId, selectedMemoryDocumentId: memory.physicalId, selectionMode: "delete", includeSuperseded: true}), options)});
+    for (const plan of plans) {
+      const current = await selectDomain<FactRecord>(domainLoader(this.client, "facts", {memorySpaceId: filter.memorySpaceId, tenantId, sourceMemoryId: plan.memory.document.memoryId, selectedMemoryDocumentId: plan.memory.physicalId, selectionMode: "delete", includeSuperseded: true}), options);
+      if (!sameSelection(plan.facts, current)) throw new Error("DOMAIN_SELECTION_CHANGED");
     }
-
-    if (filter.sourceType !== undefined) {
-      validateSourceType(filter.sourceType);
+    if (!sameSelection(selected, await selectDomain<MemoryEntry>(load, options))) throw new Error("DOMAIN_SELECTION_CHANGED");
+    let totalFactsDeleted = 0; const factIds: string[] = [], memoryIds: string[] = [];
+    const outcomes: DomainItemOutcome[] = selected.map(row => ({physicalId: row.physicalId, disposition: "unstarted"}));
+    const factOutcomes: DomainItemOutcome[] = plans.flatMap(plan => plan.facts.map(row => ({physicalId: row.physicalId, disposition: "unstarted" as const})));
+    const mergeFacts = (next: DomainItemOutcome[]) => {for (const result of next) {const index = factOutcomes.findIndex(item => item.physicalId === result.physicalId); if (index >= 0) factOutcomes[index] = result;}};
+    for (let i=0; i<plans.length; i++) {
+      try {
+        const cascaded = await this.cascadeDeleteFacts(filter.memorySpaceId, plans[i].memory.document.memoryId, undefined, plans[i], {...options, tenantId});
+        totalFactsDeleted += cascaded.count; factIds.push(...cascaded.factIds); mergeFacts(cascaded.partial.outcomes);
+        const primary = await mutateGraphSelected("memory:deleteMany", [plans[i].memory], row => this.mutateGraph(api.memories.eraseSelected, {memorySpaceId: filter.memorySpaceId, tenantId, physicalId: row.physicalId as Id<"memories">, expectedFingerprint: row.fingerprint, requireNoLinkedFacts: true}), options, this.graphAdapter);
+        outcomes[i] = primary.outcomes[0]; if (primary.confirmedCount) memoryIds.push(plans[i].memory.document.memoryId);
+      } catch (cause) {
+        if (cause instanceof DomainOperationPartialError) {
+          if (cause.partial.outcomes.some(row => row.physicalId === plans[i].memory.physicalId)) outcomes[i] = cause.partial.outcomes.find(row => row.physicalId === plans[i].memory.physicalId)!;
+          else mergeFacts(cause.partial.outcomes);
+          throw new DomainOperationPartialError("memory:deleteMany", partialFrom([...factOutcomes, ...outcomes]), cause.originalCause);
+        }
+        throw new DomainOperationPartialError("memory:deleteMany", partialFrom([...factOutcomes, ...outcomes]), cause);
+      }
     }
-
-    // Get all memories to delete
-    const memories = await this.vector.list(filter);
-
-    let totalFactsDeleted = 0;
-    const allFactIds: string[] = [];
-
-    // Cascade delete facts for each memory (graph sync handled automatically)
-    for (const memory of memories) {
-      const { count, factIds } = await this.cascadeDeleteFacts(
-        filter.memorySpaceId,
-        memory.memoryId,
-        memory.conversationRef?.conversationId,
-      );
-      totalFactsDeleted += count;
-      allFactIds.push(...factIds);
-    }
-
-    // Delete memories
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const result = await this.vector.deleteMany(filter as any);
-
-    return {
-      ...result,
-      factsDeleted: totalFactsDeleted,
-      factIds: allFactIds,
-    };
+    const partial = partialFrom([...factOutcomes, ...outcomes]);
+    try {
+      const remaining = await selectDomain<MemoryEntry>(load, options);
+      if (remaining.length) throw new DomainOperationPartialError("memory:deleteMany", {...partial, remainingPhysicalIds: remaining.map(row => row.physicalId)}, new Error("DOMAIN_SELECTION_CHANGED"));
+    } catch (cause) {if (cause instanceof DomainOperationPartialError) throw cause; throw new DomainOperationPartialError("memory:deleteMany", partial, cause);}
+    return {deleted: memoryIds.length, memoryIds, factsDeleted: totalFactsDeleted, factIds, partial};
   }
 
   /**
    * Export memories with optional fact inclusion
    */
-  async export(options: ExportMemoriesOptions): Promise<{
-    format: string;
-    data: string;
-    count: number;
-    exportedAt: number;
-  }> {
-    // Client-side validation
-    validateMemorySpaceId(options.memorySpaceId);
-    validateExportFormat(options.format);
-
-    if (options.userId !== undefined) {
-      validateUserId(options.userId, "userId");
-    }
-
-    const result = await this.vector.export(options);
-
-    if (!options.includeFacts) {
-      return result;
-    }
-
-    // Fetch all facts for this memory space
-    const facts = await this.facts.list({
-      memorySpaceId: options.memorySpaceId,
-      limit: 10000,
-    });
-
-    // Parse existing export data
-    const data = JSON.parse(result.data) as MemoryEntry[];
-
-    // Add facts to each memory
-    const enrichedData = data.map((memory: MemoryEntry) => {
-      const relatedFacts = facts.filter(
-        (fact) => fact.sourceRef?.memoryId === memory.memoryId,
-      );
-
-      return {
-        ...memory,
-        facts: relatedFacts.map((f) => ({
-          factId: f.factId,
-          fact: f.fact,
-          factType: f.factType,
-          confidence: f.confidence,
-          tags: f.tags,
-        })),
-      };
-    });
-
-    return {
-      ...result,
-      data: JSON.stringify(enrichedData, null, 2),
-    };
+  async export(options: ExportMemoriesOptions): Promise<{format: string; data: string; count: number; exportedAt: number}> {
+    validateMemorySpaceId(options.memorySpaceId); validateExportFormat(options.format);
+    if (options.userId !== undefined) validateUserId(options.userId, "userId");
+    const tenantId = resolveDomainTenant(this.authContext?.tenantId, options.tenantId);
+    const memories = await collectDomain<MemoryEntry>(domainLoader(this.client, "memories", {memorySpaceId: options.memorySpaceId, tenantId, userId: options.userId}), options);
+    const facts = options.includeFacts ? await collectDomain<FactRecord>(domainLoader(this.client, "facts", {memorySpaceId: options.memorySpaceId, tenantId, includeSuperseded: false}), options) : [];
+    return memoryExport(memories, options, facts);
   }
 
   /**
@@ -3639,36 +3620,39 @@ export class MemoryAPI {
    * console.log(`Archived ${result.factsArchived} associated facts`);
    * ```
    */
-  async archive(
-    memorySpaceId: string,
-    memoryId: string,
-  ): Promise<ArchiveResult> {
-    // Client-side validation
-    validateMemorySpaceId(memorySpaceId, "memorySpaceId");
-    validateMemoryId(memoryId);
-
-    const memory = await this.vector.get(memorySpaceId, memoryId);
-
-    if (!memory) {
-      throw new Error("MEMORY_NOT_FOUND");
+  async archive(memorySpaceId: string, memoryId: string, options?: DomainReadOptions & {intent?: MemoryArchiveIntent}): Promise<ArchiveResult & {partial?: DomainPartial; intent: MemoryArchiveIntent}> {
+    validateMemorySpaceId(memorySpaceId, "memorySpaceId"); validateMemoryId(memoryId);
+    const tenantId = resolveDomainTenant(this.authContext?.tenantId, options?.tenantId);
+    const selected = (await selectDomain<MemoryEntry>(domainLoader(this.client, "memories", {memorySpaceId, tenantId}), options)).filter(row => row.document.memoryId === memoryId);
+    if (selected.length > 1) throw new Error("DOMAIN_SCOPE_AMBIGUOUS");
+    if (!selected.length) throw new Error("MEMORY_NOT_FOUND");
+    let intent = options?.intent;
+    if (intent) {
+      if (intent.memorySpaceId !== memorySpaceId || intent.memoryId !== memoryId || intent.tenantId !== tenantId || intent.memoryPhysicalId !== selected[0].physicalId || intent.memoryFingerprint !== selected[0].fingerprint || intent.facts.some(item => item.memorySpaceId !== memorySpaceId || item.tenantId !== tenantId)) throw new Error("DOMAIN_SELECTION_CHANGED");
+    } else {
+      const facts: ArchiveFactIntent[] = [], ids = new Set<string>();
+      const load = domainLoader(this.client, "facts", {memorySpaceId, tenantId, sourceMemoryId: memoryId, selectedMemoryDocumentId: selected[0].physicalId, selectionMode: "archive", includeSuperseded: false, archiveAt: Date.now(), archiveOperationPrefix: randomUUID()});
+      for await (const page of domainPages<FactRecord>(load, options)) {
+        if (!page.archiveIntents || page.archiveIntents.length !== page.page.length) throw new Error("DOMAIN_INVALID_ARCHIVE_INTENT");
+        for (const item of page.archiveIntents) if (!ids.has(item.physicalId)) {ids.add(item.physicalId); facts.push(item);}
+      }
+      intent = {memorySpaceId, memoryId, tenantId, memoryPhysicalId: selected[0].physicalId, memoryFingerprint: selected[0].fingerprint, facts};
     }
-
-    // Archive facts (mark as expired, not deleted)
-    // Graph sync handled automatically
-    const { count: factsArchived, factIds } = await this.archiveFacts(
-      memorySpaceId,
-      memoryId,
-      memory.conversationRef?.conversationId,
-    );
-
-    // Archive memory
-    const result = await this.vector.archive(memorySpaceId, memoryId);
-
-    return {
-      ...result,
-      factsArchived,
-      factIds,
-    };
+    immutableDomainIntent(intent);
+    let archived;
+    try {archived = await this.archiveFacts(memorySpaceId, memoryId, undefined, intent, options);}
+    catch (cause) {
+      if (cause instanceof DomainOperationPartialError) throw new DomainOperationPartialError("memory:archive", partialFrom([...cause.partial.outcomes, {physicalId: intent.memoryPhysicalId, disposition: "unstarted"}], [intent]), cause.originalCause);
+      throw cause;
+    }
+    try {assertDomainActive(options);} catch (cause) {throw new DomainOperationPartialError("memory:archive", partialFrom([...archived.partial.outcomes, {physicalId: intent.memoryPhysicalId, disposition: "unstarted"}], [intent]), cause);}
+    try {
+      const result = await waitDomainOperation(this.mutateGraph(api.memories.archive, {memorySpaceId, memoryId, tenantId, expectedPhysicalId: intent.memoryPhysicalId as Id<"memories">, expectedFingerprint: intent.memoryFingerprint}), options);
+      return {...result, factsArchived: archived.count, factIds: archived.factIds, partial: partialFrom([...archived.partial.outcomes, {physicalId: intent.memoryPhysicalId, disposition: "knownCommitted"}], [intent]), intent};
+    } catch (cause) {
+      const primary: DomainItemOutcome = {physicalId: intent.memoryPhysicalId, disposition: cause instanceof ConvexError ? "knownRolledBack" : "outcomeUnknown"};
+      throw new DomainOperationPartialError("memory:archive", partialFrom([...archived.partial.outcomes, primary], [intent]), cause);
+    }
   }
 
   /**
@@ -3679,32 +3663,9 @@ export class MemoryAPI {
    * const restored = await cortex.memory.restoreFromArchive('agent-1', 'mem-123');
    * ```
    */
-  async restoreFromArchive(
-    memorySpaceId: string,
-    memoryId: string,
-  ): Promise<{
-    restored: boolean;
-    memoryId: string;
-    memory: MemoryEntry;
-  }> {
-    // Client-side validation
-    validateMemorySpaceId(memorySpaceId);
-    validateMemoryId(memoryId);
-
-    const result = await this.executeWithResilience(
-      () =>
-        this.client.mutation(api.memories.restoreFromArchive, {
-          memorySpaceId,
-          memoryId,
-        }),
-      "memory:restoreFromArchive",
-    );
-
-    return result as {
-      restored: boolean;
-      memoryId: string;
-      memory: MemoryEntry;
-    };
+  async restoreFromArchive(memorySpaceId: string, memoryId: string, options?: DomainReadOptions): ReturnType<VectorAPI["restoreFromArchive"]> {
+    validateMemorySpaceId(memorySpaceId); validateMemoryId(memoryId);
+    return this.vector.restoreFromArchive(memorySpaceId, memoryId, options);
   }
 
   /**

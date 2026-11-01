@@ -11,11 +11,11 @@
  * Updated: Added tenantId support for multi-tenancy testing.
  */
 
-import { Cortex } from "../src";
-import { ConvexClient } from "convex/browser";
+import { Cortex, ConvexClient } from "./helpers/deployment-operator";
 import { api } from "../convex-dev/_generated/api";
 import { createNamedTestRunContext, ScopedCleanup } from "./helpers";
 import { generateTenantId, createTenantAuthContext } from "./helpers/tenancy";
+import { parseCsvRows } from "./helpers/csv";
 
 describe("Conversations API (Layer 1a)", () => {
   // Create unique test run context for parallel-safe execution
@@ -37,7 +37,7 @@ describe("Conversations API (Layer 1a)", () => {
     const authContext = createTenantAuthContext(TEST_TENANT_ID, TEST_USER_ID);
     cortex = new Cortex({ convexUrl: CONVEX_URL, auth: authContext });
     // Direct client for storage validation
-    client = new ConvexClient(CONVEX_URL);
+    client = new ConvexClient(CONVEX_URL, undefined, TEST_TENANT_ID);
     // Scoped cleanup (only cleans data from this test run)
     scopedCleanup = new ScopedCleanup(client, ctx);
 
@@ -86,7 +86,7 @@ describe("Conversations API (Layer 1a)", () => {
       expect(result.updatedAt).toBeGreaterThan(0);
 
       // Validate Convex storage
-      const stored = await client.query(api.conversations.get, {
+      const stored = await client.mutation(api.conversations.get, {
         conversationId: result.conversationId,
       });
 
@@ -125,7 +125,7 @@ describe("Conversations API (Layer 1a)", () => {
       expect(result.messageCount).toBe(0);
 
       // Validate storage
-      const stored = await client.query(api.conversations.get, {
+      const stored = await client.mutation(api.conversations.get, {
         conversationId: result.conversationId,
       });
 
@@ -154,7 +154,7 @@ describe("Conversations API (Layer 1a)", () => {
       expect(result.conversationId).toBe(customId);
 
       // Validate storage
-      const stored = await client.query(api.conversations.get, {
+      const stored = await client.mutation(api.conversations.get, {
         conversationId: customId,
       });
 
@@ -304,7 +304,7 @@ describe("Conversations API (Layer 1a)", () => {
       expect(updated.messages[0].metadata).toEqual({ sentiment: "positive" });
 
       // Validate storage
-      const stored = await client.query(api.conversations.get, {
+      const stored = await client.mutation(api.conversations.get, {
         conversationId: conversation.conversationId,
       });
 
@@ -374,7 +374,7 @@ describe("Conversations API (Layer 1a)", () => {
       );
 
       // Validate storage
-      const stored = await client.query(api.conversations.get, {
+      const stored = await client.mutation(api.conversations.get, {
         conversationId: conversation.conversationId,
       });
 
@@ -1061,7 +1061,7 @@ describe("Conversations API (Layer 1a)", () => {
       expect(retrieved).toBeNull();
 
       // Verify storage
-      const stored = await client.query(api.conversations.get, {
+      const stored = await client.mutation(api.conversations.get, {
         conversationId: conversation.conversationId,
       });
 
@@ -1122,7 +1122,7 @@ describe("Conversations API (Layer 1a)", () => {
       }
 
       // Durability: Storage matches SDK response
-      const stored = await client.query(api.conversations.get, {
+      const stored = await client.mutation(api.conversations.get, {
         conversationId: conversation.conversationId,
       });
 
@@ -1498,7 +1498,7 @@ describe("Conversations API (Layer 1a)", () => {
       expect(exported.data).toBeTruthy();
 
       // Validate CSV structure
-      const lines = exported.data.split("\n");
+      const lines = parseCsvRows(exported.data);
 
       expect(lines[0]).toContain("conversationId");
       expect(lines[0]).toContain("type");
@@ -1650,7 +1650,7 @@ describe("Conversations API (Layer 1a)", () => {
       expect(csvExport.format).toBe("csv");
 
       // Validate CSV structure
-      const lines = csvExport.data.split("\n");
+      const lines = parseCsvRows(csvExport.data);
       // Header + 105 data rows
       expect(lines.length).toBe(TOTAL_CONVERSATIONS + 1);
 

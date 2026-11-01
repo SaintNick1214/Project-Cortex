@@ -1,4 +1,5 @@
 "use client";
+import { toast } from "sonner";
 
 import type { UseChatHelpers } from "@ai-sdk/react";
 import {
@@ -31,7 +32,7 @@ export function MessageEditor({
   const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
 
   const [draftContent, setDraftContent] = useState<string>(
-    getTextFromMessage(message)
+    getTextFromMessage(message),
   );
   const textareaRef = useRef<HTMLTextAreaElement>(null);
 
@@ -63,6 +64,11 @@ export function MessageEditor({
         value={draftContent}
       />
 
+      <p className="text-xs text-muted-foreground">
+        Editing replaces the active branch. Earlier audit records remain. Edited
+        chats use current branch text and owned unedited conversation recall;
+        fact and graph defaults are omitted from model context.
+      </p>
       <div className="flex flex-row justify-end gap-2">
         <Button
           className="h-fit px-3 py-2"
@@ -80,27 +86,33 @@ export function MessageEditor({
           onClick={async () => {
             setIsSubmitting(true);
 
-            await deleteTrailingMessages({
-              id: message.id,
-            });
+            try {
+              await deleteTrailingMessages({
+                id: message.id,
+              });
 
-            setMessages((messages) => {
-              const index = messages.findIndex((m) => m.id === message.id);
+              setMessages((messages) => {
+                const index = messages.findIndex((m) => m.id === message.id);
 
-              if (index !== -1) {
-                const updatedMessage: ChatMessage = {
-                  ...message,
-                  parts: [{ text: draftContent, type: "text" }],
-                };
+                if (index !== -1) {
+                  const updatedMessage: ChatMessage = {
+                    ...message,
+                    parts: [{ type: "text", text: draftContent }],
+                  };
 
-                return [...messages.slice(0, index), updatedMessage];
-              }
+                  return [...messages.slice(0, index), updatedMessage];
+                }
 
-              return messages;
-            });
+                return messages;
+              });
 
-            setMode("view");
-            regenerate();
+              setMode("view");
+              await regenerate();
+            } catch {
+              toast.error("Message edit did not finish. Reload and retry.");
+            } finally {
+              setIsSubmitting(false);
+            }
           }}
           variant="default"
         >

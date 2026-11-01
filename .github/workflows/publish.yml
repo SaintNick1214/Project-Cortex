@@ -4,11 +4,27 @@ on:
   workflow_run:
     workflows: ["PR Checks", "Security Scans"]
     types: [completed]
-    branches: [main]
+    branches: [main, dev]
+  # Readiness explains pending/failed Snyk results as well as successful ones.
+  status:
+  workflow_dispatch:
+    inputs:
+      source_sha:
+        description: Exact current main commit (40-character SHA)
+        required: true
+        type: string
+      mode:
+        description: Read-only dry plan or qualified publication recovery
+        required: true
+        default: dry-plan
+        type: choice
+        options: [dry-plan, recover]
 
 permissions:
   contents: read
   actions: read
+  checks: read
+  statuses: read
 
 concurrency:
   group: publish-main
@@ -16,77 +32,139 @@ concurrency:
 
 jobs:
   gate:
-    if: >-
-      github.event.workflow_run.event == 'push' &&
-      github.event.workflow_run.conclusion == 'success' &&
-      github.event.workflow_run.head_repository.full_name == github.repository
     runs-on: ubuntu-latest
+    timeout-minutes: 5
     outputs:
-      ready: ${{ steps.check.outputs.ready }}
+      ready: ${{ steps.check.outputs.ready || 'false' }}
       checks-run: ${{ steps.check.outputs.checks_run }}
+      source-sha: ${{ steps.source.outputs.source_sha }}
+      mode: ${{ steps.check.outputs.mode }}
     steps:
-      - name: Require successful tests and security for the same main commit
+      - name: Verify current main before loading candidate scripts
+        id: source
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          node --input-type=module <<'JS'
+          import {readFileSync, appendFileSync} from 'node:fs';
+          import {execFileSync} from 'node:child_process';
+          const event = JSON.parse(readFileSync(process.env.GITHUB_EVENT_PATH, 'utf8'));
+          const name = process.env.GITHUB_EVENT_NAME;
+          const sha = name === 'workflow_run' ? event.workflow_run?.head_sha : name === 'workflow_dispatch' ? event.inputs?.source_sha : event.sha;
+          let main;
+          try { main = JSON.parse(execFileSync('gh', ['api', `repos/${process.env.GITHUB_REPOSITORY}/git/ref/heads/main`], {encoding:'utf8', stdio:['ignore','pipe','pipe']})).object.sha; }
+          catch { throw new Error('Could not verify current main; no candidate code loaded or publication authorized.'); }
+          const exact = /^[a-f0-9]{40}$/.test(sha ?? '') && /^[a-f0-9]{40}$/.test(main ?? '');
+          const current = exact && sha === main;
+          appendFileSync(process.env.GITHUB_OUTPUT, `current=${current}\nsource_sha=${exact ? sha : ''}\n`);
+          if (!current) {
+            const run = event.workflow_run;
+            const expected = run?.head_branch && run.head_branch !== 'main' ? 'dev/other branch integration does not publish.' : run?.event && run.event !== 'push' ? 'Scheduled/manual upstream scans do not publish.' : 'Qualify the exact current main commit before dry-plan/recovery.';
+            appendFileSync(process.env.GITHUB_STEP_SUMMARY, `## Package delivery readiness\n\nOutcome: **${exact ? 'superseded' : 'invalid source'}**. Event: ${name}; upstream event: ${run?.event ?? 'n/a'}; branch: ${run?.head_branch ?? process.env.GITHUB_REF}.\n\n${expected}\nSource: ${exact ? sha : 'invalid/missing'}; current main: ${main}.\nNo candidate scripts were loaded.\n`);
+          }
+          JS
+      - uses: actions/checkout@v6
+        if: steps.source.outputs.current == 'true'
+        with:
+          ref: ${{ steps.source.outputs.source_sha }}
+          persist-credentials: false
+      - uses: actions/setup-node@v6
+        if: steps.source.outputs.current == 'true'
+        with:
+          node-version: "24"
+      - name: Reconcile exact-main tests, security, uploaded CodeQL and Snyk
+        if: steps.source.outputs.current == 'true'
         id: check
         env:
           GH_TOKEN: ${{ github.token }}
-          SOURCE_SHA: ${{ github.event.workflow_run.head_sha }}
-        run: |
-          MAIN_SHA=$(gh api "repos/$GITHUB_REPOSITORY/git/ref/heads/main" --jq '.object.sha')
-          if [ "$MAIN_SHA" != "$SOURCE_SHA" ]; then
-            echo 'A newer main commit superseded this delivery run.'
-            echo 'ready=false' >> "$GITHUB_OUTPUT"
-            exit 0
-          fi
-          gh api "repos/$GITHUB_REPOSITORY/actions/runs?branch=main&event=push&head_sha=$SOURCE_SHA&per_page=100" > runs.json
-          node --input-type=module <<'JS'
-          import {readFileSync, appendFileSync} from 'node:fs';
-          const runs = JSON.parse(readFileSync('runs.json')).workflow_runs;
-          const successful = name => {
-            const latest = runs.filter(run => run.name === name && run.head_sha === process.env.SOURCE_SHA).sort((a,b) => b.id-a.id)[0];
-            return latest?.status === 'completed' && latest.conclusion === 'success' ? latest : undefined;
-          };
-          const checks = successful('PR Checks');
-          const security = successful('Security Scans');
-          appendFileSync(process.env.GITHUB_OUTPUT, `ready=${Boolean(checks && security)}\nchecks_run=${checks?.id ?? ''}\n`);
-          JS
+          SOURCE_SHA: ${{ steps.source.outputs.source_sha }}
+        run: node scripts/release-readiness.mjs
 
-  release:
+  dry-plan:
     needs: gate
-    if: needs.gate.outputs.ready == 'true'
+    if: needs.gate.outputs.ready == 'true' && needs.gate.outputs.mode == 'dry-plan'
     runs-on: ubuntu-latest
-    permissions:
-      contents: write
-      actions: read
-      id-token: write
+    timeout-minutes: 5
     steps:
       - uses: actions/checkout@v6
         with:
-          ref: ${{ github.event.workflow_run.head_sha }}
+          ref: ${{ needs.gate.outputs.source-sha }}
           fetch-depth: 0
+          persist-credentials: false
       - uses: actions/setup-node@v6
         with:
           node-version: "24"
-          cache: npm
+      - name: Use declared npm version
+        run: npm install --global npm@12.2.0
       - uses: actions/download-artifact@v5
         with:
           name: delivery-paths
           run-id: ${{ needs.gate.outputs.checks-run }}
           github-token: ${{ github.token }}
-      - run: npm install --global npm@12.2.0
+      - name: Plan without changing manifests or publishing
+        run: node scripts/plan-release.mjs --dry-run
+        env:
+          SOURCE_SHA: ${{ needs.gate.outputs.source-sha }}
+      - name: Report dry-plan failure
+        if: failure()
+        run: echo 'Dry-plan failed. Verify the immutable delivery-paths artifact and registry metadata; nothing was published.' >> "$GITHUB_STEP_SUMMARY"
+
+  release:
+    needs: gate
+    if: needs.gate.outputs.ready == 'true' && needs.gate.outputs.mode == 'recover'
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      actions: read
+      checks: read
+      statuses: read
+      id-token: write
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          ref: ${{ needs.gate.outputs.source-sha }}
+          fetch-depth: 0
+      - uses: actions/setup-node@v6
+        with:
+          node-version: "24.15.0"
+          cache: npm
+      - name: Use declared npm version
+        run: npm install --global npm@12.2.0
+
+      - uses: actions/download-artifact@v5
+        with:
+          name: delivery-paths
+          run-id: ${{ needs.gate.outputs.checks-run }}
+          github-token: ${{ github.token }}
       - run: npm ci
       - name: Plan changed package versions
         run: node scripts/plan-release.mjs
         env:
-          SOURCE_SHA: ${{ github.event.workflow_run.head_sha }}
+          SOURCE_SHA: ${{ needs.gate.outputs.source-sha }}
       - name: Build and check public package contracts
         run: |
           npm run build
           npm run test:contracts
           npm run build --workspace=@cortexmemory/vercel-ai-provider
-          node packages/cortex-cli/scripts/sync-quickstart-template.js
+          npm run test:release
+          if node -e 'process.exit(JSON.parse(require("fs").readFileSync("release-plan.json","utf8")).packages.find(p=>p.key === "templates").changed ? 0 : 1)'; then
+            npm run assemble --workspace=@cortexmemory/templates
+          fi
+          npm run lint --workspace=@cortexmemory/templates
+          npm run typecheck --workspace=@cortexmemory/templates
+          npm test --workspace=@cortexmemory/templates
           npm run build --workspace=@cortexmemory/cli
-      - name: Publish SDK, provider, then CLI using npm trusted publishing
-        run: node scripts/publish-release.mjs
+      - name: Publish SDK, provider, catalog, then CLI using npm trusted publishing
+        # Revalidate after builds, including the selected immutable artifact's run.
+        # A new main or failed/latest rerun cannot inherit an earlier green gate.
+        run: |
+          node scripts/release-readiness.mjs --once
+          node scripts/publish-release.mjs
         env:
           GH_TOKEN: ${{ github.token }}
-          SOURCE_SHA: ${{ github.event.workflow_run.head_sha }}
+          SOURCE_SHA: ${{ needs.gate.outputs.source-sha }}
+          EXPECTED_CHECKS_RUN: ${{ needs.gate.outputs.checks-run }}
+          REQUIRE_READY: "true"
+      - name: Report incomplete delivery
+        if: failure()
+        run: echo 'Delivery failed before completion. Review readiness and package outcomes above; partial publication is recovered with the same qualified exact-main contract.' >> "$GITHUB_STEP_SUMMARY"

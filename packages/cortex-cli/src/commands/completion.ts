@@ -2,7 +2,7 @@
  * Completion Command
  *
  * Generate shell completion scripts for cortex CLI.
- * This is a fallback for users who need to manually configure completion.
+ * Users explicitly configure completion for their selected shell.
  */
 
 import { Command } from "commander";
@@ -65,8 +65,7 @@ ${pc.bold("Usage examples:")}
   ${pc.cyan("# Fish - save to completions directory")}
   cortex completion fish > ~/.config/fish/completions/cortex.fish
 
-${pc.bold("Note:")} Completion is automatically installed during 'npm install -g'.
-This command is for manual setup or troubleshooting.
+${pc.bold("Note:")} Run this command to configure completion explicitly.
 `,
     )
     .action((shell: string) => {

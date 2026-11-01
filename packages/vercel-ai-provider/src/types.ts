@@ -1,3 +1,8 @@
+/** Ephemeral native deployment credentials for trusted server construction only. */
+export interface CortexServerCredentials {
+  readonly deploymentKey: string;
+}
+
 /**
  * Type definitions for Cortex Memory Provider for Vercel AI SDK
  */
@@ -108,7 +113,12 @@ export interface CortexMemoryConfig {
   /** How to inject memory context (default: 'system') */
   contextInjectionStrategy?: ContextInjectionStrategy;
 
-  /** Custom context builder function */
+  /**
+   * Replace the complete recalled context with a custom string. Receives ranked
+   * memory entries, including graph-expanded memories; facts are not arguments.
+   * An empty string suppresses context injection. Called only after a successful
+   * recall; errors propagate before model invocation and response storage.
+   */
   customContextBuilder?: (memories: MemoryEntry[]) => string;
 
   // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
@@ -188,6 +198,8 @@ export interface CortexMemoryConfig {
    * If not provided, uses environment variables for auto-configuration.
    */
   graphConfig?: {
+    /** Caller-owned adapter; takes precedence over automatic connection/env selection. */
+    adapter?: import("@cortexmemory/sdk").GraphAdapter;
     /** Override the graph database URI */
     uri?: string;
     /** Override the graph database username */
@@ -444,6 +456,13 @@ export interface ManualClearOptions {
  */
 export interface CortexMemoryModel {
   /**
+   * Await shared factory resource disposal exactly once. All borrowed model
+   * wrappers and manual factory methods share this lifetime; call after their work
+   * completes. Closing a borrowed wrapper leaves the factory and peers usable.
+   */
+  close: () => Promise<void>;
+
+  /**
    * Wrap a language model with memory capabilities
    *
    * @param underlyingModel - Language model to wrap (from @ai-sdk/*)
@@ -541,9 +560,6 @@ export interface CortexMemoryModel {
    *
    * @returns Current configuration (read-only)
    */
-  /** Close the shared SDK client after using this factory and its models. */
-  close: () => Promise<void>;
-
   getConfig: () => Readonly<CortexMemoryConfig>;
 }
 

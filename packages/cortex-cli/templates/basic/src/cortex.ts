@@ -1,350 +1,79 @@
-/**
- * Cortex SDK Client Configuration
- *
- * Mirrors the quickstart's memory configuration with full feature support.
- * Includes optional embeddings, fact extraction, and belief revision.
- */
-
-import { Cortex } from "@cortexmemory/sdk";
-import type { RememberParams } from "@cortexmemory/sdk";
-import {
-  printLayerUpdate,
-  printRecallStart,
-  printRecallComplete,
-  printRememberStart,
-  printRememberComplete,
-} from "./display.js";
-
-// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-// Configuration
-// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-
-export const CONFIG = {
-  // Memory space for isolation
-  memorySpaceId: process.env.MEMORY_SPACE_ID || "basic-demo",
-
-  // User identification
-  userId: process.env.USER_ID || "demo-user",
-  userName: process.env.USER_NAME || "Demo User",
-
-  // Agent identification (required for user-agent conversations in SDK v0.17.0+)
-  agentId: process.env.AGENT_ID || "basic-assistant",
-  agentName: process.env.AGENT_NAME || "Cortex CLI Assistant",
-
-  // Feature flags
-  enableFactExtraction: process.env.CORTEX_FACT_EXTRACTION !== "false",
-  enableGraphMemory: process.env.CORTEX_GRAPH_SYNC === "true",
-
-  // Debug mode
-  debug: process.env.DEBUG === "true",
-};
-
-// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-// Singleton Client
-// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-
-let cortexClient: Cortex | null = null;
-let initPromise: Promise<Cortex> | null = null;
-
-/**
- * Initialize the Cortex SDK client (async)
- *
- * Uses Cortex.create() for automatic graph configuration from env vars.
- * When CORTEX_GRAPH_SYNC=true and NEO4J_URI (or MEMGRAPH_URI) is set,
- * the graph adapter is automatically created and connected.
- *
- * v0.29.0+: Graph sync is automatic when graphAdapter is configured.
- * No need to pass syncToGraph option to remember() calls.
- */
-export async function initCortex(): Promise<Cortex> {
-  if (cortexClient) {
-    return cortexClient;
+/** Fresh bounded session checks; interactive CLI may retain its owned transport. */
+import { constants } from "node:fs";
+import { open } from "node:fs/promises";
+import { CortexRuntimeClient, CortexRuntimeError } from "@cortexmemory/sdk/runtime";
+import type { CortexRuntimeClientOptions, RuntimeSession } from "@cortexmemory/sdk/runtime";
+export { CortexRuntimeError };
+export type RuntimeClient = Pick<CortexRuntimeClient, "session" | "submit" | "submitAndStart" | "start" | "attach" | "get" | "observe" | "watchObservation" | "cancel" | "approveInput" | "approveTool" | "messages" | "listConversations" | "getDefaultProfile" | "memoryReadiness" | "recall" | "close">;
+export type RuntimeFactory = (options: CortexRuntimeClientOptions) => RuntimeClient;
+export interface RuntimeConfig { deploymentUrl: string; tenantId?: string; memorySpaceId?: string; agentId: string; agentVersion: number; timeoutMs: number }
+export class AppError extends Error { constructor(readonly code: string, readonly status: 400 | 401 | 403 | 413 | 499 | 504 = 400) { super(code); } }
+export function identifier(value: unknown): string {
+  if (typeof value !== "string" || !value.trim() || value.length > 256 || [...value].some(character => character.charCodeAt(0) < 32)) throw new AppError("INVALID_INPUT");
+  return value;
+}
+export function runtimeConfig(env: Readonly<Record<string, string | undefined>> = process.env): RuntimeConfig {
+  let url: URL; try { url = new URL(env.CONVEX_URL ?? env.NEXT_PUBLIC_CONVEX_URL ?? ""); } catch { throw new AppError("CONVEX_URL_REQUIRED"); }
+  if (url.username || url.password || url.search || url.hash || !(url.protocol === "https:" || url.protocol === "http:" && ["localhost", "127.0.0.1", "[::1]"].includes(url.hostname))) throw new AppError("INVALID_CONVEX_URL");
+  const version = Number(env.AGENT_VERSION ?? env.NEXT_PUBLIC_CORTEX_AGENT_VERSION ?? "1"), timeoutMs = Number(env.RUNTIME_TIMEOUT_MS ?? "30000");
+  if (!Number.isSafeInteger(version) || version < 1 || !Number.isSafeInteger(timeoutMs) || timeoutMs < 1 || timeoutMs > 120000) throw new AppError("INVALID_RUNTIME_CONFIG");
+  const memorySpaceId = env.MEMORY_SPACE_ID ?? env.NEXT_PUBLIC_CORTEX_MEMORY_SPACE_ID;
+  return { deploymentUrl: url.href.replace(/\/$/, ""), agentId: identifier(env.AGENT_ID ?? env.NEXT_PUBLIC_CORTEX_AGENT_ID ?? "basic-assistant"), agentVersion: version, timeoutMs,
+    ...(env.TENANT_ID ? { tenantId: identifier(env.TENANT_ID) } : {}), ...(memorySpaceId ? { memorySpaceId: identifier(memorySpaceId) } : {}) };
+}
+export function bearer(header: string | undefined): string {
+  const match = /^Bearer ([^\s]{1,32768})$/i.exec(header ?? ""); if (!match) throw new AppError("UNAUTHENTICATED", 401); return match[1];
+}
+export async function hostToken(env: Readonly<Record<string, string | undefined>> = process.env): Promise<string> {
+  // Reread the host-managed file for every official refresh callback. Never print tokens.
+  let token = env.CORTEX_AUTH_TOKEN;
+  if (env.CORTEX_AUTH_TOKEN_FILE) {
+    const file = await open(env.CORTEX_AUTH_TOKEN_FILE, constants.O_RDONLY | constants.O_NOFOLLOW | constants.O_NONBLOCK).catch(() => { throw new AppError("HOST_TOKEN_UNAVAILABLE", 401); });
+    try {
+      const stat = await file.stat(); if (!stat.isFile() || stat.size > 32768 || (stat.mode & 0o077) !== 0 || typeof process.getuid === "function" && stat.uid !== process.getuid()) throw new AppError("INVALID_HOST_TOKEN", 401);
+      const data = Buffer.alloc(32769); let size = 0;
+      while (size < data.length) { const result = await file.read(data, size, data.length - size, size); if (result.bytesRead === 0) break; size += result.bytesRead; }
+      if (size > 32768) throw new AppError("INVALID_HOST_TOKEN", 401); token = data.subarray(0, size).toString("utf8").trim();
+    } finally { await file.close(); }
   }
-
-  if (initPromise) {
-    return initPromise;
-  }
-
-  initPromise = (async () => {
-    const convexUrl = process.env.CONVEX_URL;
-    if (!convexUrl) {
-      throw new Error(
-        "CONVEX_URL environment variable is required.\n" +
-          "Set it in .env.local or run: cortex init",
-      );
-    }
-
-    // Build client config
-     
-    const config: any = { convexUrl };
-
-    // Configure LLM for auto fact extraction when OpenAI key is available
-    if (process.env.OPENAI_API_KEY && CONFIG.enableFactExtraction) {
-      config.llm = {
-        provider: "openai",
-        apiKey: process.env.OPENAI_API_KEY,
-        model: process.env.CORTEX_FACT_EXTRACTION_MODEL || "gpt-4o-mini",
-      };
-    }
-
-    // Use Cortex.create() for async initialization with auto graph configuration
-    // This automatically:
-    // - Detects CORTEX_GRAPH_SYNC=true
-    // - Reads NEO4J_URI/MEMGRAPH_URI and credentials from env
-    // - Creates and connects the CypherGraphAdapter
-    cortexClient = await Cortex.create(config);
-    return cortexClient;
+  return bearer(token ? `Bearer ${token}` : undefined);
+}
+export function sameSession(a: RuntimeSession, b: RuntimeSession): boolean { return a.principalId === b.principalId && a.tenantId === b.tenantId && a.memorySpaceId === b.memorySpaceId; }
+export interface RuntimeConnection { entry?: { client: RuntimeClient; configKey: string; closed: boolean; fetchToken: CortexRuntimeClientOptions["fetchToken"]; factory?: RuntimeFactory }; busy?: boolean }
+export function closeRuntimeConnection(connection: RuntimeConnection): void {
+  const entry = connection.entry; connection.entry = undefined;
+  if (entry && !entry.closed) { entry.closed = true; entry.client.close(); }
+}
+export async function withRuntime<T>(fetchToken: CortexRuntimeClientOptions["fetchToken"], work: (client: RuntimeClient, config: RuntimeConfig) => Promise<T>,
+  options: { config?: RuntimeConfig; factory?: RuntimeFactory; signal?: AbortSignal; connection?: RuntimeConnection } = {}): Promise<T> {
+  const config = options.config ?? runtimeConfig();
+  if (options.signal?.aborted) { if (options.connection) closeRuntimeConnection(options.connection); throw new AppError("REQUEST_ABORTED", 499); }
+  const connection = options.connection;
+  if (connection?.busy) throw new AppError("RUNTIME_BUSY");
+  const configKey = JSON.stringify([config.deploymentUrl, config.tenantId, config.memorySpaceId, config.agentId, config.agentVersion, config.timeoutMs]);
+  if (connection?.entry && (connection.entry.configKey !== configKey || connection.entry.fetchToken !== fetchToken || connection.entry.factory !== options.factory)) { closeRuntimeConnection(connection); throw new AppError("RUNTIME_CONFIGURATION_CHANGED"); }
+  const entry = connection?.entry ?? { configKey, closed: false, fetchToken, factory: options.factory, client: (options.factory ?? (settings => new CortexRuntimeClient(settings)))({ deploymentUrl: config.deploymentUrl, fetchToken,
+    scope: { ...(config.tenantId ? { tenantId: config.tenantId } : {}), ...(config.memorySpaceId ? { memorySpaceId: config.memorySpaceId } : {}) },
+    authTimeoutMs: Math.min(config.timeoutMs, 10000), requestTimeoutMs: config.timeoutMs,
+    ...(process.env.CORTEX_RUNTIME_LATENCY_TRACE === "1" ? { onLatencyEvent: event => console.error(JSON.stringify({ type: "cortex-client-latency", ...event })) } : {}) }) };
+  if (connection) { connection.entry = entry; connection.busy = true; }
+  const client = entry.client;
+  let completed = false, timer: ReturnType<typeof setTimeout> | undefined, rejectBound: (error: Error) => void = () => {};
+  const close = () => { if (connection?.entry === entry) connection.entry = undefined; if (!entry.closed) { entry.closed = true; client.close(); } };
+  const abort = () => { close(); rejectBound(new AppError("REQUEST_ABORTED", 499)); };
+  const bound = new Promise<never>((_, reject) => { rejectBound = reject; timer = setTimeout(() => { close(); reject(new AppError("REQUEST_DEADLINE_EXCEEDED", 504)); }, config.timeoutMs); });
+  options.signal?.addEventListener("abort", abort, { once: true });
+  if (options.signal?.aborted) abort();
+  const operation = (async () => {
+    if (options.signal?.aborted) throw new AppError("REQUEST_ABORTED", 499);
+    const before = await client.session(), result = await work(client, config), after = await client.session();
+    if (!sameSession(before, after)) throw new AppError("SESSION_CHANGED", 403);
+    for (const deadline of [before.deliveryExpiresAt, after.deliveryExpiresAt]) if (deadline !== undefined && Date.now() >= deadline) throw new AppError("AUTHORITY_EXPIRED", 403);
+    return result;
   })();
-
-  try {
-    return await initPromise;
-  } catch (error) {
-    initPromise = null;
-    throw error;
-  }
+  try { const result = await Promise.race([operation, bound]); completed = true; return result; }
+  finally { clearTimeout(timer); options.signal?.removeEventListener("abort", abort); if (connection) connection.busy = false; if (!completed || !connection) close(); }
 }
-
-/**
- * Get the Cortex SDK client (must call initCortex first)
- *
- * @throws Error if client hasn't been initialized
- */
-export function getCortex(): Cortex {
-  if (!cortexClient) {
-    throw new Error(
-      "Cortex client not initialized. Call initCortex() first.",
-    );
-  }
-  return cortexClient;
-}
-
-/**
- * Close the Cortex client connection
- */
-export function closeCortex(): void {
-  initPromise = null;
-  if (cortexClient) {
-    cortexClient.close();
-    cortexClient = null;
-  }
-}
-
-// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-// Layer Observer (for console output)
-// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-
-/**
- * Phase of the orchestration
- * - "recall": Context retrieval phase (before LLM response)
- * - "remember": Memory storage phase (after LLM response)
- */
+// Retained display utilities consume server-confirmed statuses only. They do not execute inference.
 export type OrchestrationPhase = "recall" | "remember";
-
-/**
- * Memory layer types
- */
-export type MemoryLayer =
-  | "memorySpace"
-  | "user"
-  | "agent"
-  | "context"
-  | "conversation"
-  | "vector"
-  | "facts"
-  | "graph";
-
-/**
- * Layer event with phase-aware tracking (v0.35.1+)
- */
-export interface LayerEvent {
-  layer: MemoryLayer;
-  status: "pending" | "in_progress" | "complete" | "error" | "skipped";
-  timestamp: number;
-  latencyMs?: number;
-  /** Phase this event belongs to */
-  phase: OrchestrationPhase;
-  data?: Record<string, unknown>;
-  error?: { message: string; code?: string };
-  revisionAction?: "ADD" | "UPDATE" | "SUPERSEDE" | "NONE";
-  supersededFacts?: string[];
-}
-
-/**
- * Summary of the recall phase (context retrieval)
- */
-export interface RecallSummary {
-  orchestrationId: string;
-  phase: "recall";
-  totalLatencyMs: number;
-  context: {
-    memoriesCount: number;
-    factsCount: number;
-    graphEntitiesCount: number;
-  };
-}
-
-/**
- * Summary of the remember phase (memory storage)
- */
-export interface OrchestrationSummary {
-  orchestrationId: string;
-  phase: "remember";
-  totalLatencyMs: number;
-  createdIds: {
-    conversationId?: string;
-    memoryIds?: string[];
-    factIds?: string[];
-  };
-}
-
-/**
- * Phase-aware orchestration observer (v0.35.1+)
- *
- * Provides callbacks for both recall (context retrieval) and
- * remember (memory storage) phases of memory orchestration.
- */
-export interface OrchestrationObserver {
-  /** Called when recall phase starts */
-  onRecallStart?: (orchestrationId: string) => void | Promise<void>;
-  /** Called when recall phase completes */
-  onRecallComplete?: (summary: RecallSummary) => void | Promise<void>;
-  /** Called when remember phase starts */
-  onRememberStart?: (orchestrationId: string) => void | Promise<void>;
-  /** Called when remember phase completes */
-  onRememberComplete?: (summary: OrchestrationSummary) => void | Promise<void>;
-  /** Called when a layer's status changes (includes phase info) */
-  onLayerUpdate?: (event: LayerEvent) => void | Promise<void>;
-}
-
-/**
- * Create a phase-aware layer observer for recall operations
- */
-export function createRecallObserver(): OrchestrationObserver {
-  return {
-    onRecallStart: (orchestrationId: string) => {
-      printRecallStart(orchestrationId);
-    },
-    onLayerUpdate: (event: LayerEvent) => {
-      printLayerUpdate(event);
-    },
-    onRecallComplete: (summary: RecallSummary) => {
-      printRecallComplete(summary.totalLatencyMs);
-      if (CONFIG.debug) {
-        console.log("[Debug] Recall complete:", summary);
-      }
-    },
-  };
-}
-
-/**
- * Create a phase-aware layer observer for remember operations
- */
-export function createRememberObserver(): OrchestrationObserver {
-  return {
-    onRememberStart: (orchestrationId: string) => {
-      printRememberStart(orchestrationId);
-    },
-    onLayerUpdate: (event: LayerEvent) => {
-      printLayerUpdate(event);
-    },
-    onRememberComplete: (summary: OrchestrationSummary) => {
-      printRememberComplete(summary.totalLatencyMs);
-      if (CONFIG.debug) {
-        console.log("[Debug] Remember complete:", summary);
-      }
-    },
-  };
-}
-
-/**
- * Create a legacy-compatible layer observer (deprecated)
- * @deprecated Use createRecallObserver() and createRememberObserver() instead
- */
-export function createLayerObserver(): OrchestrationObserver {
-  return {
-    onRememberStart: (orchestrationId: string) => {
-      printRememberStart(orchestrationId);
-    },
-    onLayerUpdate: (event: LayerEvent) => {
-      printLayerUpdate(event);
-    },
-    onRememberComplete: (summary: OrchestrationSummary) => {
-      printRememberComplete(summary.totalLatencyMs);
-      if (CONFIG.debug) {
-        console.log("[Debug] Orchestration complete:", summary);
-      }
-    },
-  };
-}
-
-// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-// Embedding Provider (Optional)
-// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-
-/**
- * Get embedding provider if OpenAI is configured
- */
-export async function getEmbeddingProvider(): Promise<
-  ((text: string) => Promise<number[]>) | undefined
-> {
-  if (!process.env.OPENAI_API_KEY) {
-    return undefined;
-  }
-
-  try {
-    // Dynamic import to avoid requiring openai if not used
-    const { default: OpenAI } = await import("openai");
-    const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
-
-    return async (text: string): Promise<number[]> => {
-      const result = await openai.embeddings.create({
-        model: "text-embedding-3-small",
-        input: text,
-      });
-      return result.data[0].embedding;
-    };
-  } catch {
-    // OpenAI not installed
-    return undefined;
-  }
-}
-
-// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-// Remember Parameters Builder
-// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-
-export interface ChatMessage {
-  userMessage: string;
-  agentResponse: string;
-  conversationId: string;
-}
-
-/**
- * Build RememberParams with full configuration
- */
-export async function buildRememberParams(
-  message: ChatMessage,
-): Promise<RememberParams> {
-  const embeddingProvider = await getEmbeddingProvider();
-
-  const params: RememberParams = {
-    // Identity
-    memorySpaceId: CONFIG.memorySpaceId,
-    conversationId: message.conversationId,
-    userId: CONFIG.userId,
-    userName: CONFIG.userName,
-    agentId: CONFIG.agentId,
-
-    // Content
-    userMessage: message.userMessage,
-    agentResponse: message.agentResponse,
-
-    // Optional embedding
-    generateEmbedding: embeddingProvider,
-
-    // Fact extraction and belief revision are handled automatically
-    // by the llmConfig on the Cortex client when enableFactExtraction is true
-  };
-
-  return params;
-}
+export interface LayerEvent { layer: "memorySpace" | "user" | "agent" | "context" | "conversation" | "vector" | "facts" | "graph"; status: "pending" | "in_progress" | "complete" | "error" | "skipped"; timestamp: number; latencyMs?: number; phase: OrchestrationPhase; data?: Record<string, unknown>; error?: { message: string; code?: string }; revisionAction?: "ADD" | "UPDATE" | "SUPERSEDE" | "NONE"; supersededFacts?: string[] }

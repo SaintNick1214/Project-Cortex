@@ -101,7 +101,11 @@ export async function verifyPassword(
 
     // Compare hashes
     const hashB64 = btoa(String.fromCharCode(...new Uint8Array(derivedBits)));
-    return hashB64 === expectedHashB64;
+    if (hashB64.length !== expectedHashB64.length) return false;
+    let difference = 0;
+    for (let i = 0; i < hashB64.length; i++)
+      difference |= hashB64.charCodeAt(i) ^ expectedHashB64.charCodeAt(i);
+    return difference === 0;
   } catch {
     return false;
   }

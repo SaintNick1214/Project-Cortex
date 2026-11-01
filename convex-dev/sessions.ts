@@ -1,436 +1,103 @@
-/**
- * Cortex SDK - Convex Sessions API
- *
- * Native session management with fully extensible metadata.
- */
-
-import { mutation, query } from "./_generated/server";
-import { v } from "convex/values";
-
-// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-// Core Operations
-// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-
-/**
- * Create a new session
- */
-export const create = mutation({
-  args: {
-    sessionId: v.string(),
-    userId: v.string(),
-    tenantId: v.optional(v.string()),
-    memorySpaceId: v.optional(v.string()),
-    metadata: v.optional(v.any()),
-    startedAt: v.number(),
-    expiresAt: v.optional(v.number()),
-  },
-  handler: async (ctx, args) => {
-    const now = args.startedAt;
-
-    const session = {
-      sessionId: args.sessionId,
-      userId: args.userId,
-      tenantId: args.tenantId,
-      memorySpaceId: args.memorySpaceId,
-      status: "active" as const,
-      startedAt: now,
-      lastActiveAt: now,
-      expiresAt: args.expiresAt,
-      metadata: args.metadata,
-      messageCount: 0,
-      memoryCount: 0,
-    };
-
-    const id = await ctx.db.insert("sessions", session);
-
-    return {
-      _id: id,
-      ...session,
-    };
-  },
-});
-
-/**
- * Get a session by ID
- */
-export const get = query({
-  args: {
-    sessionId: v.string(),
-  },
-  handler: async (ctx, args) => {
-    const session = await ctx.db
-      .query("sessions")
-      .withIndex("by_sessionId", (q) => q.eq("sessionId", args.sessionId))
-      .first();
-
-    return session;
-  },
-});
-
-/**
- * Update session activity (touch)
- */
-export const touch = mutation({
-  args: {
-    sessionId: v.string(),
-  },
-  handler: async (ctx, args) => {
-    const session = await ctx.db
-      .query("sessions")
-      .withIndex("by_sessionId", (q) => q.eq("sessionId", args.sessionId))
-      .first();
-
-    if (!session) {
-      throw new Error(`Session not found: ${args.sessionId}`);
-    }
-
-    await ctx.db.patch(session._id, {
-      lastActiveAt: Date.now(),
-      status: "active",
-    });
-  },
-});
-
-/**
- * End a session
- */
-export const end = mutation({
-  args: {
-    sessionId: v.string(),
-  },
-  handler: async (ctx, args) => {
-    const session = await ctx.db
-      .query("sessions")
-      .withIndex("by_sessionId", (q) => q.eq("sessionId", args.sessionId))
-      .first();
-
-    if (!session) {
-      throw new Error(`Session not found: ${args.sessionId}`);
-    }
-
-    await ctx.db.patch(session._id, {
-      status: "ended",
-      endedAt: Date.now(),
-    });
-  },
-});
-
-/**
- * End all sessions for a user
- *
- * @param userId - The user ID to end sessions for
- * @param tenantId - Optional tenant ID for multi-tenant isolation.
- *                   When provided, only ends sessions for the user within that tenant.
- *                   Without this, ALL sessions for the userId across ALL tenants are ended.
- */
-export const endAll = mutation({
-  args: {
-    userId: v.string(),
-    tenantId: v.optional(v.string()),
-  },
-  handler: async (ctx, args) => {
-    // Use tenant-scoped index when tenantId provided for proper isolation
-    let sessions;
-    if (args.tenantId) {
-      sessions = await ctx.db
-        .query("sessions")
-        .withIndex("by_tenant_user", (q) =>
-          q.eq("tenantId", args.tenantId!).eq("userId", args.userId),
-        )
-        .filter((q) => q.neq(q.field("status"), "ended"))
-        .collect();
-    } else {
-      sessions = await ctx.db
-        .query("sessions")
-        .withIndex("by_userId", (q) => q.eq("userId", args.userId))
-        .filter((q) => q.neq(q.field("status"), "ended"))
-        .collect();
-    }
-
-    const now = Date.now();
-    const sessionIds: string[] = [];
-
-    for (const session of sessions) {
-      await ctx.db.patch(session._id, {
-        status: "ended",
-        endedAt: now,
-      });
-      sessionIds.push(session.sessionId);
-    }
-
-    return {
-      ended: sessionIds.length,
-      sessionIds,
-    };
-  },
-});
-
-// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-// Query Operations
-// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-
-/**
- * List sessions with filters
- */
-export const list = query({
-  args: {
-    userId: v.optional(v.string()),
-    tenantId: v.optional(v.string()),
-    memorySpaceId: v.optional(v.string()),
-    status: v.optional(
-      v.union(v.literal("active"), v.literal("idle"), v.literal("ended")),
-    ),
-    limit: v.optional(v.number()),
-    offset: v.optional(v.number()),
-  },
-  handler: async (ctx, args) => {
-    // Select the best index based on provided filters
-    let sessions;
-
-    if (args.tenantId && args.userId) {
-      sessions = await ctx.db
-        .query("sessions")
-        .withIndex("by_tenant_user", (q) =>
-          q.eq("tenantId", args.tenantId!).eq("userId", args.userId!),
-        )
-        .collect();
-    } else if (args.tenantId && args.status) {
-      sessions = await ctx.db
-        .query("sessions")
-        .withIndex("by_tenant_status", (q) =>
-          q.eq("tenantId", args.tenantId!).eq("status", args.status!),
-        )
-        .collect();
-    } else if (args.tenantId) {
-      sessions = await ctx.db
-        .query("sessions")
-        .withIndex("by_tenantId", (q) => q.eq("tenantId", args.tenantId!))
-        .collect();
-    } else if (args.userId) {
-      sessions = await ctx.db
-        .query("sessions")
-        .withIndex("by_userId", (q) => q.eq("userId", args.userId!))
-        .collect();
-    } else if (args.memorySpaceId) {
-      sessions = await ctx.db
-        .query("sessions")
-        .withIndex("by_memorySpace", (q) =>
-          q.eq("memorySpaceId", args.memorySpaceId!),
-        )
-        .collect();
-    } else if (args.status) {
-      sessions = await ctx.db
-        .query("sessions")
-        .withIndex("by_status", (q) => q.eq("status", args.status!))
-        .collect();
-    } else {
-      sessions = await ctx.db.query("sessions").collect();
-    }
-
-    // Apply any remaining filters not covered by the selected index
-    // Note: userId is always covered when provided (by by_tenant_user or by_userId)
-    // so no userId post-filter is needed in list
-
-    // memorySpaceId needs filter when provided but by_memorySpace wasn't used
-    // by_memorySpace is used only when !tenantId && !userId && memorySpaceId
-    if (args.memorySpaceId && (args.tenantId || args.userId)) {
-      sessions = sessions.filter((s) => s.memorySpaceId === args.memorySpaceId);
-    }
-
-    // status needs filter when provided but neither by_tenant_status nor by_status was used
-    // by_tenant_status: tenantId && status && !userId
-    // by_status: !tenantId && !userId && !memorySpaceId && status
-    if (
-      args.status &&
-      (args.userId || (args.memorySpaceId && !args.tenantId))
-    ) {
-      sessions = sessions.filter((s) => s.status === args.status);
-    }
-
-    // Apply pagination
-    const offset = args.offset ?? 0;
-    const limit = args.limit ?? 50;
-    sessions = sessions.slice(offset, offset + limit);
-
-    return sessions;
-  },
-});
-
-/**
- * Count sessions with filters
- */
-export const count = query({
-  args: {
-    userId: v.optional(v.string()),
-    tenantId: v.optional(v.string()),
-    memorySpaceId: v.optional(v.string()),
-    status: v.optional(
-      v.union(v.literal("active"), v.literal("idle"), v.literal("ended")),
-    ),
-  },
-  handler: async (ctx, args) => {
-    // Select the best index based on provided filters
-    let sessions;
-
-    if (args.tenantId && args.status) {
-      sessions = await ctx.db
-        .query("sessions")
-        .withIndex("by_tenant_status", (q) =>
-          q.eq("tenantId", args.tenantId!).eq("status", args.status!),
-        )
-        .collect();
-    } else if (args.tenantId) {
-      sessions = await ctx.db
-        .query("sessions")
-        .withIndex("by_tenantId", (q) => q.eq("tenantId", args.tenantId!))
-        .collect();
-    } else if (args.userId) {
-      sessions = await ctx.db
-        .query("sessions")
-        .withIndex("by_userId", (q) => q.eq("userId", args.userId!))
-        .collect();
-    } else if (args.memorySpaceId) {
-      sessions = await ctx.db
-        .query("sessions")
-        .withIndex("by_memorySpace", (q) =>
-          q.eq("memorySpaceId", args.memorySpaceId!),
-        )
-        .collect();
-    } else if (args.status) {
-      sessions = await ctx.db
-        .query("sessions")
-        .withIndex("by_status", (q) => q.eq("status", args.status!))
-        .collect();
-    } else {
-      sessions = await ctx.db.query("sessions").collect();
-    }
-
-    // Apply any remaining filters not covered by the selected index
-    // In count, there's no by_tenant_user index branch, so userId is only covered by by_userId
-    // by_userId is used when !tenantId && userId
-    if (args.userId && args.tenantId) {
-      sessions = sessions.filter((s) => s.userId === args.userId);
-    }
-
-    // memorySpaceId needs filter when provided but by_memorySpace wasn't used
-    // by_memorySpace is used only when !tenantId && !userId && memorySpaceId
-    if (args.memorySpaceId && (args.tenantId || args.userId)) {
-      sessions = sessions.filter((s) => s.memorySpaceId === args.memorySpaceId);
-    }
-
-    // status needs filter when provided but neither by_tenant_status nor by_status was used
-    // by_tenant_status: tenantId && status
-    // by_status: !tenantId && !userId && !memorySpaceId && status
-    if (args.status && !args.tenantId && (args.userId || args.memorySpaceId)) {
-      sessions = sessions.filter((s) => s.status === args.status);
-    }
-
-    return sessions.length;
-  },
-});
-
-// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-// Maintenance Operations
-// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-
-/**
- * Expire idle sessions
- */
-export const expireIdle = mutation({
-  args: {
-    tenantId: v.optional(v.string()),
-    idleTimeout: v.number(), // Timeout in milliseconds
-  },
-  handler: async (ctx, args) => {
-    const cutoff = Date.now() - args.idleTimeout;
-
-    // Get all active/idle sessions, optionally filtered by tenant
-    let sessions;
-    if (args.tenantId) {
-      sessions = await ctx.db
-        .query("sessions")
-        .withIndex("by_tenantId", (q) => q.eq("tenantId", args.tenantId!))
-        .filter((q) =>
-          q.or(
-            q.eq(q.field("status"), "active"),
-            q.eq(q.field("status"), "idle"),
-          ),
-        )
-        .collect();
-    } else {
-      sessions = await ctx.db
-        .query("sessions")
-        .filter((q) =>
-          q.or(
-            q.eq(q.field("status"), "active"),
-            q.eq(q.field("status"), "idle"),
-          ),
-        )
-        .collect();
-    }
-
-    // Filter by idle timeout
-    sessions = sessions.filter((s) => s.lastActiveAt < cutoff);
-
-    const now = Date.now();
-    let expired = 0;
-
-    for (const session of sessions) {
-      await ctx.db.patch(session._id, {
-        status: "ended",
-        endedAt: now,
-      });
-      expired++;
-    }
-
-    return { expired };
-  },
-});
-
-/**
- * Increment message count for a session
- */
-export const incrementMessageCount = mutation({
-  args: {
-    sessionId: v.string(),
-  },
-  handler: async (ctx, args) => {
-    const session = await ctx.db
-      .query("sessions")
-      .withIndex("by_sessionId", (q) => q.eq("sessionId", args.sessionId))
-      .first();
-
-    if (!session) {
-      return; // Session may not exist - silently ignore
-    }
-
-    await ctx.db.patch(session._id, {
-      messageCount: (session.messageCount ?? 0) + 1,
-      lastActiveAt: Date.now(),
-    });
-  },
-});
-
-/**
- * Increment memory count for a session
- */
-export const incrementMemoryCount = mutation({
-  args: {
-    sessionId: v.string(),
-  },
-  handler: async (ctx, args) => {
-    const session = await ctx.db
-      .query("sessions")
-      .withIndex("by_sessionId", (q) => q.eq("sessionId", args.sessionId))
-      .first();
-
-    if (!session) {
-      return; // Session may not exist - silently ignore
-    }
-
-    await ctx.db.patch(session._id, {
-      memoryCount: (session.memoryCount ?? 0) + 1,
-      lastActiveAt: Date.now(),
-    });
-  },
-});
+/** Application sessions use verified metadata scope. Ending a session never revokes a runtime grant. */
+import { ConvexError, v } from "convex/values";
+import { mutation, internalMutation } from "./_generated/server";
+import type { MutationCtx } from "./_generated/server";
+import type { Doc } from "./_generated/dataModel";
+import type { RuntimeAuthority, RuntimeAuthorityReference } from "../src/auth/verified";
+import { runtimeAuthorityReference } from "./runtimeAuthSchema";
+import { recheckAuthority } from "./runtimeAuth";
+import { scopeArgs, authority, actor, sessionRow, candidates, check, fresh, finalChecks, canonicalFields, newResource, sourceId,
+  readAuthority, readResourceAuthority, newTarget, resource, response, page, invalid, denied } from "./runtimeMetadataAuth";
+const keyArgs = { sessionId: v.string(), ...scopeArgs };
+const filterArgs = { ...scopeArgs, userId: v.optional(v.string()), status: v.optional(v.union(v.literal("active"), v.literal("idle"), v.literal("ended"))) };
+function filter(rows: Doc<"sessions">[], args: { userId?: string; status?: string }) { return rows.filter((row) => (args.userId === undefined || row.userId === args.userId) && (args.status === undefined || row.status === args.status)); }
+function activeSession(row: Doc<"sessions">): void {
+  if ((row.status !== "active" && row.status !== "idle") || (row.expiresAt !== undefined
+    && (!Number.isFinite(row.expiresAt) || Date.now() >= row.expiresAt))) denied();
+}
+function creationLifetime(startedAt: number, expiresAt?: number): void {
+  if (!Number.isFinite(startedAt) || (expiresAt !== undefined && (!Number.isFinite(expiresAt) || expiresAt <= Date.now() || expiresAt <= startedAt))) invalid();
+}
+export const create = mutation({ args: { ...keyArgs, userId: v.string(), metadata: v.optional(v.any()), startedAt: v.number(), expiresAt: v.optional(v.number()) }, handler: async (ctx, args) => {
+  const auth = await authority(ctx, "write", args); actor(auth, args.userId);
+  creationLifetime(args.startedAt, args.expiresAt);
+  if (await sessionRow(ctx, auth, args.sessionId, "write")) throw new ConvexError("SESSION_ALREADY_EXISTS");
+  const key = sourceId("sessions", args.sessionId); await newResource(ctx, auth, key);
+  const read = await readResourceAuthority(ctx, auth, newTarget(auth, key)); await newResource(ctx, auth, key);
+  const { actorKind: _actorKind, userId: _userId, capabilities: _capabilities, resourceAccess: _resourceAccess, ...reference } = auth;
+  creationLifetime(args.startedAt, args.expiresAt);
+  const id = await ctx.db.insert("sessions", { sessionId: args.sessionId, ...canonicalFields(auth), authorityReference: reference,
+    status: "active", startedAt: args.startedAt, lastActiveAt: args.startedAt, expiresAt: args.expiresAt, metadata: args.metadata, messageCount: 0, memoryCount: 0 });
+  const row = await ctx.db.get("sessions", id); if (!row) throw new ConvexError("SESSION_NOT_FOUND");
+  // Internal maintenance reference is never returned through the public API.
+  const { authorityReference: _reference, ...publicRow } = row;
+  return await response(ctx, auth, "sessions", row, read, () => { activeSession(row); return publicRow; }, () => { activeSession(row); return { createdId: id, sessionId: args.sessionId }; });
+} });
+export const get = mutation({ args: keyArgs, handler: async (ctx, args) => {
+  const row = await sessionRow(ctx, await authority(ctx, "read", args), args.sessionId, "read");
+  if (!row) return null; const { authorityReference: _reference, ...publicRow } = row; return publicRow;
+} });
+export const touch = mutation({ args: keyArgs, handler: async (ctx, args) => {
+  const auth = await authority(ctx, "write", args); const row = await sessionRow(ctx, auth, args.sessionId, "write"); if (!row) throw new ConvexError("SESSION_NOT_FOUND"); activeSession(row);
+  await check(ctx, "sessions", row, auth, "write"); activeSession(row);
+  await ctx.db.patch("sessions", row._id, { lastActiveAt: Date.now(), status: "active" });
+  await check(ctx, "sessions", row, auth, "write"); activeSession(row);
+} });
+export const end = mutation({ args: keyArgs, handler: async (ctx, args) => {
+  const auth = await authority(ctx, "write", args); const row = await sessionRow(ctx, auth, args.sessionId, "write"); if (!row) throw new ConvexError("SESSION_NOT_FOUND");
+  await check(ctx, "sessions", row, auth, "write"); await ctx.db.patch("sessions", row._id, { status: "ended", endedAt: Date.now() }); await check(ctx, "sessions", row, auth, "write");
+} });
+export const endAll = mutation({ args: { ...scopeArgs, userId: v.string() }, handler: async (ctx, args) => {
+  const auth = await authority(ctx, "write", args); const rows = filter(await candidates(ctx, "sessions", auth, "write"), args).filter((row) => row.status !== "ended");
+  const reads = await Promise.all(rows.map((row) => readAuthority(ctx, auth, "sessions", row)));
+  for (const row of rows) await check(ctx, "sessions", row, auth, "write");
+  for (const row of rows) { await check(ctx, "sessions", row, auth, "write"); await ctx.db.patch("sessions", row._id, { status: "ended", endedAt: Date.now() }); }
+  await finalChecks(ctx, [{ auth, capability: "write" }, ...reads.flatMap((read, index) => read ? [{ auth: read, capability: "read" as const, resource: resource("sessions", rows[index]!) }] : [])]);
+  return { ended: rows.length, ...(reads.every(Boolean) ? { sessionIds: rows.map((row) => row.sessionId) } : {}) };
+} });
+export const list = mutation({ args: { ...filterArgs, limit: v.optional(v.number()), offset: v.optional(v.number()) }, handler: async (ctx, args) => {
+  const rows = filter(await candidates(ctx, "sessions", await authority(ctx, "read", args), "read"), args); const offset = page(args.offset, 0);
+  return rows.slice(offset, offset + page(args.limit, 100)).map(({ authorityReference: _reference, ...row }) => row);
+} });
+export const count = mutation({ args: filterArgs, handler: async (ctx, args) => filter(await candidates(ctx, "sessions", await authority(ctx, "read", args), "read"), args).length });
+function sameReference(a: RuntimeAuthorityReference, b: RuntimeAuthorityReference): boolean {
+  return a.principalId === b.principalId && a.principalVersion === b.principalVersion && a.membershipId === b.membershipId
+    && a.membershipVersion === b.membershipVersion && a.grantId === b.grantId && a.grantVersion === b.grantVersion
+    && a.tenantId === b.tenantId && a.tenantEpoch === b.tenantEpoch && a.memorySpaceId === b.memorySpaceId && a.memorySpaceEpoch === b.memorySpaceEpoch;
+}
+async function backgroundCheck(ctx: MutationCtx, reference: RuntimeAuthorityReference, row: Doc<"sessions">): Promise<RuntimeAuthority> {
+  if (!row.authorityReference || !sameReference(row.authorityReference, reference) || row.tombstonedAt !== undefined) denied();
+  const auth = await recheckAuthority(ctx, row.authorityReference, { capability: "write", resource: resource("sessions", row) });
+  await finalChecks(ctx, [{ auth, capability: "write", resource: resource("sessions", row) }]);
+  // Background effects use the session creator's actor, not breadth of a later space grant.
+  if (row.ownerPrincipalId !== auth.principalId || row.userId !== auth.userId
+    || row.tenantId !== auth.tenantId || row.memorySpaceId !== auth.memorySpaceId) denied();
+  return auth;
+}
+async function backgroundRow(ctx: MutationCtx, reference: RuntimeAuthorityReference, sessionId: string) {
+  const auth = await recheckAuthority(ctx, reference, { capability: "write", tenantId: reference.tenantId, memorySpaceId: reference.memorySpaceId });
+  const row = await sessionRow(ctx, auth, sessionId, "write"); if (row) await backgroundCheck(ctx, reference, row); return row;
+}
+const backgroundArgs = { sessionId: v.string(), reference: runtimeAuthorityReference };
+export const incrementMessageCount = internalMutation({ args: backgroundArgs, handler: async (ctx, args) => {
+  const row = await backgroundRow(ctx, args.reference, args.sessionId); if (!row) return; activeSession(row);
+  if (!Number.isSafeInteger(row.messageCount) || row.messageCount < 0 || row.messageCount >= Number.MAX_SAFE_INTEGER) invalid();
+  await backgroundCheck(ctx, args.reference, row); activeSession(row);
+  await ctx.db.patch("sessions", row._id, { messageCount: row.messageCount + 1, lastActiveAt: Date.now() });
+  await backgroundCheck(ctx, args.reference, row); activeSession(row);
+} });
+export const incrementMemoryCount = internalMutation({ args: backgroundArgs, handler: async (ctx, args) => {
+  const row = await backgroundRow(ctx, args.reference, args.sessionId); if (!row) return; activeSession(row);
+  if (!Number.isSafeInteger(row.memoryCount) || row.memoryCount < 0 || row.memoryCount >= Number.MAX_SAFE_INTEGER) invalid();
+  await backgroundCheck(ctx, args.reference, row); activeSession(row);
+  await ctx.db.patch("sessions", row._id, { memoryCount: row.memoryCount + 1, lastActiveAt: Date.now() });
+  await backgroundCheck(ctx, args.reference, row); activeSession(row);
+} });
+export const expireIdle = internalMutation({ args: { reference: runtimeAuthorityReference, idleTimeout: v.number() }, handler: async (ctx, args) => {
+  if (!Number.isFinite(args.idleTimeout) || args.idleTimeout < 0) invalid();
+  const auth = await recheckAuthority(ctx, args.reference, { capability: "write", tenantId: args.reference.tenantId, memorySpaceId: args.reference.memorySpaceId });
+  const rows = (await candidates(ctx, "sessions", auth, "write")).filter((row) => row.status !== "ended" && row.lastActiveAt < Date.now() - args.idleTimeout);
+  for (const row of rows) await backgroundCheck(ctx, args.reference, row);
+  for (const row of rows) { await backgroundCheck(ctx, args.reference, row); await ctx.db.patch("sessions", row._id, { status: "ended", endedAt: Date.now() }); await backgroundCheck(ctx, args.reference, row); }
+  await fresh(ctx, auth, "write"); return { expired: rows.length };
+} });

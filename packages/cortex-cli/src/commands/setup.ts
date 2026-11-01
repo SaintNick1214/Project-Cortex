@@ -6,18 +6,26 @@
  */
 
 import { Command } from "commander";
+import { currentAdmissionContext } from "../utils/bootstrap-admission.js";
 import prompts from "prompts";
 import ora from "ora";
 import pc from "picocolors";
-import type { CLIConfig, DeploymentConfig } from "../types.js";
+import type {
+  CLIConfig,
+  DeploymentConfig,
+  GlobalOptions,
+  OutputFormat,
+} from "../types.js";
 import {
   loadConfig,
-  saveUserConfig,
+  saveEffectiveConfig,
   getUserConfigPath,
   getProjectConfigPath,
+  getDeployment,
   listDeployments,
   setConfigValue,
   updateDeployment,
+  validateDeploymentName,
 } from "../utils/config.js";
 import { testConnection } from "../utils/client.js";
 import {
@@ -32,17 +40,45 @@ import {
 } from "../utils/formatting.js";
 import { validateUrl } from "../utils/validation.js";
 import {
-  addDeploymentToEnv,
-  removeDeploymentFromEnv,
+  prepareDeploymentEnvUpdate,
+  serializeEnvAssignment,
+  prepareDeploymentEnvRemoval,
+  writePreparedEnvUpdate,
   getDeploymentEnvKeys,
 } from "../utils/env-file.js";
 import {
   getCurrentDeployment,
   setCurrentDeployment,
   clearCurrentDeployment,
+  selectDeployment,
 } from "../utils/deployment-selector.js";
 import { existsSync } from "fs";
 import { join, resolve } from "path";
+
+function emitResult(
+  options: { format?: OutputFormat },
+  data: unknown,
+): boolean {
+  if (options.format === "json" || options.format === "csv") {
+    console.log(formatOutput(data, options.format));
+    return true;
+  }
+  return false;
+}
+
+/** Positional compatibility and the global selector must identify the same target. */
+function targetArgument(
+  argument: string | undefined,
+  deployment: string | undefined,
+): string | undefined {
+  if (argument !== undefined) validateDeploymentName(argument);
+  if (deployment !== undefined) validateDeploymentName(deployment);
+  if (argument && deployment && argument !== deployment)
+    throw new Error(
+      "Conflicting deployment targets: positional name and --deployment must match",
+    );
+  return deployment ?? argument;
+}
 
 /**
  * Register config commands
@@ -54,9 +90,7 @@ export function registerConfigCommands(
   // config command group
   const configCmd = program
     .command("config")
-    .description("Manage CLI configuration")
-    .enablePositionalOptions()
-    .passThroughOptions();
+    .description("Manage CLI configuration");
 
   // config show
   configCmd
@@ -68,11 +102,9 @@ export function registerConfigCommands(
         let config = await loadConfig();
         try {
           const validation = await runValidationWithSpinner(config, {
-            checkConvex: true,
+            checkConvex: currentAdmissionContext()?.mode !== "owned-data-only",
           });
-          if (validation.modified) {
-            displayCleanupNotification(validation);
-          }
+          displayCleanupNotification(validation);
           config = validation.config;
         } catch {
           // Continue with unvalidated config
@@ -90,19 +122,21 @@ export function registerConfigCommands(
   configCmd
     .command("list")
     .description("List all deployments in table format")
-    .action(async () => {
+    .action(async (options) => {
       try {
         let config = await loadConfig();
         try {
           const validation = await runValidationWithSpinner(config, {
-            checkConvex: true,
+            checkConvex: currentAdmissionContext()?.mode !== "owned-data-only",
           });
-          if (validation.modified) {
-            displayCleanupNotification(validation);
-          }
+          displayCleanupNotification(validation);
           config = validation.config;
         } catch {
           // Continue with unvalidated config
+        }
+        if (options.format === "json" || options.format === "csv") {
+          console.log(formatOutput(listDeployments(config), options.format));
+          return;
         }
         const deployments = Object.entries(config.deployments);
 
@@ -193,7 +227,7 @@ export function registerConfigCommands(
         if (config.default) {
           console.log(
             pc.dim(
-              `  Default: ${config.default} (→) • Enabled deployments started with 'cortex start'`,
+              `  Default: ${config.default} (→) • Legacy enabled field preserved; select a target with -d`,
             ),
           );
         }
@@ -225,7 +259,11 @@ export function registerConfigCommands(
           }
 
           console.log();
-          console.log(pc.dim("  Enabled apps started with 'cortex start'"));
+          console.log(
+            pc.dim(
+              "  Legacy app registry preserved; start apps with their own package manager",
+            ),
+          );
         }
 
         console.log();
@@ -241,10 +279,15 @@ export function registerConfigCommands(
   configCmd
     .command("set <key> <value>")
     .description("Set a configuration value")
-    .action(async (key, value) => {
+    .action(async (key, value, options) => {
       try {
-        await setConfigValue(key, value);
-        printSuccess(`Set ${key} = ${value}`);
+        await setConfigValue(key, value, options);
+        printSuccess(`Set ${key} = ${key.includes("key") ? "***" : value}`);
+        emitResult(options, {
+          updated: true,
+          key,
+          value: key.includes("key") ? "***" : value,
+        });
       } catch (error) {
         printError(
           error instanceof Error ? error.message : "Failed to set config",
@@ -261,8 +304,8 @@ export function registerConfigCommands(
     .action(async (options) => {
       try {
         const config = await loadConfig();
-        const deploymentName = options.deployment ?? config.default;
-        await testAndShowConnection(config, deploymentName);
+        const selection = await selectDeployment(config, options);
+        await testAndShowConnection(config, selection!.name, options);
       } catch (error) {
         printError(
           error instanceof Error ? error.message : "Connection test failed",
@@ -274,14 +317,13 @@ export function registerConfigCommands(
   // config set-path - Set project path for a deployment
   configCmd
     .command("set-path <deployment> [path]")
-    .description(
-      "Set project path for a deployment (enables 'cortex start -d <name>' from anywhere)",
-    )
-    .action(async (deploymentName, pathArg) => {
+    .description("Set the saved project path for a deployment")
+    .action(async (deploymentName, pathArg, options) => {
       try {
+        deploymentName = targetArgument(deploymentName, options.deployment);
         const config = await loadConfig();
 
-        if (!config.deployments[deploymentName]) {
+        if (!getDeployment(config, deploymentName)) {
           printError(`Deployment "${deploymentName}" not found`);
           const names = Object.keys(config.deployments);
           if (names.length > 0) {
@@ -305,11 +347,19 @@ export function registerConfigCommands(
           projectPath,
         };
 
-        await saveUserConfig(config);
+        await saveEffectiveConfig(config);
         printSuccess(`Set project path for "${deploymentName}"`);
+        if (
+          emitResult(options, {
+            updated: true,
+            deployment: deploymentName,
+            projectPath,
+          })
+        )
+          return;
         console.log(pc.dim(`   Path: ${projectPath}`));
         console.log();
-        printInfo(`You can now run: cortex start -d ${deploymentName}`);
+        printInfo("Saved the project directory for this deployment");
         console.log(pc.dim("   This will work from any directory"));
       } catch (error) {
         printError(
@@ -319,109 +369,16 @@ export function registerConfigCommands(
       }
     });
 
-  // config enable - Enable a deployment or app for `cortex start`
-  configCmd
-    .command("enable <name>")
-    .description(
-      "Enable a deployment or app (will be started with 'cortex start')",
-    )
-    .action(async (name) => {
-      try {
-        const config = await loadConfig();
-
-        // Check if it's a deployment
-        if (config.deployments[name]) {
-          config.deployments[name] = {
-            ...config.deployments[name],
-            enabled: true,
-          };
-          await saveUserConfig(config);
-          printSuccess(`Enabled deployment "${name}"`);
-          console.log(pc.dim("   Will be started with 'cortex start'"));
-          return;
-        }
-
-        // Check if it's an app
-        if (config.apps?.[name]) {
-          config.apps[name] = {
-            ...config.apps[name],
-            enabled: true,
-          };
-          await saveUserConfig(config);
-          printSuccess(`Enabled app "${name}"`);
-          console.log(pc.dim("   Will be started with 'cortex start'"));
-          return;
-        }
-
-        // Not found
-        printError(`"${name}" not found`);
-        const deploymentNames = Object.keys(config.deployments);
-        const appNames = Object.keys(config.apps || {});
-        if (deploymentNames.length > 0) {
-          printInfo(`Available deployments: ${deploymentNames.join(", ")}`);
-        }
-        if (appNames.length > 0) {
-          printInfo(`Available apps: ${appNames.join(", ")}`);
-        }
-        process.exit(1);
-      } catch (error) {
-        printError(error instanceof Error ? error.message : "Failed to enable");
-        process.exit(1);
-      }
-    });
-
-  // config disable - Disable a deployment or app
-  configCmd
-    .command("disable <name>")
-    .description(
-      "Disable a deployment or app (will not be started with 'cortex start')",
-    )
-    .action(async (name) => {
-      try {
-        const config = await loadConfig();
-
-        // Check if it's a deployment
-        if (config.deployments[name]) {
-          config.deployments[name] = {
-            ...config.deployments[name],
-            enabled: false,
-          };
-          await saveUserConfig(config);
-          printSuccess(`Disabled deployment "${name}"`);
-          console.log(pc.dim("   Will NOT be started with 'cortex start'"));
-          return;
-        }
-
-        // Check if it's an app
-        if (config.apps?.[name]) {
-          config.apps[name] = {
-            ...config.apps[name],
-            enabled: false,
-          };
-          await saveUserConfig(config);
-          printSuccess(`Disabled app "${name}"`);
-          console.log(pc.dim("   Will NOT be started with 'cortex start'"));
-          return;
-        }
-
-        // Not found
-        printError(`"${name}" not found`);
-        const deploymentNames = Object.keys(config.deployments);
-        const appNames = Object.keys(config.apps || {});
-        if (deploymentNames.length > 0) {
-          printInfo(`Available deployments: ${deploymentNames.join(", ")}`);
-        }
-        if (appNames.length > 0) {
-          printInfo(`Available apps: ${appNames.join(", ")}`);
-        }
-        process.exit(1);
-      } catch (error) {
-        printError(
-          error instanceof Error ? error.message : "Failed to disable",
+  for (const name of ["enable", "disable"]) {
+    configCmd
+      .command(`${name} <name>`)
+      .description("Deprecated supervisor toggle (always fails)")
+      .action(() => {
+        throw new Error(
+          `config ${name} is retired. Select an explicit target with 'cortex dev -d <name>'; stored legacy fields are preserved`,
         );
-        process.exit(1);
-      }
-    });
+      });
+  }
 
   // config deployments
   configCmd
@@ -433,9 +390,13 @@ export function registerConfigCommands(
         const config = await loadConfig();
         const deployments = listDeployments(config);
 
+        if (options.format === "json" || options.format === "csv") {
+          console.log(formatOutput(deployments, options.format));
+          return;
+        }
         if (deployments.length === 0) {
           printWarning(
-            "No deployments configured. Run 'cortex setup' to configure.",
+            "No deployments configured. Run 'cortex config add-deployment' to configure.",
           );
           return;
         }
@@ -471,14 +432,18 @@ export function registerConfigCommands(
     .option("-u, --url <url>", "Convex deployment URL")
     .option("-k, --key <key>", "Convex deploy key")
     .option("--default", "Set as default deployment", false)
-    .option("--json-only", "Only save to ~/.cortexrc (skip .env.local)", false)
+    .option("--json-only", "Only save config (skip .env.local)", false)
     .action(async (nameArg, options) => {
       try {
         // Prompt for missing values interactively
-        let name = nameArg;
+        let name = targetArgument(nameArg, options.deployment);
         let url = options.url;
         let key = options.key;
 
+        if ((!name || !url) && !process.stdin.isTTY)
+          throw new Error(
+            "Supply deployment name and --url in noninteractive mode",
+          );
         if (!name) {
           const response = await prompts({
             type: "select",
@@ -528,6 +493,8 @@ export function registerConfigCommands(
           }
         }
 
+        if (!name) throw new Error("No deployment selected");
+        validateDeploymentName(name);
         if (!url) {
           const isLocal = name.toLowerCase() === "local";
           const response = await prompts({
@@ -554,10 +521,11 @@ export function registerConfigCommands(
         }
 
         validateUrl(url);
+        validateDeploymentName(name);
 
         // Only prompt for key if not local and not already provided
         const isLocal = name.toLowerCase() === "local";
-        if (!key && !isLocal) {
+        if (!key && !isLocal && process.stdin.isTTY) {
           const response = await prompts({
             type: "password",
             name: "key",
@@ -566,22 +534,27 @@ export function registerConfigCommands(
           key = response.key || undefined;
         }
 
+        if (key !== undefined) serializeEnvAssignment("CORTEX_DEPLOY_KEY", key);
         const deployment: DeploymentConfig = {
           url,
           key,
         };
 
-        // Save to user config (~/.cortexrc)
-        const config = await updateDeployment(name, deployment);
-
-        if (options.default) {
-          config.default = name;
-          await saveUserConfig(config);
-        }
+        // Save to the active configuration source
+        const config = await updateDeployment(name, deployment, false);
+        const envUpdate = options.jsonOnly
+          ? undefined
+          : await prepareDeploymentEnvUpdate(
+              name,
+              url,
+              config.deployments[name].key,
+            );
+        if (options.default) config.default = name;
+        await saveEffectiveConfig(config);
 
         // Also save to .env.local (unless --json-only)
         if (!options.jsonOnly) {
-          await addDeploymentToEnv(name, url, key);
+          await writePreparedEnvUpdate(envUpdate);
           const envKeys = getDeploymentEnvKeys(name);
           printSuccess(`Added deployment "${name}"`);
           printInfo(`Updated .env.local: ${envKeys.urlKey}=${url}`);
@@ -589,12 +562,19 @@ export function registerConfigCommands(
             printInfo(`Updated .env.local: ${envKeys.keyKey}=***`);
           }
         } else {
-          printSuccess(`Added deployment "${name}" to ~/.cortexrc`);
+          printSuccess(`Added deployment "${name}" to active config`);
         }
 
         if (options.default) {
           printInfo(`Set as default deployment`);
         }
+        emitResult(options, {
+          added: true,
+          deployment: name,
+          url,
+          hasKey: Boolean(config.deployments[name].key),
+          default: Boolean(options.default),
+        });
       } catch (error) {
         printError(
           error instanceof Error ? error.message : "Failed to add deployment",
@@ -606,18 +586,17 @@ export function registerConfigCommands(
   // config remove-deployment
   configCmd
     .command("remove-deployment [name]")
+    .option("-y, --yes", "Confirm removal without prompting")
     .description("Remove a deployment configuration")
-    .option(
-      "--json-only",
-      "Only remove from ~/.cortexrc (skip .env.local)",
-      false,
-    )
+    .option("--json-only", "Only remove from config (skip .env.local)", false)
     .action(async (nameArg, options) => {
       try {
         const config = await loadConfig();
-        let name = nameArg;
+        let name = targetArgument(nameArg, options.deployment);
 
         // If no name provided, show interactive selection
+        if (!name && !process.stdin.isTTY)
+          throw new Error("Supply a deployment name in noninteractive mode");
         if (!name) {
           const deploymentNames = Object.keys(config.deployments).filter(
             (n) => n !== config.default,
@@ -648,7 +627,8 @@ export function registerConfigCommands(
           name = response.name;
         }
 
-        if (!config.deployments[name]) {
+        if (!name) throw new Error("No deployment selected");
+        if (!getDeployment(config, name)) {
           printError(`Deployment "${name}" not found`);
           process.exit(1);
         }
@@ -660,34 +640,44 @@ export function registerConfigCommands(
           process.exit(1);
         }
 
+        if (!options.yes && !process.stdin.isTTY)
+          throw new Error(
+            "Use --yes to confirm removal in noninteractive mode",
+          );
         // Confirm removal
-        const confirm = await prompts({
-          type: "confirm",
-          name: "value",
-          message: `Remove deployment "${name}" (${config.deployments[name].url})?`,
-          initial: false,
-        });
+        const confirm = options.yes
+          ? { value: true }
+          : await prompts({
+              type: "confirm",
+              name: "value",
+              message: `Remove deployment "${name}" (${config.deployments[name].url})?`,
+              initial: false,
+            });
 
         if (!confirm.value) {
           printWarning("Cancelled");
           return;
         }
 
-        // Remove from user config (~/.cortexrc)
+        const envUpdate = options.jsonOnly
+          ? undefined
+          : await prepareDeploymentEnvRemoval(name);
+        // Remove from the active source, refusing inherited aliases
         delete config.deployments[name];
-        await saveUserConfig(config);
+        await saveEffectiveConfig(config);
 
         // Also remove from .env.local (unless --json-only)
         if (!options.jsonOnly) {
           const envKeys = getDeploymentEnvKeys(name);
-          await removeDeploymentFromEnv(name);
+          await writePreparedEnvUpdate(envUpdate);
           printSuccess(`Removed deployment "${name}"`);
           printInfo(
             `Removed from .env.local: ${envKeys.urlKey}, ${envKeys.keyKey}`,
           );
         } else {
-          printSuccess(`Removed deployment "${name}" from ~/.cortexrc`);
+          printSuccess(`Removed deployment "${name}" from active config`);
         }
+        emitResult(options, { removed: true, deployment: name });
       } catch (error) {
         printError(
           error instanceof Error
@@ -703,21 +693,21 @@ export function registerConfigCommands(
     .command("set-key [deployment]")
     .description("Set or update the deploy key for a deployment")
     .option("-k, --key <key>", "Deploy key (will prompt if not provided)")
-    .option("--json-only", "Only update ~/.cortexrc (skip .env.local)", false)
+    .option("--json-only", "Only update config (skip .env.local)", false)
     .action(async (deploymentArg, options) => {
       try {
         const config = await loadConfig();
-        let name = deploymentArg;
+        let name = targetArgument(deploymentArg, options.deployment);
 
         // If no name provided, show interactive selection
+        if (!name && !process.stdin.isTTY)
+          throw new Error("Supply a deployment name in noninteractive mode");
         if (!name) {
           const deploymentNames = Object.keys(config.deployments);
 
           if (deploymentNames.length === 0) {
             printWarning("No deployments configured");
-            console.log(
-              pc.dim("   Run 'cortex config add-deployment' to add one\n"),
-            );
+            printInfo("Run 'cortex config add-deployment' to add one");
             return;
           }
 
@@ -745,18 +735,17 @@ export function registerConfigCommands(
           name = response.name;
         }
 
-        if (!config.deployments[name]) {
+        if (!name) throw new Error("No deployment selected");
+        if (!getDeployment(config, name)) {
           printError(`Deployment "${name}" not found`);
-          console.log(
-            pc.dim(
-              "   Run 'cortex config list' to see available deployments\n",
-            ),
-          );
+          printInfo("Run 'cortex config list' to see available deployments");
           process.exit(1);
         }
 
         // Get key from option or prompt
         let key = options.key;
+        if (!key && !process.stdin.isTTY)
+          throw new Error("Supply --key in noninteractive mode");
         if (!key) {
           const response = await prompts({
             type: "password",
@@ -772,20 +761,30 @@ export function registerConfigCommands(
           key = response.key;
         }
 
+        serializeEnvAssignment("CORTEX_DEPLOY_KEY", key);
         // Update the deployment with the new key
         const deployment = config.deployments[name];
         deployment.key = key;
-        await updateDeployment(name, deployment);
+        const updated = await updateDeployment(name, deployment, false);
+        const envUpdate = options.jsonOnly
+          ? undefined
+          : await prepareDeploymentEnvUpdate(
+              name,
+              deployment.url,
+              updated.deployments[name].key,
+            );
+        await saveEffectiveConfig(updated);
 
         // Also update .env.local (unless --json-only)
         if (!options.jsonOnly) {
-          await addDeploymentToEnv(name, deployment.url, key);
+          await writePreparedEnvUpdate(envUpdate);
           const envKeys = getDeploymentEnvKeys(name);
           printSuccess(`Set deploy key for "${name}"`);
           printInfo(`Updated .env.local: ${envKeys.keyKey}=***`);
         } else {
-          printSuccess(`Set deploy key for "${name}" in ~/.cortexrc`);
+          printSuccess(`Set deploy key for "${name}" in active config`);
         }
+        emitResult(options, { updated: true, deployment: name, hasKey: true });
       } catch (error) {
         printError(
           error instanceof Error ? error.message : "Failed to set key",
@@ -799,21 +798,21 @@ export function registerConfigCommands(
     .command("set-url [deployment]")
     .description("Set or update the URL for a deployment")
     .option("-u, --url <url>", "Deployment URL (will prompt if not provided)")
-    .option("--json-only", "Only update ~/.cortexrc (skip .env.local)", false)
+    .option("--json-only", "Only update config (skip .env.local)", false)
     .action(async (deploymentArg, options) => {
       try {
         const config = await loadConfig();
-        let name = deploymentArg;
+        let name = targetArgument(deploymentArg, options.deployment);
 
         // If no name provided, show interactive selection
+        if (!name && !process.stdin.isTTY)
+          throw new Error("Supply a deployment name in noninteractive mode");
         if (!name) {
           const deploymentNames = Object.keys(config.deployments);
 
           if (deploymentNames.length === 0) {
             printWarning("No deployments configured");
-            console.log(
-              pc.dim("   Run 'cortex config add-deployment' to add one\n"),
-            );
+            printInfo("Run 'cortex config add-deployment' to add one");
             return;
           }
 
@@ -838,18 +837,17 @@ export function registerConfigCommands(
           name = response.name;
         }
 
-        if (!config.deployments[name]) {
+        if (!name) throw new Error("No deployment selected");
+        if (!getDeployment(config, name)) {
           printError(`Deployment "${name}" not found`);
-          console.log(
-            pc.dim(
-              "   Run 'cortex config list' to see available deployments\n",
-            ),
-          );
+          printInfo("Run 'cortex config list' to see available deployments");
           process.exit(1);
         }
 
         // Get URL from option or prompt
         let url = options.url;
+        if (!url && !process.stdin.isTTY)
+          throw new Error("Supply --url in noninteractive mode");
         if (!url) {
           const currentUrl = config.deployments[name].url;
           const response = await prompts({
@@ -881,19 +879,33 @@ export function registerConfigCommands(
         const deployment = config.deployments[name];
         const oldUrl = deployment.url;
         deployment.url = url;
-        await updateDeployment(name, deployment);
+        const updated = await updateDeployment(name, deployment, false);
+        if (updated.deployments[name].key !== undefined)
+          serializeEnvAssignment(
+            "CORTEX_DEPLOY_KEY",
+            updated.deployments[name].key!,
+          );
+        const envUpdate = options.jsonOnly
+          ? undefined
+          : await prepareDeploymentEnvUpdate(
+              name,
+              url,
+              updated.deployments[name].key,
+            );
+        await saveEffectiveConfig(updated);
 
         // Also update .env.local (unless --json-only)
         if (!options.jsonOnly) {
-          await addDeploymentToEnv(name, url, deployment.key);
+          await writePreparedEnvUpdate(envUpdate);
           const envKeys = getDeploymentEnvKeys(name);
           printSuccess(`Updated URL for "${name}"`);
           printInfo(`${oldUrl} → ${url}`);
           printInfo(`Updated .env.local: ${envKeys.urlKey}=${url}`);
         } else {
-          printSuccess(`Updated URL for "${name}" in ~/.cortexrc`);
+          printSuccess(`Updated URL for "${name}" in active config`);
           printInfo(`${oldUrl} → ${url}`);
         }
+        emitResult(options, { updated: true, deployment: name, url });
       } catch (error) {
         printError(
           error instanceof Error ? error.message : "Failed to set URL",
@@ -906,11 +918,19 @@ export function registerConfigCommands(
   configCmd
     .command("path")
     .description("Show configuration file paths")
-    .action(async () => {
+    .action(async (options) => {
       const userPath = getUserConfigPath();
       const projectJsonPath = getProjectConfigPath();
       const projectEnvPath = join(process.cwd(), ".env.local");
 
+      if (
+        emitResult(options, {
+          userConfig: userPath,
+          projectConfig: projectJsonPath,
+          projectEnv: projectEnvPath,
+        })
+      )
+        return;
       console.log();
       printSection("Configuration Paths", {
         "User config (~/.cortexrc)": userPath,
@@ -946,6 +966,12 @@ export function registerConfigCommands(
     .option("-y, --yes", "Skip confirmation", false)
     .action(async (options) => {
       try {
+        if (options.deployment !== undefined)
+          throw new Error(
+            "Global config reset does not support --deployment; omit -d to reset all configuration",
+          );
+        if (!options.yes && !process.stdin.isTTY)
+          throw new Error("Use --yes to confirm reset in noninteractive mode");
         if (!options.yes) {
           const confirm = await prompts({
             type: "confirm",
@@ -966,8 +992,9 @@ export function registerConfigCommands(
           confirmDangerous: true,
         };
 
-        await saveUserConfig(defaultConfig);
+        await saveEffectiveConfig(defaultConfig);
         printSuccess("Configuration reset to defaults");
+        if (emitResult(options, { reset: true })) return;
         console.log();
         printInfo("No deployments configured. To get started:");
         console.log(pc.dim("   • Run 'cortex init' to create a new project"));
@@ -985,19 +1012,25 @@ export function registerConfigCommands(
   // Top-level 'use' command for quick deployment switching
   program
     .command("use [deployment]")
-    .description("Set current deployment for all commands (session context)")
+    .description("Set current deployment for this project/directory")
     .option("--clear", "Clear the current deployment setting")
     .action(async (deploymentName, options) => {
       try {
         const config = await loadConfig();
         const deployments = Object.keys(config.deployments);
+        deploymentName = targetArgument(deploymentName, options.deployment);
+        if (options.clear && deploymentName)
+          throw new Error("Use either --clear or a deployment target");
 
         // Handle --clear flag
         if (options.clear) {
           await clearCurrentDeployment();
           printSuccess("Cleared current deployment");
+          if (emitResult(options, { cleared: true, current: null })) return;
           console.log(
-            pc.dim("   Commands will now prompt for deployment selection\n"),
+            pc.dim(
+              "   Commands will use the configured default or explicit -d target\n",
+            ),
           );
           return;
         }
@@ -1006,8 +1039,16 @@ export function registerConfigCommands(
         if (!deploymentName) {
           const current = await getCurrentDeployment();
 
+          if (
+            emitResult(options, {
+              current,
+              default: config.default,
+              deployments,
+            })
+          )
+            return;
           console.log();
-          if (current && config.deployments[current]) {
+          if (current && getDeployment(config, current)) {
             console.log(pc.bold("  Current deployment: ") + pc.cyan(current));
           } else if (current) {
             console.log(
@@ -1038,17 +1079,21 @@ export function registerConfigCommands(
         }
 
         // Validate deployment exists
-        if (!config.deployments[deploymentName]) {
+        if (!getDeployment(config, deploymentName)) {
           printError(`Deployment "${deploymentName}" not found`);
-          console.log(pc.dim(`   Available: ${deployments.join(", ")}\n`));
+          printInfo(`Available: ${deployments.join(", ")}`);
           process.exit(1);
         }
 
         // Set the current deployment
         await setCurrentDeployment(deploymentName);
         printSuccess(`Now using: ${deploymentName}`);
+        if (emitResult(options, { current: deploymentName, scoped: true }))
+          return;
         console.log(
-          pc.dim(`   All commands will target this deployment until changed\n`),
+          pc.dim(
+            `   Commands in this project will target this deployment until changed\n`,
+          ),
         );
       } catch (error) {
         printError(
@@ -1064,19 +1109,29 @@ export function registerConfigCommands(
  */
 async function showConfiguration(
   config: CLIConfig,
-  format?: string,
+  format?: OutputFormat,
 ): Promise<void> {
+  format ??= config.format;
+  if (format === "csv") {
+    console.log(formatOutput(listDeployments(config), "csv"));
+    return;
+  }
   if (format === "json") {
     // Don't show keys in JSON output
-    const safeConfig = {
-      ...config,
-      deployments: Object.fromEntries(
-        Object.entries(config.deployments).map(([name, d]) => [
-          name,
-          { ...d, key: d.key ? "***" : undefined },
-        ]),
-      ),
+    const redact = (value: unknown): unknown => {
+      if (Array.isArray(value)) return value.map(redact);
+      if (value && typeof value === "object")
+        return Object.fromEntries(
+          Object.entries(value).map(([key, field]) => [
+            key,
+            /key|token|secret|password/i.test(key) && field
+              ? "***"
+              : redact(field),
+          ]),
+        );
+      return value;
     };
+    const safeConfig = redact(config);
     console.log(formatOutput(safeConfig, "json"));
     return;
   }
@@ -1130,18 +1185,29 @@ async function showConfiguration(
 async function testAndShowConnection(
   config: CLIConfig,
   deploymentName: string,
+  options: GlobalOptions,
 ): Promise<void> {
-  const spinner = ora(`Testing connection to ${deploymentName}...`).start();
-
-  const result = await testConnection(config, { deployment: deploymentName });
-
-  spinner.stop();
-
-  if (result.connected) {
+  const spinner =
+    options.format !== "json" && !options.quiet && process.stderr.isTTY
+      ? ora({
+          text: `Testing connection to ${deploymentName}...`,
+          stream: process.stderr,
+        }).start()
+      : undefined;
+  let result;
+  try {
+    result = await testConnection(config, {
+      ...options,
+      deployment: deploymentName,
+    });
+  } finally {
+    spinner?.stop();
+  }
+  if (options.format === "json" || options.format === "csv")
+    console.log(formatOutput(result, options.format));
+  else if (result.connected) {
     printSuccess(`Connected to ${result.url}`);
     console.log(`  Latency: ${result.latency}ms`);
-  } else {
-    printError(`Connection failed: ${result.error}`);
-    printInfo("Check your URL and ensure Convex is running");
   }
+  if (!result.connected) throw new Error(`Connection failed: ${result.error}`);
 }

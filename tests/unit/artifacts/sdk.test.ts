@@ -5,19 +5,24 @@
  */
 
 import { describe, it, expect, beforeEach, jest } from "@jest/globals";
+import { getFunctionName } from "convex/server";
+import { createUnitOperatorClient } from "../../helpers/unit-operator-client";
+import { MANAGED_KINDS, primaryGraphIdentity } from "../../../src/graph/identity";
+import type { GraphJobReceipt } from "../../../src/graph/types";
+import { AssetCapabilityUnavailableError } from "../../../src/assets/errors";
 import { ArtifactsAPI, ArtifactValidationError } from "../../../src/artifacts";
 
 // Mock types - use ReturnType to avoid typing issues
-type MockConvexClient = {
-  mutation: ReturnType<typeof jest.fn>;
-  query: ReturnType<typeof jest.fn>;
-};
+type MockConvexClient = ReturnType<typeof createUnitOperatorClient>;
 
 type MockGraphAdapter = {
   createNode: ReturnType<typeof jest.fn>;
   updateNode: ReturnType<typeof jest.fn>;
   deleteNode: ReturnType<typeof jest.fn>;
   createEdge: ReturnType<typeof jest.fn>;
+  isConnected: ReturnType<typeof jest.fn>;
+  managedDialect: ReturnType<typeof jest.fn>;
+  managedRead: ReturnType<typeof jest.fn>;
 };
 
 type MockResilienceLayer = {
@@ -26,14 +31,23 @@ type MockResilienceLayer = {
 
 // Helper to create mock client
 function createMockClient(): MockConvexClient {
-  return {
-    mutation: jest.fn(),
-    query: jest.fn(),
-  };
+  const mutation = jest.fn<(...args: unknown[]) => Promise<unknown>>();
+  const query = jest.fn<(...args: unknown[]) => Promise<unknown>>();
+  return { mutation, query, transport: { mutation, query, action: jest.fn<(...args: unknown[]) => Promise<unknown>>(), onUpdate: jest.fn<(...args: unknown[]) => unknown>() } };
 }
 
 function createMockGraphAdapter(): MockGraphAdapter {
   return {
+    isConnected: jest.fn<() => Promise<boolean>>().mockResolvedValue(true),
+    managedDialect: jest.fn<() => Promise<string>>().mockResolvedValue("memgraph"),
+    managedRead: jest.fn<(text: string) => Promise<unknown>>().mockImplementation(async text => {
+      const records = text === "SHOW CONSTRAINT INFO"
+        ? MANAGED_KINDS.map(kind => ({ "constraint type": "unique", label: `CortexV2${kind}`, properties: ["key"] }))
+        : text === "SHOW INDEX INFO"
+          ? MANAGED_KINDS.flatMap(kind => ["key", "tenantValue"].map(property => ({ "index type": "label+property", label: `CortexV2${kind}`, property: [property] })))
+          : [];
+      return { records, count: records.length };
+    }),
     createNode: jest.fn<() => Promise<void>>().mockResolvedValue(undefined),
     updateNode: jest.fn<() => Promise<void>>().mockResolvedValue(undefined),
     deleteNode: jest.fn<() => Promise<void>>().mockResolvedValue(undefined),
@@ -84,12 +98,38 @@ describe("ArtifactsAPI", () => {
     mockResilience = createMockResilienceLayer();
 
     artifactsApi = new ArtifactsAPI(
-      mockClient as any,
-      mockGraphAdapter as any,
+      mockClient.transport as any,
+      undefined,
       mockResilience as any,
       { tenantId: "test-tenant" } as any,
     );
   });
+
+  // Current managed graph writes capture native queue receipts atomically.
+  // Delivery itself is qualified by the managed graph/native integration suites.
+  const job: GraphJobReceipt = {
+    id: "queued-artifact-job", generation: "generation-1", sourceRevision: 1,
+    identity: primaryGraphIdentity("Artifact", mockArtifactResponse._id, {
+      tenantKnown: true, tenantId: "test-tenant", memorySpaceId: mockArtifactResponse.memorySpaceId,
+    }),
+  };
+  function enableGraphCapture() {
+    const primary = mockClient.mutation.getMockImplementation();
+    mockClient.mutation.mockImplementation(async (...args: unknown[]) => ({
+      graphVersion: 2, primaryResult: await primary!(...args), graphJobs: [job],
+    }));
+    artifactsApi = new ArtifactsAPI(mockClient.transport as never, mockGraphAdapter as never,
+      mockResilience as never, { tenantId: "test-tenant" } as never, { mode: "background" });
+  }
+  function expectGraphCapture() {
+    expect(mockClient.mutation).toHaveBeenCalledWith(expect.anything(),
+      expect.objectContaining({ queueGraph: { graphInvocationId: expect.any(String) } }));
+    expect(mockGraphAdapter.managedRead).toHaveBeenCalled();
+    // Unscoped legacy direct writes cannot bypass the durable native queue.
+    expect(mockGraphAdapter.createNode).not.toHaveBeenCalled();
+    expect(mockGraphAdapter.updateNode).not.toHaveBeenCalled();
+    expect(mockGraphAdapter.deleteNode).not.toHaveBeenCalled();
+  }
 
   // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
   // create()
@@ -132,6 +172,7 @@ describe("ArtifactsAPI", () => {
 
     it("should sync to graph adapter when available", async () => {
       mockClient.mutation.mockResolvedValue(mockArtifactResponse);
+      enableGraphCapture();
 
       await artifactsApi.create({
         memorySpaceId: "space-123",
@@ -139,7 +180,7 @@ describe("ArtifactsAPI", () => {
         content: "content",
       });
 
-      expect(mockGraphAdapter.createNode).toHaveBeenCalled();
+      expectGraphCapture();
     });
 
     it("should use resilience layer when available", async () => {
@@ -163,7 +204,7 @@ describe("ArtifactsAPI", () => {
         content: "content",
       });
 
-      const callArgs = mockClient.mutation.mock.calls[0][1];
+      const callArgs = mockClient.mutation.mock.calls[0][1] as Record<string, unknown>;
       expect(callArgs.tenantId).toBe("test-tenant");
     });
   });
@@ -174,7 +215,7 @@ describe("ArtifactsAPI", () => {
 
   describe("get()", () => {
     it("should return artifact when found", async () => {
-      mockClient.query.mockResolvedValue(mockArtifactResponse);
+      mockClient.mutation.mockResolvedValue(mockArtifactResponse);
 
       const result = await artifactsApi.get("art-abc123");
 
@@ -183,7 +224,7 @@ describe("ArtifactsAPI", () => {
     });
 
     it("should return null when not found", async () => {
-      mockClient.query.mockResolvedValue(null);
+      mockClient.mutation.mockResolvedValue(null);
 
       const result = await artifactsApi.get("nonexistent");
 
@@ -240,10 +281,11 @@ describe("ArtifactsAPI", () => {
 
     it("should update graph on success", async () => {
       mockClient.mutation.mockResolvedValue(updatedArtifact);
+      enableGraphCapture();
 
       await artifactsApi.update("art-abc123", "Updated content");
 
-      expect(mockGraphAdapter.updateNode).toHaveBeenCalled();
+      expectGraphCapture();
     });
   });
 
@@ -257,11 +299,12 @@ describe("ArtifactsAPI", () => {
         deleted: true,
         artifactId: "art-abc123",
       });
+      enableGraphCapture();
 
       const result = await artifactsApi.delete("art-abc123");
 
       expect(result.deleted).toBe(true);
-      expect(mockGraphAdapter.updateNode).toHaveBeenCalled();
+      expectGraphCapture();
     });
 
     it("should hard delete when specified", async () => {
@@ -271,11 +314,12 @@ describe("ArtifactsAPI", () => {
         versionsPurged: 1,
         filesDetached: 0,
       });
+      enableGraphCapture();
 
       const result = await artifactsApi.delete("art-abc123", true);
 
       expect(result.deleted).toBe(true);
-      expect(mockGraphAdapter.deleteNode).toHaveBeenCalled();
+      expectGraphCapture();
     });
 
     it("should throw validation error for empty ID", async () => {
@@ -290,7 +334,7 @@ describe("ArtifactsAPI", () => {
   describe("list()", () => {
     it("should list artifacts with filter", async () => {
       // SDK extracts .artifacts from the response
-      mockClient.query.mockResolvedValue({
+      mockClient.mutation.mockResolvedValue({
         artifacts: [mockArtifactResponse],
         total: 1,
         limit: 50,
@@ -326,7 +370,7 @@ describe("ArtifactsAPI", () => {
 
   describe("count()", () => {
     it("should return count", async () => {
-      mockClient.query.mockResolvedValue(5);
+      mockClient.mutation.mockResolvedValue(5);
 
       const result = await artifactsApi.count({
         memorySpaceId: "space-123",
@@ -407,7 +451,7 @@ describe("ArtifactsAPI", () => {
   describe("getHistory()", () => {
     it("should return version history", async () => {
       // SDK extracts .history from the response
-      mockClient.query.mockResolvedValue({
+      mockClient.mutation.mockResolvedValue({
         history: [
           { version: 1, content: "v1", timestamp: Date.now(), artifactId: "art-abc123", isCurrent: false, changeType: "create" },
           { version: 2, content: "v2", timestamp: Date.now(), artifactId: "art-abc123", isCurrent: true, changeType: "update" },
@@ -439,7 +483,7 @@ describe("ArtifactsAPI", () => {
 
   describe("getVersion()", () => {
     it("should return specific version", async () => {
-      mockClient.query.mockResolvedValue({
+      mockClient.mutation.mockResolvedValue({
         version: 2,
         content: "v2 content",
         timestamp: Date.now(),
@@ -452,7 +496,7 @@ describe("ArtifactsAPI", () => {
     });
 
     it("should return null for invalid version", async () => {
-      mockClient.query.mockResolvedValue(null);
+      mockClient.mutation.mockResolvedValue(null);
 
       const result = await artifactsApi.getVersion("art-abc123", 999);
 
@@ -607,13 +651,14 @@ describe("ArtifactsAPI", () => {
         version: 2,
       });
 
+      enableGraphCapture();
       const result = await artifactsApi.finalizeStreaming({
         artifactId: "art-abc123",
         sessionId: "stream-abc123",
       });
 
       expect(result.currentState).toBe("final");
-      expect(mockGraphAdapter.updateNode).toHaveBeenCalled();
+      expectGraphCapture();
     });
   });
 
@@ -627,10 +672,11 @@ describe("ArtifactsAPI", () => {
         updatedAt: Date.now(),
       });
 
+      enableGraphCapture();
       const result = await artifactsApi.setStreamingState("art-abc123", "error");
 
       expect(result.currentState).toBe("error");
-      expect(mockGraphAdapter.updateNode).toHaveBeenCalled();
+      expectGraphCapture();
     });
 
     it("should throw validation error for invalid state", async () => {
@@ -644,19 +690,20 @@ describe("ArtifactsAPI", () => {
   // File Methods
   // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
+  it("accepts first-class video artifacts through the typed SDK", async () => {
+    mockClient.mutation.mockResolvedValue({ ...mockArtifactResponse, kind: "video" });
+    const result = await artifactsApi.create({ memorySpaceId: "space-123", kind: "video", title: "Video", content: "video metadata" });
+    expect(result.kind).toBe("video"); expect(mockClient.mutation).toHaveBeenCalled();
+  });
+
   describe("getFileUrl()", () => {
-    it("should return file URL", async () => {
-      mockClient.query.mockResolvedValue({ url: "https://storage.example.com/file.png" });
-
-      const result = await artifactsApi.getFileUrl("art-abc123");
-
-      expect(result).toBe("https://storage.example.com/file.png");
+    it("direct bearer delivery is unavailable before transport", async () => {
+      await expect(artifactsApi.getFileUrl("art-abc123")).rejects.toBeInstanceOf(AssetCapabilityUnavailableError);
+      expect(mockClient.mutation).not.toHaveBeenCalled(); expect(mockClient.query).not.toHaveBeenCalled();
     });
-
-    it("should throw validation error for empty artifactId", async () => {
-      await expect(
-        artifactsApi.getFileUrl("")
-      ).rejects.toThrow(ArtifactValidationError);
+    it("empty selectors retain the same unavailable boundary", async () => {
+      await expect(artifactsApi.getFileUrl("")).rejects.toBeInstanceOf(AssetCapabilityUnavailableError);
+      expect(mockClient.mutation).not.toHaveBeenCalled(); expect(mockClient.query).not.toHaveBeenCalled();
     });
   });
 
@@ -686,4 +733,27 @@ describe("ArtifactsAPI", () => {
       ).rejects.toThrow(ArtifactValidationError);
     });
   });
+});
+
+
+describe("public artifact asset capability", () => {
+  it("refuses delivery before query I/O without operator opt-in", async () => {
+    const client = { query: jest.fn(), mutation: jest.fn() };
+    const api = new ArtifactsAPI(client as never);
+    await expect(api.getFileUrl("art-abc123")).rejects.toBeInstanceOf(AssetCapabilityUnavailableError);
+    expect(client.query).not.toHaveBeenCalled();
+    expect(client.mutation).not.toHaveBeenCalled();
+  });
+});
+
+// Explicit legacy administration keeps its separate internal query route.
+it("operator artifact reads use the internal query and preserve the row", async () => {
+  const operator = createUnitOperatorClient();
+  operator.query.mockResolvedValue(mockArtifactResponse);
+  const api = new ArtifactsAPI(operator.transport as never, undefined, undefined, { tenantId: "test-tenant" } as never);
+  expect(await api.get("art-abc123")).toEqual(mockArtifactResponse);
+  const [reference, args] = operator.query.mock.calls[0];
+  expect(getFunctionName(reference as never)).toBe("cliOperator/artifacts:get");
+  expect(args).toEqual({ artifactId: "art-abc123", tenantId: "test-tenant" });
+  expect(operator.mutation).not.toHaveBeenCalled();
 });

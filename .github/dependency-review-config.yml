@@ -13,6 +13,11 @@ license-check: true
 # Any license NOT in this list will be flagged.
 allow-licenses:
   - MIT
+  # SPDX MIT No Attribution is MIT with its attribution condition removed.
+  - MIT-0
+  # File-level copyleft: preserve covered-file notices and source availability.
+  # https://www.mozilla.org/en-US/MPL/2.0/FAQ/
+  - MPL-2.0
   - Apache-2.0
   - BSD-2-Clause
   - BSD-3-Clause
@@ -29,6 +34,10 @@ allow-licenses:
 # Note: Workspace packages may be identified by lockfile path OR npm name depending
 # on how the scanner resolves them, so we include both formats.
 allow-dependencies-licenses:
+  # Archived Python SDK reference dependency: upstream declares PSF-2.0.
+  # The scanner misreads historical GPL-compatibility notices in its LICENSE.
+  # https://github.com/python/typing_extensions/blob/4.15.0/pyproject.toml
+  - "pkg:pypi/typing-extensions"
   # Internal packages by npm name
   - "pkg:npm/@cortexmemory/sdk"
   - "pkg:npm/@cortexmemory/cli"

@@ -6,8 +6,8 @@
  */
 
 import { jest } from "@jest/globals";
-import { Cortex } from "../src";
-import { ConvexClient } from "convex/browser";
+import { Cortex } from "./helpers/deployment-operator";
+import { ConvexClient } from "./helpers/deployment-operator";
 import { api } from "../convex-dev/_generated/api";
 import { TestCleanup } from "./helpers/cleanup";
 import { createTestRunContext } from "./helpers/isolation";
@@ -56,12 +56,12 @@ describe("Memory Validation", () => {
         },
       });
 
-      const beforeACID = await client.query(api.conversations.get, {
+      const beforeACID = await client.mutation(api.conversations.get, {
         conversationId: conv.conversationId,
       });
       const beforeMessageCount = beforeACID!.messageCount;
 
-      const beforeVector = await client.query(api.memories.count, {
+      const beforeVector = await client.mutation(api.memories.count, {
         memorySpaceId: TEST_MEMSPACE_ID,
       });
 
@@ -75,13 +75,13 @@ describe("Memory Validation", () => {
         agentId: TEST_AGENT_ID,
       });
 
-      const afterACID = await client.query(api.conversations.get, {
+      const afterACID = await client.mutation(api.conversations.get, {
         conversationId: conv.conversationId,
       });
 
       expect(afterACID!.messageCount).toBe(beforeMessageCount + 2);
 
-      const afterVector = await client.query(api.memories.count, {
+      const afterVector = await client.mutation(api.memories.count, {
         memorySpaceId: TEST_MEMSPACE_ID,
       });
 
@@ -512,12 +512,12 @@ describe("Memory Validation", () => {
         ).rejects.toThrow("minScore must be between 0 and 1");
       });
 
-      it("throws on invalid limit (0)", async () => {
+      it("returns an empty memory search window for limit zero", async () => {
         await expect(
           cortex.memory.search(TEST_MEMSPACE_ID, "query", {
             limit: 0,
           }),
-        ).rejects.toThrow("limit must be a positive integer");
+        ).resolves.toEqual([]);
       });
 
       it("throws on invalid limit (negative)", async () => {
@@ -1063,7 +1063,10 @@ describe("Memory Validation", () => {
 
         await expect(
           cortex.memory.restoreFromArchive(TEST_MEMSPACE_ID, memory.memoryId),
-        ).rejects.toThrow(/MEMORY_NOT_ARCHIVED|not archived/i);
+        ).rejects.toMatchObject({ partial: { confirmedCount: 0, possibleCount: 0,
+          outcomes: [expect.objectContaining({ disposition: "knownRolledBack" })] },
+          originalCause: expect.objectContaining({ data: "MEMORY_NOT_ARCHIVED" }) });
+        expect(await cortex.vector.get(TEST_MEMSPACE_ID, memory.memoryId)).toEqual(memory);
       });
     });
 

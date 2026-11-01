@@ -1,200 +1,63 @@
-import { auth } from "@/app/(auth)/auth";
-import type { ArtifactKind } from "@/components/artifact";
-import {
-  deleteDocumentsByIdAfterTimestamp,
-  getDocumentById,
-  getDocumentsByConversationId,
-  getDocumentsById,
-  getDocumentVersion,
-  redoDocumentChange,
-  saveDocument,
-  undoDocumentChange,
-} from "@/lib/db/queries";
-import { ChatSDKError } from "@/lib/errors";
+import { z } from "zod";
 
+const inputSchema = z
+  .object({
+    artifact: z
+      .object({ artifactId: z.string(), version: z.number().int().positive() })
+      .strict()
+      .optional(),
+    conversationId: z.string().optional(),
+    intent: z.enum(["title", "text", "code", "sheet", "suggestions"]),
+    parentRunId: z.string().optional(),
+    prompt: z.string(),
+    requestId: z.string(),
+    sourceMessageId: z.string().optional(),
+    version: z.literal(1),
+  })
+  .strict();
+
+import { body, exact, identifier, withRuntime } from "@/lib/runtime/server";
 export async function GET(request: Request) {
-  const { searchParams } = new URL(request.url);
-  const id = searchParams.get("id");
-  const version = searchParams.get("version");
-  const conversationId = searchParams.get("conversationId");
-
-  const session = await auth();
-
-  if (!session?.user) {
-    return new ChatSDKError("unauthorized:document").toResponse();
-  }
-
-  // Get documents by conversation ID
-  if (conversationId) {
-    const documents = await getDocumentsByConversationId({ conversationId });
-    // Filter to only documents owned by the user
-    const userDocuments = documents.filter(
-      (doc) => doc.userId === session.user?.id
-    );
-    return Response.json(userDocuments, { status: 200 });
-  }
-
-  if (!id) {
-    return new ChatSDKError(
-      "bad_request:api",
-      "Parameter id is missing"
-    ).toResponse();
-  }
-
-  // Get a specific version
-  if (version) {
-    const document = await getDocumentVersion({
-      id,
-      version: Number.parseInt(version, 10),
-    });
-
-    if (!document) {
-      return new ChatSDKError("not_found:document").toResponse();
-    }
-
-    if (document.userId !== session.user.id) {
-      return new ChatSDKError("forbidden:document").toResponse();
-    }
-
-    return Response.json(document, { status: 200 });
-  }
-
-  // Get all versions of a document
-  const documents = await getDocumentsById({ id });
-
-  const [document] = documents;
-
-  if (!document) {
-    return new ChatSDKError("not_found:document").toResponse();
-  }
-
-  if (document.userId !== session.user.id) {
-    return new ChatSDKError("forbidden:document").toResponse();
-  }
-
-  return Response.json(documents, { status: 200 });
+  return withRuntime(request, (client) => {
+    const query = new URL(request.url).searchParams;
+    const id = query.get("jobId");
+    return id
+      ? client.getContentJob(identifier(id))
+      : client.listContentJobs(
+          query.get("conversationId")
+            ? { conversationId: identifier(query.get("conversationId")) }
+            : {}
+        );
+  });
 }
-
 export async function POST(request: Request) {
-  const { searchParams } = new URL(request.url);
-  const id = searchParams.get("id");
-  const action = searchParams.get("action");
-
-  if (!id) {
-    return new ChatSDKError(
-      "bad_request:api",
-      "Parameter id is required."
-    ).toResponse();
-  }
-
-  const session = await auth();
-
-  if (!session?.user) {
-    return new ChatSDKError("unauthorized:document").toResponse();
-  }
-
-  // Handle undo/redo actions
-  if (action === "undo") {
-    const document = await getDocumentById({ id });
-    if (!document) {
-      return new ChatSDKError("not_found:document").toResponse();
-    }
-    if (document.userId !== session.user.id) {
-      return new ChatSDKError("forbidden:document").toResponse();
-    }
-    const result = await undoDocumentChange({ id });
-    return Response.json(result, { status: 200 });
-  }
-
-  if (action === "redo") {
-    const document = await getDocumentById({ id });
-    if (!document) {
-      return new ChatSDKError("not_found:document").toResponse();
-    }
-    if (document.userId !== session.user.id) {
-      return new ChatSDKError("forbidden:document").toResponse();
-    }
-    const result = await redoDocumentChange({ id });
-    return Response.json(result, { status: 200 });
-  }
-
-  // Standard save operation
-  const {
-    content,
-    title,
-    kind,
-    conversationId,
-    messageId,
-  }: {
-    content: string;
-    title: string;
-    kind: ArtifactKind;
-    conversationId?: string;
-    messageId?: string;
-  } = await request.json();
-
-  const documents = await getDocumentsById({ id });
-
-  if (documents.length > 0) {
-    const [doc] = documents;
-
-    if (doc.userId !== session.user.id) {
-      return new ChatSDKError("forbidden:document").toResponse();
-    }
-  }
-
-  const document = await saveDocument({
-    content,
-    conversationId,
-    id,
-    kind,
-    messageId,
-    title,
-    userId: session.user.id,
+  return withRuntime(request, async (client) => {
+    const input = await body(request);
+    exact(input, [
+      "version",
+      "requestId",
+      "intent",
+      "prompt",
+      "conversationId",
+      "sourceMessageId",
+      "parentRunId",
+      "artifact",
+    ]);
+    identifier(input.requestId);
+    return client.submitContentJob(inputSchema.parse(input));
   });
-
-  return Response.json(document, { status: 200 });
 }
-
 export async function DELETE(request: Request) {
-  const { searchParams } = new URL(request.url);
-  const id = searchParams.get("id");
-  const timestamp = searchParams.get("timestamp");
-
-  if (!id) {
-    return new ChatSDKError(
-      "bad_request:api",
-      "Parameter id is required."
-    ).toResponse();
-  }
-
-  if (!timestamp) {
-    return new ChatSDKError(
-      "bad_request:api",
-      "Parameter timestamp is required."
-    ).toResponse();
-  }
-
-  const session = await auth();
-
-  if (!session?.user) {
-    return new ChatSDKError("unauthorized:document").toResponse();
-  }
-
-  const document = await getDocumentById({ id });
-
-  if (!document) {
-    return new ChatSDKError("not_found:document").toResponse();
-  }
-
-  if (document.userId !== session.user.id) {
-    return new ChatSDKError("forbidden:document").toResponse();
-  }
-
-  const documentsDeleted = await deleteDocumentsByIdAfterTimestamp({
-    id,
-    timestamp: new Date(timestamp),
+  return withRuntime(request, (client) =>
+    client.cancelContentJob(
+      identifier(new URL(request.url).searchParams.get("jobId"))
+    )
+  );
+}
+export async function PATCH(request: Request) {
+  return withRuntime(request, async (client) => {
+    const input = await body(request);
+    exact(input, ["jobId"]);
+    return client.reconcileContentJob(identifier(input.jobId));
   });
-
-  return Response.json(documentsDeleted, { status: 200 });
 }

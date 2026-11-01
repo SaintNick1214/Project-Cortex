@@ -10,7 +10,7 @@
  */
 
 import { describe, it, expect, beforeAll, afterAll } from "@jest/globals";
-import { Cortex } from "../src/index";
+import { Cortex } from "./helpers/deployment-operator";
 
 // All valid conversation types
 const ALL_CONVERSATION_TYPES = ["user-agent", "agent-agent"] as const;

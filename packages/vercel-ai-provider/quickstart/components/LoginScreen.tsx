@@ -24,8 +24,8 @@ export function LoginScreen() {
       return;
     }
 
-    if (!password) {
-      setLocalError("Password is required");
+    if (password.length < 6 || password.length > 1024) {
+      setLocalError("Password must contain 6 to 1024 characters");
       return;
     }
 

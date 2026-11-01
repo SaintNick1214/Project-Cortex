@@ -3,7 +3,8 @@ import { memo } from "react";
 import { toast } from "sonner";
 import { useSWRConfig } from "swr";
 import { useCopyToClipboard } from "usehooks-ts";
-import type { ChatMessage, Vote } from "@/lib/types";
+import type { Vote } from "@/lib/types";
+import type { ChatMessage } from "@/lib/types";
 import { Action, Actions } from "./elements/actions";
 import { CopyIcon, PencilEditIcon, ThumbDownIcon, ThumbUpIcon } from "./icons";
 
@@ -48,7 +49,7 @@ export function PureMessageActions({
     return (
       <Actions className="-mr-0.5 justify-end">
         <div className="relative">
-          {!!setMode && (
+          {setMode !== undefined && (
             <Action
               className="absolute top-0 -left-10 opacity-0 transition-opacity focus-visible:opacity-100 group-hover/message:opacity-100"
               data-testid="message-edit-button"
@@ -77,16 +78,18 @@ export function PureMessageActions({
         disabled={vote?.isUpvoted}
         onClick={() => {
           const upvote = fetch("/api/vote", {
+            method: "PATCH",
             body: JSON.stringify({
               chatId,
               messageId: message.id,
               type: "up",
             }),
-            method: "PATCH",
+          }).then((response) => {
+            if (!response.ok) throw new Error("Vote could not be saved");
+            return response;
           });
 
           toast.promise(upvote, {
-            error: "Failed to upvote response.",
             loading: "Upvoting Response...",
             success: () => {
               mutate<Vote[]>(
@@ -97,23 +100,24 @@ export function PureMessageActions({
                   }
 
                   const votesWithoutCurrent = currentVotes.filter(
-                    (currentVote) => currentVote.messageId !== message.id
+                    (currentVote) => currentVote.messageId !== message.id,
                   );
 
                   return [
                     ...votesWithoutCurrent,
                     {
                       chatId,
-                      isUpvoted: true,
                       messageId: message.id,
+                      isUpvoted: true,
                     },
                   ];
                 },
-                { revalidate: false }
+                { revalidate: false },
               );
 
               return "Upvoted Response!";
             },
+            error: "Failed to upvote response.",
           });
         }}
         tooltip="Upvote Response"
@@ -126,16 +130,18 @@ export function PureMessageActions({
         disabled={vote && !vote.isUpvoted}
         onClick={() => {
           const downvote = fetch("/api/vote", {
+            method: "PATCH",
             body: JSON.stringify({
               chatId,
               messageId: message.id,
               type: "down",
             }),
-            method: "PATCH",
+          }).then((response) => {
+            if (!response.ok) throw new Error("Vote could not be saved");
+            return response;
           });
 
           toast.promise(downvote, {
-            error: "Failed to downvote response.",
             loading: "Downvoting Response...",
             success: () => {
               mutate<Vote[]>(
@@ -146,23 +152,24 @@ export function PureMessageActions({
                   }
 
                   const votesWithoutCurrent = currentVotes.filter(
-                    (currentVote) => currentVote.messageId !== message.id
+                    (currentVote) => currentVote.messageId !== message.id,
                   );
 
                   return [
                     ...votesWithoutCurrent,
                     {
                       chatId,
-                      isUpvoted: false,
                       messageId: message.id,
+                      isUpvoted: false,
                     },
                   ];
                 },
-                { revalidate: false }
+                { revalidate: false },
               );
 
               return "Downvoted Response!";
             },
+            error: "Failed to downvote response.",
           });
         }}
         tooltip="Downvote Response"
@@ -184,5 +191,5 @@ export const MessageActions = memo(
     }
 
     return true;
-  }
+  },
 );

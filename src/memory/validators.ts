@@ -179,7 +179,13 @@ export function validateContentType(contentType: string): void {
   }
 }
 
-const VALID_SOURCE_TYPES = ["conversation", "system", "tool", "a2a"] as const;
+const VALID_SOURCE_TYPES = [
+  "conversation",
+  "system",
+  "tool",
+  "a2a",
+  "fact-extraction",
+] as const;
 
 /**
  * Validates sourceType is one of allowed values
@@ -605,7 +611,7 @@ export function validateSearchOptions(options: SearchMemoryOptions): void {
     validateMinScore(options.minScore);
   }
 
-  if (options.limit !== undefined) {
+  if (options.limit !== undefined && options.limit !== 0) {
     validateLimit(options.limit);
   }
 

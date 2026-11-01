@@ -10,10 +10,10 @@
  * PARALLEL-SAFE: Uses TestRunContext for isolated test data
  */
 
-import { Cortex } from "../src";
+import { Cortex } from "./helpers/deployment-operator";
 import { createNamedTestRunContext, ScopedCleanup } from "./helpers";
 import { generateTenantId, createTenantAuthContext } from "./helpers/tenancy";
-import { ConvexClient } from "convex/browser";
+import { ConvexClient } from "./helpers/deployment-operator";
 
 describe("Collaborative Conversations (Shareable Chats Phase 4)", () => {
   const ctx = createNamedTestRunContext("collab");

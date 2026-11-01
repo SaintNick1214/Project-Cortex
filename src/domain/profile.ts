@@ -1,0 +1,103 @@
+import { Hash } from "fast-sha256";
+
+/** Exact supported configurations. Catalogue membership is not model qualification. */
+export interface EmbeddingProfile {
+  readonly profileId: string;
+  readonly modelId: string;
+  readonly dimensions: number;
+  readonly normalization: string;
+  readonly chunking: string;
+  readonly indexName: string;
+}
+
+export const DEFAULT_EMBEDDING_PROFILE: Readonly<EmbeddingProfile> = Object.freeze({
+  profileId: "cortex-text-small-1536-v1",
+  modelId: "openai/text-embedding-3-small",
+  dimensions: 1536,
+  normalization: "text-nfc-lf-v1",
+  chunking: "codepoint-1600-overlap-200-v1",
+  indexName: "by_default_embedding_v1",
+});
+
+/** Additional candidate; production dispatch also requires current native qualification. */
+export const LARGE_EMBEDDING_PROFILE: Readonly<EmbeddingProfile> = Object.freeze({
+  profileId: "cortex-text-large-3072-v1",
+  modelId: "openai/text-embedding-3-large",
+  dimensions: 3072,
+  normalization: "text-nfc-lf-v1",
+  chunking: "codepoint-1600-overlap-200-v1",
+  indexName: "by_large_embedding_v1",
+});
+export const SUPPORTED_EMBEDDING_PROFILES = Object.freeze([DEFAULT_EMBEDDING_PROFILE, LARGE_EMBEDDING_PROFILE]);
+export function embeddingProfileForModel(modelId: string): Readonly<EmbeddingProfile> {
+  const profile = SUPPORTED_EMBEDDING_PROFILES.find(value => value.modelId === modelId);
+  if (!profile) throw new Error("CAPABILITY_UNSUPPORTED: embedding model has no supported profile/index");
+  return profile;
+}
+export function assertSupportedEmbeddingProfile(actual: EmbeddingProfile): void {
+  assertProfileMatches(actual, embeddingProfileForModel(actual.modelId));
+}
+
+export const DEFAULT_VECTOR_FILTER_FIELDS = Object.freeze([
+  "tenantId", "memorySpaceId", "profileId",
+] as const);
+
+export function normalizeSourceText(text: string): string {
+  const normalized = text.normalize("NFC").replace(/\r\n?/g, "\n").trim();
+  if (!normalized) throw new Error("INVALID_INPUT: normalized text is empty");
+  return normalized;
+}
+
+export function assertProfileMatches(
+  actual: EmbeddingProfile,
+  expected: EmbeddingProfile = DEFAULT_EMBEDDING_PROFILE,
+): void {
+  const fields = ["profileId", "modelId", "dimensions", "normalization", "chunking", "indexName"] as const;
+  if (fields.some((field) => actual[field] !== expected[field])) {
+    throw new Error("PROFILE_NOT_READY: embedding profile does not match the pinned profile");
+  }
+}
+
+export function assertEmbeddingVector(
+  vector: readonly number[],
+  profile: EmbeddingProfile = DEFAULT_EMBEDDING_PROFILE,
+): void {
+  if (!Number.isSafeInteger(profile.dimensions) || profile.dimensions <= 0 ||
+      !Array.isArray(vector) || vector.length !== profile.dimensions || Array.from(vector).some((coordinate) => !Number.isFinite(coordinate))) {
+    throw new Error(`INVALID_INPUT: expected ${profile.dimensions} finite embedding coordinates`);
+  }
+}
+
+/**
+ * Portable SHA-256 over the exact UTF-8 bytes, shared with canonical evidence hashing.
+ * Hashes are lookup keys, not authorization or proof of equality: repositories must
+ * compare the canonical identity/content before reusing an idempotency receipt.
+ * A collision is an IDEMPOTENCY_CONFLICT, never permission to overwrite another source.
+ */
+export async function semanticHash(value: string): Promise<string> {
+  const bytes = new TextEncoder().encode(value);
+  return Array.from(new Hash().update(bytes).digest(), (byte) => byte.toString(16).padStart(2, "0")).join("");
+}
+
+export interface TextWindow {
+  ordinal: number;
+  /** Offsets are Unicode code points in the complete normalized source. */
+  start: number;
+  end: number;
+  text: string;
+}
+
+/** Source is already normalized; windows preserve internal and boundary whitespace. */
+export function chunkNormalizedText(text: string): TextWindow[] {
+  if (!text || normalizeSourceText(text) !== text) {
+    throw new Error("INVALID_INPUT: chunking requires normalized source text");
+  }
+  const points = Array.from(text);
+  const windows: TextWindow[] = [];
+  for (let start = 0; start < points.length; start += 1400) {
+    const end = Math.min(start + 1600, points.length);
+    windows.push({ ordinal: windows.length, start, end, text: points.slice(start, end).join("") });
+    if (end === points.length) break;
+  }
+  return windows;
+}

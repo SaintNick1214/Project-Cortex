@@ -202,6 +202,11 @@ export interface ShortestPathConfig {
  * supporting Neo4j, Memgraph, and other Cypher-compatible databases.
  */
 export interface GraphAdapter {
+  /** Capability observed by the accepted read-only elementId/id probe. */
+  managedDialect?(): Promise<"neo4j" | "memgraph">;
+  managedRead?(cypher: string, params?: Record<string, unknown>): Promise<GraphQueryResult>;
+  /** Explicit bounded transaction; managed services supply only fixed statements. */
+  managedTransaction?<T>(operation: (transaction: ManagedGraphTransaction) => Promise<T>): Promise<T>;
   // ============================================================================
   // Connection Management
   // ============================================================================
@@ -402,6 +407,65 @@ export interface GraphAdapter {
    * @returns Promise that resolves when cleared
    */
   clearDatabase(): Promise<void>;
+}
+
+export interface ManagedGraphTransaction {
+  query(cypher: string, params?: Record<string, unknown>): Promise<GraphQueryResult>;
+}
+export type GraphKind = "Memory" | "Fact" | "Context" | "Conversation" | "MemorySpace" | "Immutable" | "Mutable" | "Artifact";
+export type GraphTable = "memories" | "facts" | "contexts" | "conversations" | "memorySpaces" | "immutable" | "mutable" | "artifacts";
+export interface GraphScope { tenantKnown: true; tenantId: string | null; memorySpaceId: string | null }
+export interface GraphIdentity extends GraphScope {
+  schemaVersion: 2; kind: GraphKind; physicalSourceId: string; key: string; tupleJson: string;
+}
+export interface GraphReference {
+  role: string; slot: string; relationship: string; identity: GraphIdentity;
+  sourceRevision: number; ownershipRevision: number; referenceGeneration: string;
+}
+export interface GraphDerivedNode {
+  kind: "User" | "Agent" | "Participant" | "Entity"; logicalId: string; entityType?: string;
+  relationship: string; properties: Record<string, unknown>;
+}
+export interface GraphProjection {
+  identity: GraphIdentity; sourceRevision: number; properties: Record<string, unknown>;
+  references: GraphReference[]; derived: GraphDerivedNode[];
+  derivedRelations?: Array<{subject:{name:string;type:string};object:{name:string;type:string};predicate:string}>;
+}
+export interface GraphJobReceipt { id: string; generation: string; identity: GraphIdentity; sourceRevision: number }
+export interface GraphJob {
+  _id: string; schemaVersion: 2; table: GraphTable; identity: GraphIdentity; sourceRevision: number;
+  operation: "insert" | "update" | "delete"; graphInvocationId: string; requestDigest: string;
+  projectionJson?: string; projectionDigest?: string; requestJson?: string; sourceDigest?: string; suppressedJobs?: GraphJobReceipt[];
+  generation: string; attemptToken: string; referenceGeneration: string; ownershipRevision: number;
+  state: "pending" | "synced" | "failed" | "suppressed"; failedAttempts: number;
+  projection: GraphProjection; createdAt: number; priority?: "high" | "normal" | "low";
+}
+export interface GraphSyncPolicy { mode: "inline" | "background" }
+export interface GraphApplyResult {
+  disposition: "applied" | "idempotent" | "suppressed";
+  nodesCreated: number; nodesDeleted: number; relationshipsCreated: number; relationshipsDeleted: number;
+  absentTargets: string[];
+}
+export class GraphJobUnresolved extends Error {
+  readonly code = "GRAPH_JOB_UNRESOLVED";
+  constructor(public readonly receipt?: GraphJobReceipt) {
+    super("The original graph job is missing, expired or contradictory. Do not resend the primary mutation."); this.name = "GraphJobUnresolved";
+  }
+}
+export class GraphPrimaryOutcomeUnknown extends Error {
+  readonly code = "GRAPH_PRIMARY_OUTCOME_UNKNOWN";
+  readonly outcome = "unknown";
+  constructor(public readonly domain: string, public readonly scope: GraphScope,
+    public readonly invocationId: string, public readonly intent: unknown, public readonly knownPhysicalSourceIds: string[] = []) {
+    super("The graph-enabled primary response was lost. Its outcome is unknown; inspect and replan without automatically resending it."); this.name = "GraphPrimaryOutcomeUnknown";
+  }
+}
+export class GraphCommittedPartial<T = unknown> extends Error {
+  readonly code = "GRAPH_COMMITTED_PARTIAL"; readonly knownCommitted = true;
+  constructor(public readonly primaryResult: T, public readonly jobs: GraphJobReceipt[],
+    public readonly graphOutcome: "failed" | "unknown", public readonly reason: string) {
+    super("Primary data committed; graph delivery or acknowledgement is incomplete. Retry only the original graph jobs."); this.name = "GraphCommittedPartial";
+  }
 }
 
 /**

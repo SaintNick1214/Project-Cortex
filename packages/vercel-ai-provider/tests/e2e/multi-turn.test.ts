@@ -7,7 +7,7 @@
  */
 
 import { createCortexMemory } from "../helpers/memory-factory";
-import { Cortex } from "@cortexmemory/sdk";
+import { Cortex } from "../helpers/operator-client";
 import {
   createTestMemorySpaceId,
   createTestUserId,

@@ -33,6 +33,9 @@ export default [
       "**/venv/**/*", // Exclude Python virtual environments
       "dev-docs/**/*", // Exclude dev documentation
       "Internal Docs/**/*", // Exclude internal docs
+      "work/**/*", // Private scratch files and generated qualification probes
+      ".codex/tmp/**/*", // Disposable copied hosts are checked separately from canonical source
+      "_goals/**/qa/**/*", // Frozen evidence and standalone fixtures use their scoped lint configs
     ],
   },
 
@@ -187,6 +190,35 @@ export default [
       "@typescript-eslint/no-unsafe-argument": "off",
       "@typescript-eslint/no-unsafe-return": "off",
       "@typescript-eslint/no-unnecessary-condition": "off",
+    },
+  },
+
+  // Standalone qualification has its own TypeScript project and package install.
+  {
+    files: [
+      "_goals/convex-backend-runtime-2026-10-02/qa/task01/fixture/**/*.ts",
+    ],
+    languageOptions: {
+      parserOptions: {
+        project:
+          "./_goals/convex-backend-runtime-2026-10-02/qa/task01/fixture/tsconfig.json",
+      },
+    },
+  },
+
+  // Isolated live authorization qualification has separate backend/client projects.
+  {
+    files: [
+      "_goals/convex-backend-runtime-2026-10-02/qa/task03c2-live-fixture/fixture/**/*.ts",
+      "_goals/convex-backend-runtime-2026-10-02/qa/task03c2-live-fixture/scripts/**/*.ts",
+    ],
+    languageOptions: {
+      parserOptions: {
+        project: [
+          "./_goals/convex-backend-runtime-2026-10-02/qa/task03c2-live-fixture/fixture/convex/tsconfig.json",
+          "./_goals/convex-backend-runtime-2026-10-02/qa/task03c2-live-fixture/client-tsconfig.json",
+        ],
+      },
     },
   },
 

@@ -5,9 +5,9 @@
  * Uses mock observers to capture and verify events.
  */
 
-import { describe, it, expect, jest, beforeEach } from "@jest/globals";
-import { Cortex } from "../../src";
-import { ConvexClient } from "convex/browser";
+import { describe, it, expect, jest, beforeEach, beforeAll, afterAll } from "@jest/globals";
+import { getFunctionName } from "convex/server";
+import type { Conversation, MemoryEntry } from "../../src/types";
 import { createTestRunContext } from "../helpers/isolation";
 import type {
   OrchestrationObserver,
@@ -17,14 +17,66 @@ import type {
   MemoryLayer,
 } from "../../src/types";
 
+/** Strict local transport port: real SDK orchestration runs against unit state only. */
+class ObserverUnitClient {
+  static readonly owned: ObserverUnitClient[] = [];
+  readonly conversations = new Map<string, Conversation>();
+  readonly memories: MemoryEntry[] = [];
+  readonly calls: string[] = [];
+  closed = false;
+  constructor(readonly url: string) { if (url !== "https://unit.invalid") throw new Error("Observer fixture requires unit.invalid"); ObserverUnitClient.owned.push(this); }
+  async mutation(ref: Parameters<typeof getFunctionName>[0], args: Record<string, unknown>) {
+    if (this.closed) throw new Error("Owned unit client is closed");
+    const registeredName = getFunctionName(ref); this.calls.push(registeredName);
+    const name = registeredName.replace(/^cliOperator\//, "");
+    // Ensure observed latency has a real async boundary without a live socket.
+    await new Promise(resolve => setTimeout(resolve, 5));
+    if (name === "memorySpaces:get") return { memorySpaceId: args.memorySpaceId, type: "personal", participants: [], status: "active", createdAt: 1, updatedAt: 1 };
+    if (name === "immutable:get") return { type: "user", id: args.id, data: { name: "Unit user" }, version: 1, createdAt: 1 };
+    if (name === "users:get") return { userId: args.userId, data: {}, version: 1, createdAt: 1, updatedAt: 1 };
+    if (name === "agents:exists") return true;
+    if (name === "agents:get") return { agentId: args.agentId, name: "Unit agent", status: "active", registeredAt: 1, updatedAt: 1 };
+    if (name === "conversations:create") {
+      const row = { _id: `unit/${this.conversations.size + 1}`, ...args, conversationId: args.conversationId, messages: [], messageCount: 0, createdAt: 1, updatedAt: 1 } as unknown as Conversation;
+      this.conversations.set(row.conversationId, row); return structuredClone(row);
+    }
+    if (name === "conversations:get") return structuredClone(this.conversations.get(String(args.conversationId)) ?? null);
+    if (name === "conversations:addMessage") {
+      const row = this.conversations.get(String(args.conversationId)); if (!row) throw new Error("Missing unit conversation");
+      row.messages.push(args.message as Conversation["messages"][number]); row.messageCount = row.messages.length; return structuredClone(row);
+    }
+    if (name === "memories:store") {
+      const row = { ...args, _id: `memories/${this.memories.length + 1}`, memoryId: `unit-memory-${this.memories.length + 1}`, version: 1, previousVersions: [], accessCount: 0, createdAt: Date.now(), updatedAt: Date.now() } as unknown as MemoryEntry;
+      this.memories.push(row); return structuredClone(row);
+    }
+    if (name === "memories:search") return [];
+    if (name === "facts:search") return [];
+    if (name === "facts:candidatePage") return { page: [], isDone: true, continueCursor: "unit-facts-complete" };
+    throw new Error(`Unexpected observer unit mutation ${name}`);
+  }
+  async query(ref: Parameters<typeof getFunctionName>[0], args: Record<string, unknown>) { return this.mutation(ref, args); }
+  onUpdate() { throw new Error("Observer unit fixture has no subscription effects"); }
+  async action(ref: Parameters<typeof getFunctionName>[0]) {
+    const registeredName = getFunctionName(ref); this.calls.push(registeredName);
+    const name = registeredName.replace(/^cliOperator\//, "");
+    if (name !== "memories:search") throw new Error(`Unexpected observer unit action ${name}`);
+    await new Promise(resolve => setTimeout(resolve, 5)); return [];
+  }
+  async close() { this.closed = true; }
+}
+jest.unstable_mockModule("convex/browser", () => ({
+  ConvexClient: ObserverUnitClient,
+  ConvexHttpClient: class { constructor() { throw new Error("Observer unit fixture must not construct an HTTP transport"); } },
+}));
+const { Cortex } = await import("../../src");
+
 // Create test run context for parallel execution isolation
 const ctx = createTestRunContext();
 
-const CONVEX_URL = process.env.CONVEX_URL || "http://127.0.0.1:3210";
+const CONVEX_URL = "https://unit.invalid";
 
 describe("Memory Orchestration Observer", () => {
-  let cortex: Cortex;
-  let _client: ConvexClient;
+  let cortex: InstanceType<typeof Cortex>;
 
   // Use ctx-scoped IDs for parallel execution isolation
   const TEST_MEMSPACE_ID = ctx.memorySpaceId("observer");
@@ -75,12 +127,16 @@ describe("Memory Orchestration Observer", () => {
   });
 
   beforeAll(async () => {
-    cortex = new Cortex({ convexUrl: CONVEX_URL });
-    _client = new ConvexClient(CONVEX_URL);
+    cortex = new Cortex({ convexUrl: CONVEX_URL, resilience: { enabled: false } }, { deploymentOperator: true });
   });
 
   afterAll(async () => {
-    await _client.close();
+    await cortex.shutdown(1000);
+    expect(ObserverUnitClient.owned).toHaveLength(1);
+    expect(ObserverUnitClient.owned.every(client => client.closed)).toBe(true);
+    expect(ObserverUnitClient.owned[0].memories.length).toBeGreaterThan(0);
+    expect(ObserverUnitClient.owned[0].calls).toContain("cliOperator/memories:search");
+    expect(ObserverUnitClient.owned[0].calls).toContain("cliOperator/conversations:addMessage");
   });
 
   // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━

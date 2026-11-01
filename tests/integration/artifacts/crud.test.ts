@@ -12,8 +12,8 @@
  * Test IDs: INT-CRUD-001 through INT-CRUD-003
  */
 
-import { Cortex } from "../../../src";
-import { ConvexClient } from "convex/browser";
+import { Cortex } from "../../helpers/deployment-operator";
+import { ConvexClient } from "../../helpers/deployment-operator";
 import { api } from "../../../convex-dev/_generated/api";
 import { createNamedTestRunContext } from "../../helpers/isolation";
 import { generateTenantId, createTenantAuthContext } from "../../helpers/tenancy";
@@ -111,7 +111,7 @@ describeWithConvex("Artifacts CRUD Integration", () => {
       expect(artifact.streamingState).toBe("draft");
 
       // Verify database state directly
-      const stored = await client.query(api.artifacts.get, {
+      const stored = await client.mutation(api.artifacts.get, {
         artifactId: artifact.artifactId,
         tenantId: TEST_TENANT_ID,
       });

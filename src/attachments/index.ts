@@ -1,3 +1,4 @@
+import { readBackend } from "../common/backendRead";
 /**
  * Cortex SDK - Attachments API
  *
@@ -12,9 +13,11 @@
  * - Multi-tenancy support
  */
 
+import { isDeploymentOperatorClient } from "../common/deploymentOperator";
+import { AssetCapabilityUnavailableError } from "../assets/errors";
 import { resolveTenantId } from "../auth/tenant";
 import type { ConvexClient } from "convex/browser";
-import { api } from "../../convex-dev/_generated/api";
+import { api } from "../common/backendApi";
 import type {
   Attachment,
   AttachParams,
@@ -85,32 +88,15 @@ export class AttachmentsAPI {
   // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
   /**
-   * Generate a pre-signed upload URL for file upload.
+   * Asset upload and delivery require a qualified authenticated backend capability.
+   * This intermediate SDK rejects with AssetCapabilityUnavailableError before
+   * transport or file processing; no bearer URL or upload result is returned.
+   * Future support uses bounded authenticated Convex upload and delivery.
    *
-   * This method creates a short-lived upload URL that clients can use
-   * to upload files directly to Convex storage.
-   *
-   * @example
-   * ```typescript
-   * const { uploadUrl } = await cortex.attachments.generateUploadUrl();
-   *
-   * // Client uploads file to uploadUrl via POST
-   * const response = await fetch(uploadUrl, { method: 'POST', body: file });
-   * const { storageId } = await response.json();
-   *
-   * // Then register the attachment
-   * await cortex.attachments.attach({
-   *   storageId,
-   *   memorySpaceId: 'my-space',
-   *   userId: 'user-123',
-   *   type: 'image',
-   *   mimeType: 'image/png',
-   *   filename: 'photo.png',
-   *   size: file.size,
-   * });
-   * ```
+   * @throws AssetCapabilityUnavailableError with CAPABILITY_UNAVAILABLE
    */
   async generateUploadUrl(): Promise<UploadUrlResult> {
+    if (!isDeploymentOperatorClient(this.client)) throw new AssetCapabilityUnavailableError();
     const result = await this.executeWithResilience(
       () => this.client.mutation(api.attachments.generateUploadUrl, {
         tenantId: this.authContext?.tenantId,
@@ -168,7 +154,8 @@ export class AttachmentsAPI {
         "attachments:attach",
       );
 
-      return result as Attachment;
+      if (result === null) throw Object.assign(new Error("Attachment write result unavailable; do not repeat the write."), {code: "ATTACHMENT_COMMITTED_RESULT_UNAVAILABLE", outcome: "committed"});
+      return result;
     } catch (error) {
       this.handleConvexError(error);
     }
@@ -195,32 +182,26 @@ export class AttachmentsAPI {
 
     const result = await this.executeWithResilience(
       () =>
-        this.client.query(api.attachments.get, {
+        readBackend(this.client, api.attachments.get, {
           attachmentId,
           tenantId: this.authContext?.tenantId,
         }),
       "attachments:get",
     );
 
-    return result as Attachment | null;
+    return result;
   }
 
   /**
-   * Get a signed download URL for an attachment.
+   * Asset upload and delivery require a qualified authenticated backend capability.
+   * This intermediate SDK rejects with AssetCapabilityUnavailableError before
+   * transport or file processing; no bearer URL or upload result is returned.
+   * Future support uses bounded authenticated Convex upload and delivery.
    *
-   * The URL is temporary and will expire. Use it immediately to display
-   * or download the file.
-   *
-   * @example
-   * ```typescript
-   * const url = await cortex.attachments.getUrl('attach-abc123');
-   * if (url) {
-   *   // Display image or download file
-   *   window.open(url);
-   * }
-   * ```
+   * @throws AssetCapabilityUnavailableError with CAPABILITY_UNAVAILABLE
    */
   async getUrl(attachmentId: string): Promise<string | null> {
+    if (!isDeploymentOperatorClient(this.client)) throw new AssetCapabilityUnavailableError();
     // Client-side validation
     validateAttachmentId(attachmentId);
 
@@ -267,7 +248,7 @@ export class AttachmentsAPI {
 
     const result = await this.executeWithResilience(
       () =>
-        this.client.query(api.attachments.list, {
+        readBackend(this.client, api.attachments.list, {
           memorySpaceId: filter.memorySpaceId,
           tenantId: resolveTenantId(this.authContext?.tenantId, filter.tenantId),
           conversationId: filter.conversationId,
@@ -284,7 +265,7 @@ export class AttachmentsAPI {
       "attachments:list",
     );
 
-    return result as ListAttachmentsResult;
+    return result;
   }
 
   /**
@@ -302,7 +283,7 @@ export class AttachmentsAPI {
   ): Promise<Attachment[]> {
     const result = await this.executeWithResilience(
       () =>
-        this.client.query(api.attachments.getByConversation, {
+        readBackend(this.client, api.attachments.getByConversation, {
           conversationId,
           tenantId: this.authContext?.tenantId,
           type: options?.type,
@@ -311,7 +292,7 @@ export class AttachmentsAPI {
       "attachments:getByConversation",
     );
 
-    return result as Attachment[];
+    return result;
   }
 
   /**
@@ -328,14 +309,14 @@ export class AttachmentsAPI {
   async getByMessage(messageId: string): Promise<Attachment[]> {
     const result = await this.executeWithResilience(
       () =>
-        this.client.query(api.attachments.getByMessage, {
+        readBackend(this.client, api.attachments.getByMessage, {
           messageId,
           tenantId: this.authContext?.tenantId,
         }),
       "attachments:getByMessage",
     );
 
-    return result as Attachment[];
+    return result;
   }
 
   /**
@@ -363,7 +344,7 @@ export class AttachmentsAPI {
 
     const result = await this.executeWithResilience(
       () =>
-        this.client.query(api.attachments.count, {
+        readBackend(this.client, api.attachments.count, {
           memorySpaceId: filter.memorySpaceId,
           tenantId: resolveTenantId(this.authContext?.tenantId, filter.tenantId),
           conversationId: filter.conversationId,
@@ -384,7 +365,7 @@ export class AttachmentsAPI {
   /**
    * Delete an attachment.
    *
-   * Removes both the metadata record and the file from storage.
+   * Removes the metadata record. Bytes are deleted only when no document or retained version references them. The boolean reports metadata deletion.
    *
    * @example
    * ```typescript

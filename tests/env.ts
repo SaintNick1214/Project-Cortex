@@ -13,11 +13,12 @@
 import dotenv from "dotenv";
 import { resolve } from "path";
 
-// Load .env.test first (test defaults)
-dotenv.config({ path: resolve(process.cwd(), ".env.test") });
-
-// Load .env.local second with override=true (local development overrides for test defaults AND system env vars)
-dotenv.config({ path: resolve(process.cwd(), ".env.local"), override: true });
+// CI/actual qualification selectors must not be redirected by a developer's .env.local.
+const explicitEnvironment = process.env.CORTEX_TEST_ENV_MODE === "explicit" || process.env.CI === "true";
+if (!explicitEnvironment) {
+  dotenv.config({ path: resolve(process.cwd(), ".env.test") });
+  dotenv.config({ path: resolve(process.cwd(), ".env.local"), override: true });
+}
 
 // Determine which Convex deployment to test against
 // Note: In auto mode, the test-runner.mjs script handles detection and orchestration
@@ -36,7 +37,7 @@ const hasManagedConfig = Boolean(
 );
 
 // Configure CONVEX_URL based on test mode
-if (testMode === "local") {
+if (!explicitEnvironment && testMode === "local") {
   // Explicit local mode
   if (process.env.LOCAL_CONVEX_URL) {
     process.env.CONVEX_URL = process.env.LOCAL_CONVEX_URL;
@@ -45,14 +46,14 @@ if (testMode === "local") {
   console.log(
     `   Note: Vector search (.similar()) not supported in local mode\n`,
   );
-} else if (testMode === "managed") {
+} else if (!explicitEnvironment && testMode === "managed") {
   // Explicit managed mode - prefer CLOUD_CONVEX_URL if set
   if (process.env.CLOUD_CONVEX_URL) {
     process.env.CONVEX_URL = process.env.CLOUD_CONVEX_URL;
   }
   console.log(`\n🧪 Testing against MANAGED Convex: ${process.env.CONVEX_URL}`);
   console.log(`   Note: Vector search fully supported in managed mode\n`);
-} else if (testMode === "auto") {
+} else if (!explicitEnvironment && testMode === "auto") {
   // Auto mode - detect which config is available
   // Note: If both configs are present, the test-runner.mjs script will run tests twice
   if (hasLocalConfig && !hasManagedConfig) {

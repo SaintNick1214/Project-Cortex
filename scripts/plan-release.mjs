@@ -1,65 +1,28 @@
-import { readFileSync, writeFileSync } from 'node:fs';
+import { appendFileSync, readFileSync, writeFileSync } from 'node:fs';
 import { execFileSync } from 'node:child_process';
-
-const paths = JSON.parse(readFileSync('delivery-paths.json', 'utf8'));
-if (!process.env.SOURCE_SHA || paths.sha !== process.env.SOURCE_SHA) {
-  throw new Error('Release paths must match the checked main commit');
-}
-const packages = [
-  { key: 'sdk', folder: '.', tag: 'v', changed: paths.sdk, paths: ['src/','convex-dev/','package.json','package-lock.json','tsconfig*.json'] },
-  { key: 'provider', folder: 'packages/vercel-ai-provider', tag: 'vercel-ai-provider-v', changed: paths.sdk || paths.provider, paths: ['packages/vercel-ai-provider/src/','packages/vercel-ai-provider/react/','packages/vercel-ai-provider/package.json','packages/vercel-ai-provider/tsconfig*.json'] },
-  { key: 'cli', folder: 'packages/cortex-cli', tag: 'cli-v', changed: paths.sdk || paths.provider || paths.cli, paths: ['packages/cortex-cli/src/','packages/cortex-cli/templates/','packages/cortex-cli/scripts/','packages/cortex-cli/package.json'] },
-];
-const parse = version => {
-  if (!/^\d+\.\d+\.\d+$/.test(version)) throw new Error(`Stable semver required: ${version}`);
-  return version.split('.').map(Number);
+import { createReleasePlan, registryResult } from './release-contract.mjs';
+if (process.argv.slice(2).some(arg => arg !== '--dry-run')) throw new Error('Only --dry-run is supported');
+const dryRun = process.argv.includes('--dry-run');
+const readManifest = folder => JSON.parse(readFileSync(`${folder}/package.json`, 'utf8'));
+const registry = name => {
+  try { return registryResult(execFileSync('npm', ['view', name, 'version', 'gitHead', '--json', '--prefer-online'], { encoding: 'utf8', stdio: ['ignore', 'pipe', 'pipe'] })); }
+  catch (error) { return registryResult(String(error.stdout ?? ''), error); }
 };
-const compare = (a,b) => {
-  const x = parse(a), y = parse(b);
-  return x[0]-y[0] || x[1]-y[1] || x[2]-y[2];
-};
-for (const pkg of packages) {
-  const filename = `${pkg.folder}/package.json`;
-  const manifest = JSON.parse(readFileSync(filename, 'utf8'));
-  pkg.name = manifest.name;
-  pkg.version = manifest.version;
-  // Registry errors must fail the release, not masquerade as an unpublished package.
-  const response = JSON.parse(execFileSync('npm', ['view', pkg.name, 'version', 'gitHead', '--json', '--prefer-online'], { encoding: 'utf8' }));
-  const latest = Array.isArray(response) ? response[0] : response;
-  // Include changes from earlier main commits whose delivery was superseded
-  // or failed. A push's path list alone would permanently lose those changes.
-  if (/^[a-f0-9]{40}$/.test(latest.gitHead ?? '') && /^[a-f0-9]{40}$/.test(paths.sha)) {
-    const changed = execFileSync('git', ['diff','--name-only',latest.gitHead,paths.sha,'--',...pkg.paths], {encoding:'utf8'}).trim();
-    pkg.changed ||= Boolean(changed);
+const plan = createReleasePlan({
+  paths: JSON.parse(readFileSync('delivery-paths.json', 'utf8')),
+  sourceSha: process.env.SOURCE_SHA, readManifest, registry,
+  diffPaths: (from, to, paths) => execFileSync('git', ['diff', '--name-only', from, to, '--', ...paths], { encoding: 'utf8' }).trim(),
+});
+for (const pkg of plan.packages.filter(pkg => !dryRun && (pkg.changed || pkg.released))) {
+  const manifest = readManifest(pkg.folder);
+  manifest.version = pkg.version;
+  for (const dependency of plan.packages) {
+    if (manifest.dependencies?.[dependency.name]) manifest.dependencies[dependency.name] = `^${dependency.version}`;
   }
-  if (pkg.key !== 'sdk') pkg.changed ||= packages[0].changed || packages[0].released;
-  if (pkg.key === 'cli') pkg.changed ||= packages[1].changed || packages[1].released;
-  if (latest.gitHead === paths.sha) {
-    pkg.changed = false; // A retry must not republish a completed package.
-    pkg.released = true;
-    pkg.version = latest.version;
-    manifest.version = latest.version;
-    writeFileSync(filename, JSON.stringify(manifest, null, 2) + '\n');
-    continue;
-  }
-  if (!pkg.changed) {
-    pkg.version = latest.version;
-    continue;
-  }
-  const chosen = compare(manifest.version, latest.version) > 0
-    ? manifest.version
-    : (() => { const [major,minor,patch] = parse(latest.version); return `${major}.${minor}.${patch+1}`; })();
-  manifest.version = pkg.version = chosen;
-  writeFileSync(filename, JSON.stringify(manifest, null, 2) + '\n');
+  writeFileSync(`${pkg.folder}/package.json`, JSON.stringify(manifest, null, 2) + '\n');
 }
-const sdk = packages[0];
-if (sdk.version) {
-  for (const pkg of packages.slice(1)) {
-    const filename = `${pkg.folder}/package.json`;
-    const manifest = JSON.parse(readFileSync(filename, 'utf8'));
-    if (manifest.dependencies?.[sdk.name]) manifest.dependencies[sdk.name] = `^${sdk.version}`;
-    writeFileSync(filename, JSON.stringify(manifest, null, 2) + '\n');
-  }
-}
-writeFileSync('release-plan.json', JSON.stringify(packages, null, 2) + '\n');
-console.log(packages.map(pkg => `${pkg.name}: ${pkg.changed ? pkg.version : 'unchanged/already released'}`).join('\n'));
+writeFileSync('release-plan.json', JSON.stringify(plan, null, 2) + '\n');
+const outcome = plan.packages.some(pkg => pkg.changed) ? 'changes planned' : plan.packages.some(pkg => pkg.released) ? 'release metadata recovery planned' : 'nothing to publish';
+const summary = `## Package release plan\n\nOutcome: **${outcome}**; source: \`${plan.sourceSha}\`; mode: ${dryRun ? 'dry-plan (no manifest changes or publication)' : 'publication/recovery plan'}.\n\n` + plan.packages.map(pkg => `- ${pkg.name}: ${pkg.changed ? `publish ${pkg.version}` : pkg.released ? `already accepted ${pkg.version}; verify visibility and recover release metadata` : 'unchanged'}`).join('\n') + '\n';
+if (process.env.GITHUB_STEP_SUMMARY) appendFileSync(process.env.GITHUB_STEP_SUMMARY, summary);
+console.log(summary);

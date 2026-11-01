@@ -173,8 +173,8 @@ export function validateOutputFormat(format: string): OutputFormat {
  * Validate a limit (pagination)
  */
 export function validateLimit(limit: number, max = 1000): number {
-  if (isNaN(limit) || limit < 1) {
-    throw new ValidationError("Limit must be a positive number");
+  if (!Number.isSafeInteger(limit) || limit < 1) {
+    throw new ValidationError("Limit must be a positive integer");
   }
   if (limit > max) {
     throw new ValidationError(`Limit cannot exceed ${max}`);
@@ -191,9 +191,21 @@ export function validateUrl(url: string): void {
   }
 
   try {
-    new URL(url);
+    const parsed = new URL(url);
+    if (
+      !["http:", "https:"].includes(parsed.protocol) ||
+      parsed.username ||
+      parsed.password ||
+      parsed.search ||
+      parsed.hash ||
+      parsed.pathname !== "/" ||
+      [...url].some((char) => char.charCodeAt(0) <= 32)
+    )
+      throw new Error("Unsupported deployment URL");
   } catch {
-    throw new ValidationError(`Invalid URL: ${url}`);
+    throw new ValidationError(
+      "Invalid URL: use an HTTP(S) deployment origin without credentials, query, fragment or path",
+    );
   }
 }
 
@@ -205,6 +217,8 @@ export function validateFilePath(path: string): void {
     throw new ValidationError("File path is required");
   }
 
+  if (path.length > 4096 || [...path].some((char) => char.charCodeAt(0) < 32))
+    throw new ValidationError("Invalid file path");
   if (path.trim().length === 0) {
     throw new ValidationError("File path cannot be empty");
   }

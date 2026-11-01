@@ -100,3 +100,7 @@ export type {
 
 // Re-export artifact stream event constants
 export { ARTIFACT_STREAM_EVENTS } from "../src/artifacts";
+
+/** Typed metadata/options for the official AI SDK remote transport. */
+export type { CortexRemoteMetadata, CortexRemoteRequestBody, CortexRemoteTransportOptions } from "../src/remote/index";
+export type { MemoryEffort, MemoryEffortRequest, MemoryEffortTrace } from "@cortexmemory/sdk/runtime";
