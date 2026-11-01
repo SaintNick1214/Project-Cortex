@@ -29,6 +29,17 @@ contracts run separately. Discovery counts describe selected files, not executed
 tests; inspect hosted results and inherited skips separately. Missing target,
 identity or qualified model prerequisites fail service coverage explicitly.
 
+## Permanent main contents
+
+Main-target pull requests and main pushes enforce `.main-release-policy.json` against
+the complete committed candidate tree before selecting coverage. Internal development
+records remain on dev; unchanged forbidden files and paths outside sparse checkout
+also fail. Use `npm run release:prepare` to create a filtered normal-merge release
+branch, then open an ordinary main PR. See [branch contents and promotion](release-branches.md).
+Local validation may be explicitly waived for an operation; GitHub checks, reviews,
+main-push qualification and publishing prerequisites remain required. Never use a
+CI-skip marker or administrator bypass as a substitute for that path.
+
 ## Shared deployments and candidate packages
 
 Offline checks and isolated demo, graph and native containers run outside the

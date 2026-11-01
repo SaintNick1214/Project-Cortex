@@ -73,6 +73,7 @@
     "clean": "rimraf dist",
     "prepublishOnly": "npm test && npm run build",
     "prepack": "npm run build",
+    "release:prepare": "node scripts/ci-main-release.mjs prepare",
     "release": "pwsh -File scripts/release.ps1",
     "dev": "node scripts/dev-runner.mjs",
     "dev:local": "node scripts/dev-runner.mjs --local",
