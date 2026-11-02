@@ -185,7 +185,7 @@ test('normal workflow requires hosted refusals, both native roles and one direct
   const first = markers.slice(0, 4).map(marker => job.indexOf(marker)); assert.ok(first.every((value, index) => value >= 0 && (index === 0 || value > first[index - 1])));
   const finalSource = job.lastIndexOf(markers[4]), verify = job.indexOf(markers[5]), upload = job.indexOf(markers[6]); assert.ok(finalSource > first[3] && verify > finalSource && upload > verify);
   assert.equal((job.match(/uses: github\/codeql-action\/upload-sarif@/g) ?? []).length, 1);
-  assert.deepEqual((job.match(/^        if:.*$/gm) ?? []).map(line => line.trim()), ['if: always()']);
+  assert.deepEqual((job.match(/^ {8}if:.*$/gm) ?? []).map(line => line.trim()), ['if: always()']);
   assert.equal((job.match(/run: node scripts\/security-contract\.mjs scorecard-source/g) ?? []).length, 3);
   assert.match(job, /id: local_scorecard/); assert.match(job, /LOCAL_SCORECARD_OUTCOME: \$\{\{ steps.local_scorecard.outcome \}\}/);
   assert.match(job, /sarif_file: \$\{\{ runner.temp \}\}\/scorecard-upload\/native/); assert.match(job, /wait-for-processing: true/);
