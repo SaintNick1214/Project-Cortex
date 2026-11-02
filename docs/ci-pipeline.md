@@ -29,6 +29,17 @@ contracts run separately. Discovery counts describe selected files, not executed
 tests; inspect hosted results and inherited skips separately. Missing target,
 identity or qualified model prerequisites fail service coverage explicitly.
 
+## Permanent main contents
+
+Main-target pull requests and main pushes enforce `.main-release-policy.json` against
+the complete committed candidate tree before selecting coverage. Internal development
+records remain on dev; unchanged forbidden files and paths outside sparse checkout
+also fail. Use `npm run release:prepare` to create a filtered normal-merge release
+branch, then open an ordinary main PR. See [branch contents and promotion](release-branches.md).
+Local validation may be explicitly waived for an operation; GitHub checks, reviews,
+main-push qualification and publishing prerequisites remain required. Never use a
+CI-skip marker or administrator bypass as a substitute for that path.
+
 ## Shared deployments and candidate packages
 
 Offline checks and isolated demo, graph and native containers run outside the
@@ -80,7 +91,15 @@ their blocking policies; uploaded CodeQL/Trivy/Semgrep alerts retain branch-rule
 enforcement. Semgrep's authentic SARIF identity is `Semgrep OSS`. Explicitly
 classified PartialParsing warnings are visible incomplete parser coverage;
 scanner crashes, other errors, empty coverage, invalid output and required upload
-failures block the summary. Scheduled/main Scorecard scores remain advisory.
+failures block the summary.
+
+PR/manual Scorecard analysis must complete, produce valid native SARIF and upload
+successfully. Source checks bind the normal PR checkout or current default-branch
+manual dispatch before/after scanning and before upload; stale sources fail.
+Upstream PR/manual support is experimental and fork repositories are unsupported.
+Scores remain advisory. External Scorecard publication runs separately in
+`Scorecard Publishing` on main pushes and its weekly schedule; `Security Scans`
+does not certify that independent workflow's outcome.
 
 ## Delivery and recovery
 

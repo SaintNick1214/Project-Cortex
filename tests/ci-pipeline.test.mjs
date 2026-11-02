@@ -70,7 +70,7 @@ test('documentation, security and release helpers avoid unrelated managed/demo/n
   }
 });
 
-for (const file of ['convex-dev/schema.ts', 'convex-dev/_generated/api.d.ts', 'convex.json', 'src/index.ts', 'package-lock.json', 'package.json', 'tsconfig.json', 'jest.config.mjs', '.github/workflows/pr-checks.yml', '.github/workflows/managed-ci.yml', '.github/actions/setup/action.yml', 'scripts/prepare-ci-backend.mjs', 'scripts/ci-contract.mjs', 'scripts/ci-managed.mjs', 'scripts/ci-candidate-artifacts.mjs', 'scripts/ci/prepare-fixtures.mjs', 'tests/ci-managed.test.mjs', 'tests/ci-candidate-artifacts.test.mjs']) test(`${file} conservatively covers every consumer`, () => {
+for (const file of ['convex-dev/schema.ts', 'convex-dev/_generated/api.d.ts', 'convex.json', 'src/index.ts', 'package-lock.json', 'package.json', 'tsconfig.json', 'jest.config.mjs', '.github/workflows/pr-checks.yml', '.github/workflows/managed-ci.yml', '.github/actions/setup/action.yml', 'scripts/prepare-ci-backend.mjs', 'scripts/ci-contract.mjs', '.main-release-policy.json', 'scripts/ci-main-release.mjs', 'tests/ci-main-release.test.mjs', 'scripts/ci-managed.mjs', 'scripts/ci-candidate-artifacts.mjs', 'scripts/ci/prepare-fixtures.mjs', 'tests/ci-managed.test.mjs', 'tests/ci-candidate-artifacts.test.mjs']) test(`${file} conservatively covers every consumer`, () => {
   const selected = selectCi(pr({ files: [file] }));
   assert.deepEqual(new Set(selected.selected), new Set(ciJobs));
   assert.equal(selected.demos.length, 3);
@@ -136,7 +136,7 @@ const moves = [
   { name: 'CLI source to provider', from: 'packages/cortex-cli/src/contract.ts', to: 'packages/vercel-ai-provider/src/contract.ts', full: false, delivery: { sdk: false, provider: true, cli: true, templates: false } },
   { name: 'provider source to template catalog', from: 'packages/vercel-ai-provider/src/contract.ts', to: 'packages/cortex-templates/contract.ts', full: false, delivery: { sdk: false, provider: true, cli: false, templates: true } },
 ];
-for (const move of moves) test(`actual workflow extraction retains both endpoints: ${move.name}`, () => {
+for (const move of moves) test(`actual workflow extraction retains both endpoints: ${move.name}`, async () => {
   const directory = mkdtempSync(join(tmpdir(), 'cortex-ci-git-move-'));
   const git = (...args) => execFileSync('git', ['-c', 'user.name=CI Fixture', '-c', 'user.email=ci-fixture@example.invalid', '-c', 'commit.gpgsign=false', '-c', 'core.hooksPath=/dev/null', ...args], { cwd: directory, encoding: 'utf8' });
   try {
@@ -152,7 +152,7 @@ for (const move of moves) test(`actual workflow extraction retains both endpoint
     // Prove this fixture exercises Git's otherwise lossy R100 name-only result.
     assert.match(git('diff', '--name-status', baseSha, headSha), /^R100\s/);
     assert.deepEqual(git('diff', '--name-only', '-z', baseSha, headSha).split('\0').filter(Boolean), [move.to]);
-    const files = changedCiPaths(baseSha, headSha, directory);
+    const files = await changedCiPaths(baseSha, headSha, directory);
     assert.deepEqual(new Set(files), new Set([move.from, move.to]));
     const selection = selectCi(pr({ files }));
     assert.deepEqual(selection.delivery, move.delivery);
@@ -174,16 +174,16 @@ for (const move of moves) test(`actual workflow extraction retains both endpoint
     const push = spawnSync(process.execPath, [resolve('scripts/ci-contract.mjs'), 'select'], { cwd: directory, env: { ...env, GITHUB_EVENT_NAME: 'push', GITHUB_REF: 'refs/heads/main', GITHUB_SHA: headSha }, encoding: 'utf8' });
     assert.equal(push.status, 0, push.stderr);
     assert.deepEqual(JSON.parse(readFileSync(join(directory, 'delivery-paths.json'), 'utf8')), { sha: headSha, ...move.delivery });
-    assert.deepEqual(changedCiPaths('0'.repeat(40), headSha, directory), [move.to]);
+    assert.deepEqual(await changedCiPaths('0'.repeat(40), headSha, directory), [move.to]);
   } finally { rmSync(directory, { recursive: true, force: true }); }
 });
 
-test('change extraction rejects absent or non-commit inputs before invoking Git', () => {
-  for (const [base, head] of [[undefined, undefined], ['main', 'a'.repeat(40)], ['a'.repeat(40), '--help'], ['a'.repeat(40), '0'.repeat(40)]]) assert.throws(() => changedCiPaths(base, head), /Exact base and nonzero head commits required/);
-  assert.throws(() => changedCiPaths('a'.repeat(40), 'b'.repeat(40), '/missing/cortex-ci-fixture'));
+test('change extraction rejects absent or non-commit inputs before invoking Git', async () => {
+  for (const [base, head] of [[undefined, undefined], ['main', 'a'.repeat(40)], ['a'.repeat(40), '--help'], ['a'.repeat(40), '0'.repeat(40)]]) await assert.rejects(changedCiPaths(base, head), /Exact base and nonzero head commits required/);
+  await assert.rejects(changedCiPaths('a'.repeat(40), 'b'.repeat(40), '/missing/cortex-ci-fixture'));
 });
 
-test('complete change extraction retains product endpoints after more than1MiB of preserved history', () => {
+test('complete change extraction retains product endpoints after more than 32MiB of preserved history', async () => {
   const directory = mkdtempSync(join(tmpdir(), 'cortex-ci-large-paths-'));
   const git = (...args) => execFileSync('git', args, { cwd: directory, encoding: 'utf8' });
   try {
@@ -192,13 +192,13 @@ test('complete change extraction retains product endpoints after more than1MiB o
     git('commit', '--allow-empty', '--quiet', '-m', 'empty fixture');
     const baseSha = git('rev-parse', 'HEAD').trim();
     const blob = execFileSync('git', ['hash-object', '-w', '--stdin'], { cwd: directory, input: 'fixture\n', encoding: 'utf8' }).trim();
-    const expected = Array.from({ length: 12000 }, (_, index) => `_goals/preserved/${'e'.repeat(80)}/${String(index).padStart(5, '0')}/receipt.json`);
+    const expected = Array.from({ length: 240000 }, (_, index) => `_goals/preserved/${'e'.repeat(120)}-${String(index).padStart(6, '0')}.json`);
     expected.push('src/retained-product.ts');
-    assert.ok(Buffer.byteLength(expected.join('\0') + '\0') > 1024 * 1024);
+    assert.ok(Buffer.byteLength(expected.join('\0') + '\0') > 32 * 1024 * 1024);
     execFileSync('git', ['update-index', '-z', '--index-info'], { cwd: directory, input: expected.map(path => `100644 ${blob}\t${path}\0`).join(''), encoding: 'utf8' });
     git('commit', '--quiet', '-m', 'large preserved path history and product source');
     const headSha = git('rev-parse', 'HEAD').trim();
-    const files = changedCiPaths(baseSha, headSha, directory);
+    const files = await changedCiPaths(baseSha, headSha, directory);
     assert.deepEqual(files, expected);
     const input = pr({ files }); input.event.pull_request.draft = true;
     const selection = selectCi(input);
@@ -206,7 +206,7 @@ test('complete change extraction retains product endpoints after more than1MiB o
     assert.equal(selection.delivery.sdk, true);
     assert.ok(selection.selected.includes('offline-packages'));
     assert.ok(selection.deferred.includes('test-typescript'));
-    assert.deepEqual(changedCiPaths('0'.repeat(40), headSha, directory), expected);
+    assert.deepEqual(await changedCiPaths('0'.repeat(40), headSha, directory), expected);
   } finally { rmSync(directory, { recursive: true, force: true }); }
 });
 

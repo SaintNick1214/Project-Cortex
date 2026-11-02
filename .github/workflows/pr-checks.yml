@@ -232,7 +232,7 @@ jobs:
       - name: 'Exercise disposable-target, scoped JWT, lifecycle, installation and environment guards offline'
         run: node --test scripts/ci/*.test.mjs
       - name: 'CI, security and delivery readiness regressions'
-        run: node --test tests/ci-pipeline.test.mjs tests/ci-managed.test.mjs tests/ci-candidate-artifacts.test.mjs tests/security-pipeline.test.mjs tests/release-pipeline.test.mjs
+        run: node --test tests/ci-pipeline.test.mjs tests/ci-main-release.test.mjs tests/ci-managed.test.mjs tests/ci-candidate-artifacts.test.mjs tests/security-pipeline.test.mjs tests/release-pipeline.test.mjs
       - name: Verify candidate-install refusals and transitive closure
         run: |
           npm install --global pnpm@10.33.0
@@ -339,6 +339,11 @@ jobs:
       - uses: ./.github/actions/cortex-setup
         with:
           cache: 'false'
+      - name: Enforce complete committed main release contents
+        if: (github.event_name == 'pull_request' && github.base_ref == 'main') || (github.event_name == 'push' && github.ref == 'refs/heads/main')
+        env:
+          MAIN_RELEASE_TREE: ${{ github.event.pull_request.head.sha || github.sha }}
+        run: node scripts/ci-main-release.mjs check --tree "$MAIN_RELEASE_TREE"
       - name: Select dependency and trust coverage
         id: select
         env:
