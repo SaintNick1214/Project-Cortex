@@ -268,7 +268,8 @@ test('manual Scorecard source observations bind dispatch SHA, exact checkout and
     if (call.executable === 'gh') assert.equal(call.options.env.GH_TOKEN, 'synthetic-github-token');
   }
   const pr = sourceObservations([sourceSha]);
-  assert.equal(checkScorecardSource({ ...manualSource, eventName: 'pull_request', ref: 'refs/pull/42/merge' }, { spawn: pr.spawn }).source, 'normal-pr-merge-checkout');
+  const prSource = { ...manualSource, eventName: 'pull_request', ref: 'refs/pull/42/merge' };
+  assert.deepEqual(checkScorecardSource(prSource, { spawn: pr.spawn }), { ...prSource, checkoutSha: sourceSha, source: 'normal-pr-merge-checkout' });
   assert.equal(pr.calls.length, 1); assert.equal(pr.calls[0].executable, 'git');
 });
 

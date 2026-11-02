@@ -62,7 +62,7 @@ export function checkScorecardSource({ eventName, repository, ref, sha }, { spaw
   };
   const checkoutSha = read('git', ['rev-parse', '--verify', 'HEAD']);
   if (checkoutSha !== sha) throw new Error('Scorecard checkout HEAD does not match the workflow SHA');
-  if (eventName === 'pull_request') return { eventName, ref, sha, checkoutSha, source: 'normal-pr-merge-checkout' };
+  if (eventName === 'pull_request') return { eventName, repository, ref, sha, checkoutSha, source: 'normal-pr-merge-checkout' };
   if (typeof token !== 'string' || !token.trim()) throw new Error('The default GH_TOKEN is required for read-only manual Scorecard source checks');
   const get = endpoint => {
     const value = read('gh', ['api', '--hostname', 'github.com', '--method', 'GET', endpoint]);
@@ -77,7 +77,7 @@ export function checkScorecardSource({ eventName, repository, ref, sha }, { spaw
   if (remote?.ref !== defaultRef || remote.object?.type !== 'commit' || remote.object.sha !== sha) throw new Error('Remote default branch no longer matches the manual dispatch SHA');
   // Re-read the checkout after the bounded GETs; never accept a moving local HEAD.
   if (read('git', ['rev-parse', '--verify', 'HEAD']) !== sha) throw new Error('Scorecard checkout HEAD moved during the source check');
-  return { eventName, ref, sha, checkoutSha, source: 'remote-default-head', defaultBranch, remoteSha: remote.object.sha };
+  return { eventName, repository, ref, sha, checkoutSha, source: 'remote-default-head', defaultBranch, remoteSha: remote.object.sha };
 }
 
 /** Validate the uploadable SARIF envelope/results and reject reported execution errors. */
