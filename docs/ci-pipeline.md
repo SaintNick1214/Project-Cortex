@@ -19,6 +19,12 @@ Marking a trusted PR ready runs the applicable service gate. Main pushes always
 select the full gate. `All Checks Passed` requires every selected job to succeed;
 missing, cancelled or unexpectedly skipped jobs fail it.
 
+Offline quality uses five native Jest shards of the complete controlled-unit
+file discovery, with serial execution inside each shard. Every shard must exit
+naturally within the existing 240-second process deadline: TERM, then KILL after
+five seconds. The existing 60-second per-test limit remains. Pipeline regressions
+verify that the five groups cover every discovered file exactly once.
+
 Controlled unit checks use fake transports and Gateway peers, including current
 runtime, installation, policy and natural-close contracts. Both Gateway regression
 catalogs run against the current capture and atomic attachment contract; earlier
@@ -97,6 +103,16 @@ PR/manual Scorecard analysis must complete, produce valid native SARIF and uploa
 successfully. Source checks bind the normal PR checkout or current default-branch
 manual dispatch before/after scanning and before upload; stale sources fail.
 Upstream PR/manual support is experimental and fork repositories are unsupported.
+For PRs, one additional pinned native `Branch-Protection` check observes live
+global repository settings. Its source fences are separate from the PR merge
+checkout: the PR SHA identifies the evaluation context, not immutable settings.
+The untouched local report and genuine settings report are validated as two
+regular native SARIF files and uploaded together once. Empty settings findings
+can mean a satisfied or inconclusive check; complete settings coverage is not
+claimed. Manual runs keep their existing three-category remote report and do
+not execute the additional CLI. Any required preparation, validation or upload
+failure fails the mandatory Scorecard job and security summary.
+
 Scores remain advisory. External Scorecard publication runs separately in
 `Scorecard Publishing` on main pushes and its weekly schedule; `Security Scans`
 does not certify that independent workflow's outcome.
