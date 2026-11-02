@@ -21,6 +21,8 @@ permissions:
 
 # Required on every event, including draft/fork/Dependabot PRs: CodeQL, Trivy,
 # Gitleaks and Semgrep execution + valid results. Dependency Review is PR-only.
+# PR/manual Scorecard analysis + validated SARIF upload is also required; scores
+# remain advisory. A required tool analysis cannot be replaced by a skipped job.
 # GitHub permits code-scanning PR uploads with read-only fork/Dependabot tokens:
 # https://docs.github.com/en/code-security/reference/code-scanning/troubleshoot-analysis-errors/resource-not-accessible
 # Only non-PR Dependabot uploads are unavailable; local coverage still runs and
@@ -169,40 +171,54 @@ jobs:
           # Job summary works on forks/bots without PR write permission.
           comment-summary-in-pr: never
 
-  # Advisory scores: failed analysis/upload is reported, not a mandatory gate.
-  scorecard:
-    name: Supply Chain Security (Scorecard)
+  # Upstream PR/manual support is experimental; fork repositories are unsupported.
+  # Non-PR upstream runs require the default branch. Failures remain visible.
+  # No external Scorecard publishing, OIDC permission or PAT is used here.
+  scorecard-analysis:
+    name: Scorecard Analysis (PR and manual)
     runs-on: ubuntu-latest
-    if: github.event_name == 'schedule' || (github.event_name == 'push' && github.ref == 'refs/heads/main')
-    continue-on-error: true
+    if: github.event_name == 'pull_request' || github.event_name == 'workflow_dispatch'
     permissions:
-      security-events: write
-      id-token: write
       contents: read
-      actions: read
+      security-events: write
     steps:
       - name: Checkout code
         uses: actions/checkout@v6
         with:
+          ref: ${{ github.sha }}
+          fetch-depth: 0
           persist-credentials: false
-      - name: Run analysis
+      - uses: ./.github/actions/cortex-setup
+        with:
+          cache: "false"
+      - name: Verify Scorecard source before analysis
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: node scripts/security-contract.mjs scorecard-source
+      - name: Run Scorecard analysis without external publication
         uses: ossf/scorecard-action@v2.4.3
         with:
-          results_file: results.sarif
+          results_file: scorecard-results.sarif
           results_format: sarif
-          publish_results: true
-      - name: Upload SARIF results
+          publish_results: false
+      - name: Verify Scorecard source after analysis
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: node scripts/security-contract.mjs scorecard-source
+      - name: Validate Scorecard results
+        run: node scripts/security-contract.mjs sarif scorecard-results.sarif Scorecard
+      - name: Verify Scorecard source before upload
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: node scripts/security-contract.mjs scorecard-source
+      - name: Upload Scorecard SARIF
         uses: github/codeql-action/upload-sarif@v4
         with:
-          sarif_file: results.sarif
+          sarif_file: scorecard-results.sarif
           category: "scorecard"
-      - name: Report advisory outcome
-        if: always()
-        env:
-          SCORECARD_STEPS: ${{ toJSON(steps) }}
-        run: |
-          echo '### Scorecard (advisory)' >> "$GITHUB_STEP_SUMMARY"
-          echo "$SCORECARD_STEPS" >> "$GITHUB_STEP_SUMMARY"
+
+  # External Scorecard publishing is isolated in scorecard-publish.yml.
+  # Its advisory outcome is not observed by this workflow's security summary.
 
   api-security:
     name: API Security Scan (Semgrep)
@@ -249,7 +265,7 @@ jobs:
 
   security-summary:
     name: Security Checks Summary
-    needs: [codeql-analysis, dependency-scan, secret-scan, api-security, dependency-review, scorecard]
+    needs: [codeql-analysis, dependency-scan, secret-scan, api-security, dependency-review, scorecard-analysis]
     if: always()
     runs-on: ubuntu-latest
     permissions:

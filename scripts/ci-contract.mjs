@@ -1,9 +1,10 @@
 /** Functional CI selection and final outcomes. No service calls or credentials. */
 import { appendFileSync, readFileSync, readdirSync, writeFileSync } from 'node:fs';
-import { execFileSync, spawnSync } from 'node:child_process';
+import { spawnSync } from 'node:child_process';
 import { relative, resolve } from 'node:path';
 import { fileURLToPath, pathToFileURL } from 'node:url';
 import { aggregateManaged, managedJobs } from './ci-managed.mjs';
+import { readNulCommand } from './ci-main-release.mjs';
 
 export const ciJobs = ['detect-changes', 'code-quality', 'public-contracts', 'offline-packages', 'template-catalog', 'candidate-artifacts', 'demo-contracts', 'graph-contracts', 'native-proof-contracts', ...managedJobs];
 const repositoryRoot = fileURLToPath(new URL('../', import.meta.url));
@@ -20,17 +21,17 @@ export const offlineUnitFiles = discoverOfflineUnitFiles();
 const demoFolders = ['packages/cortex-cli/templates/basic', 'packages/cortex-cli/templates/chat-sdk-quickstart', 'packages/vercel-ai-provider/quickstart'];
 const bot = value => typeof value === 'string' && /(?:\[bot\]|^dependabot|^renovate)/i.test(value);
 const docs = path => /\.(?:md|mdx|txt)$/i.test(path) || /^(?:_goals|_research|work|\.agents)\//.test(path);
-const topology = path => (/^\.github\/workflows\/[^/]+\.ya?ml$/.test(path) && !/^\.github\/workflows\/(?:security|publish|auto-merge)\.ya?ml$/.test(path)) || /^\.github\/actions\//.test(path) || /^scripts\/ci\//.test(path) || /^scripts\/(?:ci-[^/]+\.mjs|prepare-ci-backend\.mjs|cleanup-test-data\.ts|install-ci-demo\.mjs|lib\/ci-[^/]+\.ts)$/.test(path) || /^tests\/ci-[^/]+\.test\.mjs$/.test(path);
+const topology = path => path === '.main-release-policy.json' || (/^\.github\/workflows\/[^/]+\.ya?ml$/.test(path) && !/^\.github\/workflows\/(?:security|publish|auto-merge)\.ya?ml$/.test(path)) || /^\.github\/actions\//.test(path) || /^scripts\/ci\//.test(path) || /^scripts\/(?:ci-[^/]+\.mjs|prepare-ci-backend\.mjs|cleanup-test-data\.ts|install-ci-demo\.mjs|lib\/ci-[^/]+\.ts)$/.test(path) || /^tests\/ci-[^/]+\.test\.mjs$/.test(path);
 const shared = path => /^(?:src|convex-dev)\//.test(path) || /^(?:package(?:-lock)?\.json|convex\.json|tsconfig[^/]*\.json|jest\.config\.[^/]+|eslint\.config\.[^/]+|tsup\.config\.[^/]+)$/.test(path) || /^tests\/.*\.(?:ts|tsx)$/.test(path);
 
 /** Retain deletions and additions independently, including both moved endpoints. */
-export function changedCiPaths(baseSha, headSha, cwd = process.cwd()) {
+export async function changedCiPaths(baseSha, headSha, cwd = process.cwd(), { limits } = {}) {
   if (!/^[a-f0-9]{40}$/.test(baseSha ?? '') || !/^[a-f0-9]{40}$/.test(headSha ?? '') || /^0+$/.test(headSha)) throw new Error('Exact base and nonzero head commits required');
-  const args = /^0+$/.test(baseSha) ? ['ls-files', '-z'] : ['diff', '--no-renames', '--name-only', '-z', baseSha, headSha];
-  // Preserved QA and immutable payload history can exceed Node's inherited 1MiB
-  // stdout buffer. Retain the complete list within finite byte/time bounds;
-  // an exceeded bound still refuses rather than silently truncating selection.
-  return execFileSync('git', args, { cwd, encoding: 'utf8', maxBuffer: 32 * 1024 * 1024, timeout: 30000 }).split('\0').filter(Boolean);
+  // Both forms read committed objects, so sparse/dirty indexes cannot hide paths.
+  const args = /^0+$/.test(baseSha) ? ['ls-tree', '--full-tree', '-r', '--name-only', '-z', headSha] : ['diff', '--no-relative', '--no-renames', '--name-only', '-z', baseSha, headSha];
+  const { records } = await readNulCommand('git', args, { cwd, limits });
+  if (records.some(path => !path)) throw new Error('Git returned an empty change path');
+  return records;
 }
 
 export function selectCi({ eventName, event = {}, repository, actor, ref, files, fullCi = false }) {
@@ -122,7 +123,7 @@ if (process.argv[1] && pathToFileURL(resolve(process.argv[1])).href === import.m
     const command = process.argv[2];
     if (command === 'select') {
       const event = JSON.parse(readFileSync(process.env.GITHUB_EVENT_PATH, 'utf8'));
-      const files = process.argv[3] ? readFileSync(process.argv[3], 'utf8').split('\0').filter(Boolean) : changedCiPaths(process.env.BASE_SHA, process.env.HEAD_SHA);
+      const files = process.argv[3] ? readFileSync(process.argv[3], 'utf8').split('\0').filter(Boolean) : await changedCiPaths(process.env.BASE_SHA, process.env.HEAD_SHA);
       const selection = selectCi({ eventName: process.env.GITHUB_EVENT_NAME, event, repository: process.env.GITHUB_REPOSITORY, actor: process.env.GITHUB_ACTOR, ref: process.env.GITHUB_REF, files, fullCi: event.inputs?.full_ci === true || event.inputs?.full_ci === 'true' });
       const outputs = { selection: JSON.stringify(selection), 'candidate-artifacts': selection.selected.includes('candidate-artifacts'), 'offline-packages': selection.selected.includes('offline-packages'), 'template-catalog': selection.selected.includes('template-catalog'), 'demo-contracts': selection.selected.includes('demo-contracts'), 'graph-contracts': selection.selected.includes('graph-contracts'), 'native-proof-contracts': selection.selected.includes('native-proof-contracts'), managed: selection.selected.includes('setup-and-purge'), 'managed-sdk': selection.selected.includes('test-typescript'), 'managed-provider': selection.selected.includes('test-vercel-ai-provider'), 'managed-cli': selection.selected.includes('test-cli'), cli: selection.cli, provider: selection.provider, demos: JSON.stringify(selection.demos), ...Object.fromEntries(Object.entries(selection.delivery).map(([key, value]) => [`${key}-release`, value])) };
       appendFileSync(process.env.GITHUB_OUTPUT, Object.entries(outputs).map(([key, value]) => `${key}=${value}`).join('\n') + '\n');
