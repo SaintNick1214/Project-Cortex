@@ -210,25 +210,33 @@ test('complete change extraction retains product endpoints after more than 32MiB
   } finally { rmSync(directory, { recursive: true, force: true }); }
 });
 
-test('four bounded offline shards retain every discovered unit exactly once without relaxing exit or case deadlines', () => {
+test('five bounded offline shards retain every discovered unit exactly once without relaxing exit or case deadlines', () => {
   const workflow = load(readFileSync('.github/workflows/pr-checks.yml', 'utf8'));
   const job = workflow.jobs['code-quality'];
-  assert.deepEqual(job.strategy.matrix.shard, [1, 2, 3, 4]);
+  assert.deepEqual(job.strategy.matrix.shard, [1, 2, 3, 4, 5]);
   assert.equal(job.strategy['fail-fast'], false);
   const command = job.steps.find(step => step.name === 'Pure SDK unit contracts without live environment loading').run;
-  assert.match(command, /timeout --signal=TERM --kill-after=5s 240s node scripts\/ci-contract\.mjs offline-unit --shard=\$\{\{ matrix\.shard \}\}\/4/);
-  const observed = [];
+  assert.equal(command.trim(), 'npm run build:backend\ntimeout --signal=TERM --kill-after=5s 240s node scripts/ci-contract.mjs offline-unit --shard=${{ matrix.shard }}/5');
+  const observed = [], shardSizes = [], shardCount = job.strategy.matrix.shard.length;
   for (const shard of job.strategy.matrix.shard) {
-    const run = spawnSync(process.execPath, [resolve('scripts/ci-contract.mjs'), 'offline-unit', '--listTests', '--json', `--shard=${shard}/4`], { cwd: resolve('.'), encoding: 'utf8', timeout: 30000 });
+    const run = spawnSync(process.execPath, [resolve('scripts/ci-contract.mjs'), 'offline-unit', '--listTests', '--json', `--shard=${shard}/${shardCount}`], { cwd: resolve('.'), encoding: 'utf8', timeout: 30000 });
     assert.equal(run.error, undefined); assert.equal(run.signal, null); assert.equal(run.status, 0, run.stderr);
     const paths = JSON.parse(run.stdout).map(path => path.slice(resolve('.').length + 1).replaceAll('\\', '/'));
-    assert.ok(paths.length > 0); observed.push(...paths);
+    assert.ok(paths.length > 0);
+    assert.ok(paths.length >= Math.floor(offlineUnitFiles.length / shardCount));
+    assert.ok(paths.length <= Math.ceil(offlineUnitFiles.length / shardCount));
+    shardSizes.push(paths.length); observed.push(...paths);
   }
   assert.equal(new Set(observed).size, observed.length);
   assert.deepEqual(observed.sort(), offlineUnitFiles);
+  assert.ok(Math.max(...shardSizes) - Math.min(...shardSizes) <= 1);
   const config = readFileSync('jest.config.mjs', 'utf8');
   assert.match(config, /testTimeout: 60000/);
-  assert.match(readFileSync('scripts/ci-contract.mjs', 'utf8'), /forceExit: false/);
+  const runner = readFileSync('scripts/ci-contract.mjs', 'utf8');
+  assert.match(runner, /forceExit: false/);
+  assert.match(runner, /'--forceExit=false'/);
+  assert.match(runner, /'--runInBand'/);
+  assert.match(runner, /'--runTestsByPath', \.\.\.offlineUnitFiles/);
 });
 
 test('failed, cancelled, skipped, missing or incomplete selected jobs cannot pass', () => {

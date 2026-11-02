@@ -232,7 +232,7 @@ jobs:
       - name: 'Exercise disposable-target, scoped JWT, lifecycle, installation and environment guards offline'
         run: node --test scripts/ci/*.test.mjs
       - name: 'CI, security and delivery readiness regressions'
-        run: node --test tests/ci-pipeline.test.mjs tests/ci-main-release.test.mjs tests/ci-managed.test.mjs tests/ci-candidate-artifacts.test.mjs tests/security-pipeline.test.mjs tests/release-pipeline.test.mjs
+        run: node --test tests/ci-pipeline.test.mjs tests/ci-main-release.test.mjs tests/ci-managed.test.mjs tests/ci-candidate-artifacts.test.mjs tests/security-pipeline.test.mjs tests/scorecard-repository-metadata.test.mjs tests/release-pipeline.test.mjs
       - name: Verify candidate-install refusals and transitive closure
         run: |
           npm install --global pnpm@10.33.0
@@ -368,7 +368,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        shard: [1, 2, 3, 4]
+        shard: [1, 2, 3, 4, 5]
     permissions:
       contents: read
     steps:
@@ -388,7 +388,7 @@ jobs:
       - name: Pure SDK unit contracts without live environment loading
         run: |
           npm run build:backend
-          timeout --signal=TERM --kill-after=5s 240s node scripts/ci-contract.mjs offline-unit --shard=${{ matrix.shard }}/4
+          timeout --signal=TERM --kill-after=5s 240s node scripts/ci-contract.mjs offline-unit --shard=${{ matrix.shard }}/5
 
   offline-packages:
     name: Offline CLI and provider contracts

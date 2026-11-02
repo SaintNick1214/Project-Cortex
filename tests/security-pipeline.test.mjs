@@ -221,10 +221,10 @@ test('PR/manual Scorecard scan, validated SARIF and upload run in order without 
   assert.doesNotMatch(JSON.stringify(job), /id-token|secrets\.|repo_token|internal_default_token|pull_request_target/);
   const scan = job.steps.findIndex(step => step.uses === 'ossf/scorecard-action@v2.4.3');
   const validate = job.steps.findIndex(step => step.run === 'node scripts/security-contract.mjs sarif scorecard-results.sarif Scorecard');
-  const upload = job.steps.findIndex(step => step.uses === 'github/codeql-action/upload-sarif@v4');
+  const upload = job.steps.findIndex(step => step.uses === 'github/codeql-action/upload-sarif@9b3254085494b55a0f7c4c2b3d2d52cc712ce370');
   assert.ok(scan >= 0 && validate > scan && upload > validate);
   assert.deepEqual(job.steps[scan].with, { results_file: 'scorecard-results.sarif', results_format: 'sarif', publish_results: false });
-  assert.deepEqual(job.steps[upload].with, { sarif_file: 'scorecard-results.sarif', category: 'scorecard' });
+  assert.deepEqual(job.steps[upload].with, { sarif_file: '${{ runner.temp }}/scorecard-upload/native', 'wait-for-processing': true });
   for (const index of [scan, validate, upload]) {
     assert.equal(job.steps[index].if, undefined);
     assert.equal(job.steps[index]['continue-on-error'], undefined);
