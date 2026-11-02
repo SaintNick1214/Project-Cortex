@@ -1,0 +1,42 @@
+name: Scorecard Publishing
+
+on:
+  push:
+    branches: [main]
+  schedule:
+    - cron: "0 3 * * 1"
+
+# The vendor verifies the whole producing workflow. Keep a single Scorecard job,
+# only approved action steps, no global env/defaults or workflow write permission.
+# Scores and external publication remain advisory; Security Scans does not claim
+# to observe this independent workflow's result.
+permissions:
+  contents: read
+
+jobs:
+  scorecard:
+    name: Supply Chain Security (Scorecard)
+    runs-on: ubuntu-latest
+    if: github.event_name == 'schedule' || (github.event_name == 'push' && github.ref == 'refs/heads/main')
+    continue-on-error: true
+    permissions:
+      security-events: write
+      id-token: write
+      contents: read
+      actions: read
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v6
+        with:
+          persist-credentials: false
+      - name: Run analysis
+        uses: ossf/scorecard-action@v2.4.3
+        with:
+          results_file: results.sarif
+          results_format: sarif
+          publish_results: true
+      - name: Upload SARIF results
+        uses: github/codeql-action/upload-sarif@v4
+        with:
+          sarif_file: results.sarif
+          category: "scorecard"

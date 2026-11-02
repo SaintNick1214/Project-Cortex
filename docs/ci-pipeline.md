@@ -91,7 +91,15 @@ their blocking policies; uploaded CodeQL/Trivy/Semgrep alerts retain branch-rule
 enforcement. Semgrep's authentic SARIF identity is `Semgrep OSS`. Explicitly
 classified PartialParsing warnings are visible incomplete parser coverage;
 scanner crashes, other errors, empty coverage, invalid output and required upload
-failures block the summary. Scheduled/main Scorecard scores remain advisory.
+failures block the summary.
+
+PR/manual Scorecard analysis must complete, produce valid native SARIF and upload
+successfully. Source checks bind the normal PR checkout or current default-branch
+manual dispatch before/after scanning and before upload; stale sources fail.
+Upstream PR/manual support is experimental and fork repositories are unsupported.
+Scores remain advisory. External Scorecard publication runs separately in
+`Scorecard Publishing` on main pushes and its weekly schedule; `Security Scans`
+does not certify that independent workflow's outcome.
 
 ## Delivery and recovery
 

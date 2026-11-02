@@ -8,12 +8,12 @@ const scanJobs = ['codeql-analysis', 'dependency-scan', 'secret-scan', 'api-secu
 const events = ['pull_request', 'push', 'schedule', 'workflow_dispatch'];
 
 /** PR uploads are supported even for read-only fork/Dependabot tokens by GitHub. */
-export function securityPolicy({ eventName, actor, ref }) {
+export function securityPolicy({ eventName, actor }) {
   if (!events.includes(eventName)) throw new Error(`Unsupported security event: ${eventName}`);
+  const scorecardAnalysisExpected = eventName === 'pull_request' || eventName === 'workflow_dispatch';
   return {
-    required: [...scanJobs, ...(eventName === 'pull_request' ? ['dependency-review'] : [])],
-    skipped: eventName === 'pull_request' ? [] : ['dependency-review'],
-    scorecardExpected: eventName === 'schedule' || (eventName === 'push' && ref === 'refs/heads/main'),
+    required: [...scanJobs, ...(eventName === 'pull_request' ? ['dependency-review'] : []), ...(scorecardAnalysisExpected ? ['scorecard-analysis'] : [])],
+    skipped: [...(eventName === 'pull_request' ? [] : ['dependency-review']), ...(scorecardAnalysisExpected ? [] : ['scorecard-analysis'])],
     uploadRequired: eventName === 'pull_request' || actor !== 'dependabot[bot]',
   };
 }
@@ -29,14 +29,16 @@ export function securitySummary(context, needs) {
   }
   for (const job of policy.skipped) {
     const result = needs?.[job]?.result;
-    rows.push(`${job}: ${result ?? 'missing'} (expected skip: dependency review applies only to PRs)`);
+    const reason = job === 'dependency-review' ? 'dependency review applies only to PRs' : 'Scorecard PR/manual analysis does not apply to this event';
+    rows.push(`${job}: ${result ?? 'missing'} (expected skip: ${reason})`);
     if (result !== 'skipped') failures.push(`${job}: expected skipped, got ${result ?? 'missing'}`);
   }
-  const scorecard = needs?.scorecard?.result;
-  rows.push(`scorecard: ${scorecard ?? 'missing'} (advisory; ${policy.scorecardExpected ? 'scheduled/main push analysis expected' : 'event skip expected'})`);
+  rows.push('Scorecard external publishing runs in the separate advisory Scorecard Publishing workflow; its outcome is not observed by this security summary.');
   rows.push(policy.uploadRequired
     ? 'CodeQL, Trivy and Semgrep SARIF upload required; PR uploads support read-only fork/bot tokens.'
     : 'SARIF upload unavailable: non-PR Dependabot token is read-only. Local scan/results required; uploaded alert coverage is incomplete.');
+  rows.push('Scorecard PR/manual coverage requires source checks before/after analysis and before upload, a scan, valid Scorecard SARIF and successful GitHub upload; scores remain advisory.');
+  rows.push('Upstream Scorecard PR/manual support is experimental; fork repositories are unsupported; non-PR runs require the default branch.');
   rows.push('Findings: Gitleaks blocks secrets; PR Dependency Review blocks reviewed high-severity/license additions.');
   rows.push('CodeQL/Trivy/Semgrep findings use existing GitHub code-scanning alert rules. Semgrep CLI reports findings without a new exit-code threshold; Scorecard scores are advisory.');
   rows.push('Semgrep native SARIF tool is Semgrep OSS; branch alert policy must cover that identity at the existing thresholds.');
@@ -44,6 +46,38 @@ export function securitySummary(context, needs) {
   if (semgrep) rows.push(`Semgrep CE: ${semgrep.scanned ?? 'unknown'} files, ${semgrep.findings ?? 'unknown'} findings, ${semgrep.partial_parsing ?? 'unknown'} PartialParsing warnings (affected lines lack parser coverage; see scanner summary/artifact).`);
   rows.push('Execution success does not certify zero vulnerabilities or satisfy the separate Snyk release gate.');
   return { ok: failures.length === 0, failures, rows };
+}
+
+/** Read-only source fences: no retries, ref mutation, metadata overrides or PAT. */
+export function checkScorecardSource({ eventName, repository, ref, sha }, { spawn = spawnSync, token = process.env.GH_TOKEN } = {}) {
+  if (!['pull_request', 'workflow_dispatch'].includes(eventName) || typeof repository !== 'string' || !/^[A-Za-z0-9_.-]+\/[A-Za-z0-9_.-]+$/.test(repository) || repository.split('/').some(part => part === '.' || part === '..') || !/^[a-f0-9]{40}$/.test(sha ?? '')) throw new Error('Exact GitHub Scorecard event, repository and SHA are required');
+  if (eventName === 'pull_request' ? !/^refs\/pull\/\d+\/merge$/.test(ref ?? '') : !/^refs\/heads\/.+/.test(ref ?? '')) throw new Error('Scorecard requires the normal PR merge ref or a manual branch ref');
+  const read = (executable, args) => {
+    const outcome = spawn(executable, args, {
+      encoding: 'utf8', timeout: 10_000, killSignal: 'SIGKILL', maxBuffer: 64 * 1024,
+      env: executable === 'gh' ? { ...process.env, GH_TOKEN: token } : process.env,
+    });
+    if (outcome.error || outcome.signal || outcome.status !== 0 || typeof outcome.stdout !== 'string') throw new Error(`Scorecard source observation failed (${executable}: ${outcome.signal ?? outcome.status ?? 'unavailable'})`);
+    return outcome.stdout.trim();
+  };
+  const checkoutSha = read('git', ['rev-parse', '--verify', 'HEAD']);
+  if (checkoutSha !== sha) throw new Error('Scorecard checkout HEAD does not match the workflow SHA');
+  if (eventName === 'pull_request') return { eventName, ref, sha, checkoutSha, source: 'normal-pr-merge-checkout' };
+  if (typeof token !== 'string' || !token.trim()) throw new Error('The default GH_TOKEN is required for read-only manual Scorecard source checks');
+  const get = endpoint => {
+    const value = read('gh', ['api', '--hostname', 'github.com', '--method', 'GET', endpoint]);
+    try { return JSON.parse(value); } catch { throw new Error('Invalid GitHub JSON in Scorecard source observation'); }
+  };
+  const metadata = get(`repos/${repository}`);
+  const defaultBranch = metadata?.default_branch;
+  if (typeof defaultBranch !== 'string' || !defaultBranch || /[\0\r\n]/.test(defaultBranch)) throw new Error('GitHub did not report a valid repository default branch');
+  const defaultRef = `refs/heads/${defaultBranch}`;
+  if (ref !== defaultRef) throw new Error('Manual Scorecard source must use the repository default branch');
+  const remote = get(`repos/${repository}/git/ref/heads/${defaultBranch.split('/').map(encodeURIComponent).join('/')}`);
+  if (remote?.ref !== defaultRef || remote.object?.type !== 'commit' || remote.object.sha !== sha) throw new Error('Remote default branch no longer matches the manual dispatch SHA');
+  // Re-read the checkout after the bounded GETs; never accept a moving local HEAD.
+  if (read('git', ['rev-parse', '--verify', 'HEAD']) !== sha) throw new Error('Scorecard checkout HEAD moved during the source check');
+  return { eventName, ref, sha, checkoutSha, source: 'remote-default-head', defaultBranch, remoteSha: remote.object.sha };
 }
 
 /** Validate the uploadable SARIF envelope/results and reject reported execution errors. */
@@ -111,6 +145,8 @@ if (process.argv[1] && import.meta.url === pathToFileURL(resolve(process.argv[1]
       if (process.env.GITHUB_OUTPUT) appendFileSync(process.env.GITHUB_OUTPUT, `scanned=${result.scanned}\nfindings=${result.findings}\npartial_parsing=${result.partialParsing.length}\n`);
       if (process.env.GITHUB_STEP_SUMMARY) appendFileSync(process.env.GITHUB_STEP_SUMMARY,
         `### Semgrep CE coverage\n\nVersion ${result.version}; ${result.scanned} files scanned; ${result.findings} findings (native CLI report-only; uploaded alert policy remains separate).\n\n${result.partialParsing.length} PartialParsing warnings: affected lines have incomplete parser coverage; no source/rules were excluded to silence these warnings.\n\n\`\`\`text\n${result.partialParsing.join('\n')}\n\`\`\`\n`);
+    } else if (command === 'scorecard-source') {
+      console.log(JSON.stringify(checkScorecardSource({ eventName: process.env.GITHUB_EVENT_NAME, repository: process.env.GITHUB_REPOSITORY, ref: process.env.GITHUB_REF, sha: process.env.GITHUB_SHA })));
     } else if (command === 'sarif') {
       console.log(JSON.stringify(validateSarif(JSON.parse(readFileSync(process.argv[3], 'utf8')), process.argv[4])));
     } else if (command === 'summary') {
@@ -120,7 +156,7 @@ if (process.argv[1] && import.meta.url === pathToFileURL(resolve(process.argv[1]
       if (process.env.GITHUB_STEP_SUMMARY) appendFileSync(process.env.GITHUB_STEP_SUMMARY, `### Security coverage\n\n\`\`\`text\n${message}\`\`\`\n`);
       if (!result.ok) process.exitCode = 1;
     } else {
-      throw new Error('Expected semgrep, sarif <file> <tool>, or summary command');
+      throw new Error('Expected semgrep, sarif <file> <tool>, scorecard-source, or summary command');
     }
   } catch (error) {
     console.error(error.message);
