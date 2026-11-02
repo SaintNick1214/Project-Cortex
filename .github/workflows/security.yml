@@ -1,284 +1,56 @@
-name: "Security Scans"
+name: Security Scans
 
+# Diagnostic branch only. Exactly one manually dispatched observational baseline.
 on:
-  push:
-    branches: [main, dev]
-  pull_request:
-    branches: [main, dev, chore/cortex-0.37-modernization]
-    types: [opened, synchronize, reopened, ready_for_review]
-  schedule:
-    - cron: "0 3 * * 1"
   workflow_dispatch:
-
-# Scanners do not mutate Convex. Superseded scans may be cancelled; a cancelled
-# mandatory job cannot pass the current run's summary.
-concurrency:
-  group: security-${{ github.event_name == 'pull_request' && format('pr-{0}', github.event.pull_request.number) || format('branch-{0}', github.ref) }}
-  cancel-in-progress: true
 
 permissions:
   contents: read
 
-# Required on every event, including draft/fork/Dependabot PRs: CodeQL, Trivy,
-# Gitleaks and Semgrep execution + valid results. Dependency Review is PR-only.
-# PR/manual Scorecard analysis + validated SARIF upload is also required; scores
-# remain advisory. A required tool analysis cannot be replaced by a skipped job.
-# GitHub permits code-scanning PR uploads with read-only fork/Dependabot tokens:
-# https://docs.github.com/en/code-security/reference/code-scanning/troubleshoot-analysis-errors/resource-not-accessible
-# Only non-PR Dependabot uploads are unavailable; local coverage still runs and
-# the summary reports the missing uploaded alert coverage. No vendor secrets.
-# Findings: Gitleaks blocks leaks; Dependency Review retains the reviewed high
-# severity + license policy. CodeQL/Trivy/Semgrep preserve existing GitHub alert
-# enforcement. Trivy/Semgrep CLI completion is not a zero-vulnerability claim.
-
 jobs:
-  codeql-analysis:
-    name: CodeQL Analysis
+  scorecard:
+    name: Remote-main Scorecard baseline (two separate scans; observational)
     runs-on: ubuntu-latest
-    permissions:
-      actions: read
-      contents: read
-      security-events: write
-    strategy:
-      fail-fast: false
-      matrix:
-        language: ["javascript-typescript"]
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v6
-        with:
-          fetch-depth: 0
-          persist-credentials: false
-      - name: Initialize CodeQL
-        uses: github/codeql-action/init@v4
-        with:
-          languages: ${{ matrix.language }}
-          config-file: ./.github/codeql/codeql-config.yml
-          queries: +security-extended
-      - uses: ./.github/actions/cortex-setup
-        with:
-          cache: "false"
-      - name: Install dependencies
-        run: npm ci
-      - name: Autobuild
-        uses: github/codeql-action/autobuild@v4
-      - name: Perform CodeQL Analysis
-        uses: github/codeql-action/analyze@v4
-        with:
-          category: "/language:${{ matrix.language }}"
-          output: codeql-results
-          upload: ${{ github.event_name == 'pull_request' || github.actor != 'dependabot[bot]' }}
-      - name: Validate CodeQL results
-        run: |
-          for file in codeql-results/*.sarif; do
-            node scripts/security-contract.mjs sarif "$file" CodeQL
-          done
-      - name: Preserve CodeQL results
-        uses: actions/upload-artifact@v4
-        with:
-          name: codeql-results-${{ matrix.language }}
-          path: codeql-results/*.sarif
-          if-no-files-found: error
-
-  dependency-scan:
-    name: Dependency Vulnerability Scan
-    runs-on: ubuntu-latest
+    timeout-minutes: 20
     permissions:
       contents: read
       security-events: write
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v6
-        with:
-          fetch-depth: 0
-          persist-credentials: false
-      - uses: ./.github/actions/cortex-setup
-        with:
-          cache: "false"
-      - name: Run Trivy vulnerability scanner
-        uses: aquasecurity/trivy-action@ed142fd0673e97e23eac54620cfb913e5ce36c25 # v0.36.0; retain dev SHA-pinning policy
-        with:
-          scan-type: "fs"
-          scan-ref: "."
-          format: "sarif"
-          output: "trivy-results.sarif"
-          severity: "CRITICAL,HIGH,MEDIUM"
-          # Existing GitHub alert policy is the finding gate; this is execution.
-          exit-code: "0"
-      - name: Validate Trivy results
-        run: node scripts/security-contract.mjs sarif trivy-results.sarif Trivy
-      - name: Upload Trivy results to GitHub Security tab
-        if: github.event_name == 'pull_request' || github.actor != 'dependabot[bot]'
-        uses: github/codeql-action/upload-sarif@v4
-        with:
-          sarif_file: "trivy-results.sarif"
-          category: "trivy-dependencies"
-      - name: Preserve Trivy results
-        uses: actions/upload-artifact@v4
-        with:
-          name: trivy-results
-          path: trivy-results.sarif
-          if-no-files-found: error
-
-  secret-scan:
-    name: Secret Scanning
-    runs-on: ubuntu-latest
-    permissions:
-      contents: read
-      pull-requests: read
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v6
-        with:
-          fetch-depth: 0
-          persist-credentials: false
-      - uses: ./.github/actions/cortex-setup
-        with:
-          cache: "false"
-      - name: Run Gitleaks
-        uses: gitleaks/gitleaks-action@v2
-        env:
-          GITHUB_TOKEN: ${{ github.token }}
-          GITLEAKS_ENABLE_COMMENTS: false
-          GITLEAKS_ENABLE_UPLOAD_ARTIFACT: false
-          GITLEAKS_ENABLE_SUMMARY: true
-      - name: Validate Gitleaks results
-        if: always()
-        run: node scripts/security-contract.mjs sarif results.sarif Gitleaks
-      - name: Preserve Gitleaks results
-        if: always()
-        uses: actions/upload-artifact@v4
-        with:
-          name: gitleaks-results
-          path: results.sarif
-          if-no-files-found: error
-
-  dependency-review:
-    name: Dependency Review
-    runs-on: ubuntu-latest
-    if: github.event_name == 'pull_request'
-    permissions:
-      contents: read
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v6
-        with:
-          persist-credentials: false
-      - name: Dependency Review
-        uses: actions/dependency-review-action@v4
-        with:
-          config-file: .github/dependency-review-config.yml
-          # Job summary works on forks/bots without PR write permission.
-          comment-summary-in-pr: never
-
-  # Upstream PR/manual support is experimental; fork repositories are unsupported.
-  # Non-PR upstream runs require the default branch. Failures remain visible.
-  # No external Scorecard publishing, OIDC permission or PAT is used here.
-  scorecard-analysis:
-    name: Scorecard Analysis (PR and manual)
-    runs-on: ubuntu-latest
-    if: github.event_name == 'pull_request' || github.event_name == 'workflow_dispatch'
-    permissions:
-      contents: read
-      security-events: write
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v6
+      - uses: actions/checkout@v6
         with:
           ref: ${{ github.sha }}
-          fetch-depth: 0
           persist-credentials: false
-      - uses: ./.github/actions/cortex-setup
+      - uses: actions/setup-node@v6
         with:
-          cache: "false"
-      - name: Verify Scorecard source before analysis
+          node-version: '24.21.0'
+      - name: Assert refusal contracts before native scans or upload
+        timeout-minutes: 2
+        run: node --test tests/scorecard-main-baseline.test.mjs
+      - name: Run two independent pinned remote-main analyses with source fences
+        timeout-minutes: 12
         env:
           GH_TOKEN: ${{ github.token }}
-        run: node scripts/security-contract.mjs scorecard-source
-      - name: Run Scorecard analysis without external publication
-        uses: ossf/scorecard-action@v2.4.3
-        with:
-          results_file: scorecard-results.sarif
-          results_format: sarif
-          publish_results: false
-      - name: Verify Scorecard source after analysis
+        run: node scripts/scorecard-main-baseline.mjs run "$RUNNER_TEMP/scorecard-main-baseline"
+      - name: Validate untouched outputs and final live-main source fence
+        id: preupload
+        timeout-minutes: 1
         env:
           GH_TOKEN: ${{ github.token }}
-        run: node scripts/security-contract.mjs scorecard-source
-      - name: Validate Scorecard results
-        run: node scripts/security-contract.mjs sarif scorecard-results.sarif Scorecard
-      - name: Verify Scorecard source before upload
-        env:
-          GH_TOKEN: ${{ github.token }}
-        run: node scripts/security-contract.mjs scorecard-source
-      - name: Upload Scorecard SARIF
-        uses: github/codeql-action/upload-sarif@v4
+        run: node scripts/scorecard-main-baseline.mjs preupload "$RUNNER_TEMP/scorecard-main-baseline"
+      - name: Upload unchanged native SARIF to its observational main destination
+        if: success() && steps.preupload.outputs.upload_ready == 'true'
+        timeout-minutes: 4
+        uses: github/codeql-action/upload-sarif@9b3254085494b55a0f7c4c2b3d2d52cc712ce370
         with:
-          sarif_file: scorecard-results.sarif
-          category: "scorecard"
-
-  # External Scorecard publishing is isolated in scorecard-publish.yml.
-  # Its advisory outcome is not observed by this workflow's security summary.
-
-  api-security:
-    name: API Security Scan (Semgrep)
-    runs-on: ubuntu-latest
-    permissions:
-      contents: read
-      security-events: write
-    outputs:
-      scanned: ${{ steps.scan.outputs.scanned }}
-      findings: ${{ steps.scan.outputs.findings }}
-      partial_parsing: ${{ steps.scan.outputs.partial_parsing }}
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v6
-        with:
-          persist-credentials: false
-      - uses: ./.github/actions/cortex-setup
-        with:
-          cache: "false"
-      - name: Setup Python for Semgrep CE
-        uses: actions/setup-python@v6
-        with:
-          python-version: "3.12"
-      - name: Install supported Semgrep CLI
-        run: python -m pip install semgrep==1.179.0
-      - name: Run Semgrep and enforce execution/result contract
-        id: scan
-        run: node scripts/security-contract.mjs semgrep
-      - name: Upload Semgrep SARIF
-        if: github.event_name == 'pull_request' || github.actor != 'dependabot[bot]'
-        uses: github/codeql-action/upload-sarif@v4
-        with:
-          sarif_file: semgrep.sarif
-          category: "semgrep-api-security"
-      - name: Preserve Semgrep results
+          sarif_file: ${{ runner.temp }}/scorecard-main-baseline/native-sarif.stdout
+          ref: refs/heads/main
+          sha: 924b2e9ff6b615dcf0f26377de57aac9bf4607cb
+          wait-for-processing: true
+      - name: Preserve raw outputs, process receipts, official pin and source observations
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: semgrep-results
-          path: |
-            semgrep.json
-            semgrep.sarif
-          if-no-files-found: error
-
-  security-summary:
-    name: Security Checks Summary
-    needs: [codeql-analysis, dependency-scan, secret-scan, api-security, dependency-review, scorecard-analysis]
-    if: always()
-    runs-on: ubuntu-latest
-    permissions:
-      contents: read
-    steps:
-      - name: Checkout security contract
-        uses: actions/checkout@v6
-        with:
-          persist-credentials: false
-      - uses: ./.github/actions/cortex-setup
-        with:
-          cache: "false"
-      - name: Enforce required security coverage
-        env:
-          SECURITY_NEEDS: ${{ toJSON(needs) }}
-        run: node scripts/security-contract.mjs summary
+          name: scorecard-main-baseline-${{ github.run_id }}-${{ github.run_attempt }}
+          path: ${{ runner.temp }}/scorecard-main-baseline/
+          if-no-files-found: warn
+          retention-days: 14
