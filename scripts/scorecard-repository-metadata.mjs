@@ -1,6 +1,6 @@
 /** Preserve native local analysis; add one independent live repository-settings snapshot for PRs. */
 import { spawnSync } from 'node:child_process';
-import { appendFileSync, chmodSync, lstatSync, mkdirSync, mkdtempSync, readFileSync, readdirSync, writeFileSync } from 'node:fs';
+import fs, { appendFileSync, chmodSync, mkdirSync, mkdtempSync, readFileSync, writeFileSync } from 'node:fs';
 import { createHash } from 'node:crypto';
 import { tmpdir } from 'node:os';
 import { join, resolve } from 'node:path';
@@ -95,18 +95,66 @@ export function prepareBundle({ context, localOutcome, baseBytes }, operations) 
     receipt.status = 'prepared'; operations.persist(receipt); return receipt;
   } catch (error) { receipt.status = 'failed'; receipt.error = error.message; operations.persist(receipt); throw error; }
 }
-/** Fresh owned directory: regular, single-link native files only; never rewritten. */
-export function readNativeDirectory(directory, role) {
+const identityFields = ['dev', 'ino', 'mode', 'uid', 'gid', 'size', 'nlink', 'mtimeNs', 'ctimeNs'];
+const stableFile = (before, after) => identityFields.every(key => before[key] === after[key]);
+/** House safe-file pattern: open first, bound positional reads on that FD, always close. */
+export function readBoundedFile(path, { maxBytes = maximumBytes, io = fs } = {}) {
+  demand(Number.isSafeInteger(maxBytes) && maxBytes > 0 && maxBytes <= 64 * 1024 * 1024, 'Finite native file byte bound required');
+  const fd = io.openSync(path, fs.constants.O_RDONLY | fs.constants.O_NOFOLLOW | fs.constants.O_NONBLOCK);
+  try {
+    const before = io.fstatSync(fd, { bigint: true });
+    demand(before.isFile() && before.nlink === 1n && before.size > 0n && before.size <= BigInt(maxBytes), 'Native inputs must be bounded regular files without links');
+    const read = () => {
+      const bytes = Buffer.alloc(Number(before.size));
+      let offset = 0;
+      while (offset < bytes.length) {
+        const count = io.readSync(fd, bytes, offset, bytes.length - offset, offset);
+        demand(Number.isInteger(count) && count > 0 && count <= bytes.length - offset, 'Native file shortened or read failed');
+        offset += count;
+      }
+      demand(io.readSync(fd, Buffer.alloc(1), 0, 1, offset) === 0, 'Native file grew while reading');
+      return bytes;
+    };
+    const bytes = read();
+    demand(bytes.equals(read()) && stableFile(before, io.fstatSync(fd, { bigint: true })) && stableFile(before, io.lstatSync(path, { bigint: true })), 'Native file changed while reading');
+    return bytes;
+  } finally { io.closeSync(fd); }
+}
+/** Linux CLI contract: procfs keeps child lookups anchored to the opened directory. */
+function withDirectory(directory, read, io) {
+  const fd = io.openSync(directory, fs.constants.O_RDONLY | fs.constants.O_NOFOLLOW | fs.constants.O_NONBLOCK | fs.constants.O_DIRECTORY);
+  try {
+    const before = io.fstatSync(fd, { bigint: true });
+    demand(before.isDirectory(), 'Owned native directory required');
+    const result = read(`/proc/self/fd/${fd}`);
+    demand(stableFile(before, io.fstatSync(fd, { bigint: true })) && stableFile(before, io.lstatSync(directory, { bigint: true })), 'Native directory changed while reading');
+    return result;
+  } finally { io.closeSync(fd); }
+}
+function nativeNames(anchored, expectedCount, io) {
+  const directory = io.opendirSync(anchored, { bufferSize: expectedCount + 1 });
+  try {
+    const names = [];
+    for (let entry; (entry = directory.readSync()) !== null;) {
+      names.push(entry.name);
+      demand(names.length <= expectedCount, 'Missing, stale or extra native upload file');
+    }
+    return names.sort();
+  } finally { directory.closeSync(); }
+}
+/** Fresh owned directory: exact regular, single-link native files; never rewritten. */
+export function readNativeDirectory(directory, role, { io = fs } = {}) {
   demand(['local-pr', 'remote-manual'].includes(role), 'Known native group role required');
-  const directoryStat = lstatSync(directory);
-  demand(directoryStat.isDirectory() && !directoryStat.isSymbolicLink(), 'Owned native directory required');
-  const names = readdirSync(directory).sort();
-  demand(same(names, expectedNames(role)), 'Missing, stale or extra native upload file');
-  return names.map(name => {
-    const path = join(directory, name), stat = lstatSync(path);
-    demand(stat.isFile() && !stat.isSymbolicLink() && stat.nlink === 1 && stat.size > 0 && stat.size <= maximumBytes, 'Native upload inputs must be bounded regular files without links');
-    return { name, bytes: readFileSync(path) };
-  });
+  return withDirectory(directory, anchored => {
+    const expected = expectedNames(role), names = nativeNames(anchored, expected.length, io);
+    demand(same(names, expected), 'Missing, stale or extra native upload file');
+    const files = names.map(name => ({ name, bytes: readBoundedFile(join(anchored, name), { io }) }));
+    demand(same(nativeNames(anchored, expected.length, io), names), 'Native upload entries changed while reading');
+    return files;
+  }, io);
+}
+export function readReceipt(directory, { io = fs } = {}) {
+  return withDirectory(directory, anchored => JSON.parse(readBoundedFile(join(anchored, 'receipt.json'), { io }).toString('utf8')), io);
 }
 export function verifyBundle({ context, receipt, files }, operations) {
   try {
@@ -132,7 +180,6 @@ export function verifyBundle({ context, receipt, files }, operations) {
   } catch (error) { if (receipt) { receipt.status = 'failed'; receipt.error = error.message; operations.persist(receipt); } throw error; }
 }
 
-function requireFile(path) { const stat = lstatSync(path); demand(stat.isFile() && !stat.isSymbolicLink() && stat.nlink === 1 && stat.size > 0 && stat.size <= maximumBytes, 'Bounded native source file required'); return readFileSync(path); }
 function sourceContext() {
   const event = JSON.parse(readFileSync(process.env.GITHUB_EVENT_PATH, 'utf8'));
   return { eventName: process.env.GITHUB_EVENT_NAME, repository: process.env.GITHUB_REPOSITORY, eventRepository: event.repository?.full_name, repositoryId: event.repository?.id, public: event.repository?.private === false, ref: process.env.GITHUB_REF, sha: process.env.GITHUB_SHA, runId: process.env.GITHUB_RUN_ID, attempt: process.env.GITHUB_RUN_ATTEMPT, ...(process.env.GITHUB_EVENT_NAME === 'pull_request' ? { number: event.number, baseRepository: event.pull_request?.base?.repo?.full_name, baseRepositoryId: event.pull_request?.base?.repo?.id, basePrivate: event.pull_request?.base?.repo?.private } : {}) };
@@ -154,7 +201,7 @@ function install(directory) {
   chmodSync(executable, 0o700); writeFileSync(policyFile, policy, { flag: 'wx' });
   return { ...pin, executable, policyFile, binarySha256: hash(unpack.stdout) };
 }
-function pinned(cli) { validPin(cli); demand(hash(readFileSync(cli.executable)) === cli.binarySha256 && hash(readFileSync(cli.policyFile)) === pin.policySha256, 'Pinned executable/policy bytes changed'); }
+function pinned(cli) { validPin(cli); demand(hash(readBoundedFile(cli.executable, { maxBytes: 64 * 1024 * 1024 })) === cli.binarySha256 && hash(readBoundedFile(cli.policyFile)) === pin.policySha256, 'Pinned executable/policy bytes changed'); }
 function operations(directory, token, stage) {
   let reads = 0;
   const checkout = () => { const name = `${stage}-checkout-${++reads}`; const result = capture(directory, name, 'git', ['rev-parse', '--verify', 'HEAD'], { timeoutMs: 10_000, maxBytes: 64 * 1024 }, { PATH: process.env.PATH }, join(directory, `${name}.stdout.txt`)); successful(result.receipt); return result.stdout.toString('utf8').trim(); };
@@ -190,9 +237,9 @@ if (process.argv[1] && pathToFileURL(resolve(process.argv[1])).href === import.m
     demand(['prepare', 'verify'].includes(command) && location, 'Expected prepare <owned directory> <native source> or verify <owned directory>');
     if (command === 'prepare') { mkdirSync(directory, { mode: 0o700 }); mkdirSync(join(directory, 'native'), { mode: 0o700 }); }
     const io = operations(directory, process.env.GH_TOKEN, command);
-    if (command === 'prepare') { demand(source, 'Existing native source required'); summary(prepareBundle({ context, localOutcome: process.env.LOCAL_SCORECARD_OUTCOME, baseBytes: requireFile(resolve(source)) }, io)); }
+    if (command === 'prepare') { demand(source, 'Existing native source required'); summary(prepareBundle({ context, localOutcome: process.env.LOCAL_SCORECARD_OUTCOME, baseBytes: readBoundedFile(resolve(source)) }, io)); }
     else {
-      const receipt = JSON.parse(readFileSync(join(directory, 'receipt.json'), 'utf8'));
+      const receipt = readReceipt(directory);
       const files = readNativeDirectory(join(directory, 'native'), roleFor(context));
       summary(verifyBundle({ context, receipt, files }, io));
     }

@@ -2,10 +2,10 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import { createHash } from 'node:crypto';
 import { spawnSync } from 'node:child_process';
-import { existsSync, linkSync, mkdirSync, mkdtempSync, readFileSync, renameSync, rmSync, symlinkSync, unlinkSync, writeFileSync } from 'node:fs';
+import fs, { existsSync, linkSync, mkdirSync, mkdtempSync, readFileSync, renameSync, rmSync, symlinkSync, unlinkSync, writeFileSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { join, resolve } from 'node:path';
-import { boundedProcess, nativeArguments, pin, prepareBundle, readNativeDirectory, repository, validateContext, validateNative, validateSnapshot, verifyBundle } from '../scripts/scorecard-repository-metadata.mjs';
+import { boundedProcess, nativeArguments, pin, prepareBundle, readBoundedFile, readNativeDirectory, readReceipt, repository, validateContext, validateNative, validateSnapshot, verifyBundle } from '../scripts/scorecard-repository-metadata.mjs';
 import { securityPolicy, securitySummary } from '../scripts/security-contract.mjs';
 
 const hash = value => createHash('sha256').update(value).digest('hex');
@@ -194,4 +194,140 @@ test('normal workflow requires hosted refusals, both native roles and one direct
   assert.match(job, /if: always\(\)[\s\S]*actions\/upload-artifact@v4/); assert.doesNotMatch(job, /path:[\s\S]*\*\.tar|path:[\s\S]*scorecard-settings-pin/);
   const parent = readFileSync('.github/workflows/pr-checks.yml', 'utf8'); assert.match(parent, /node --test .*tests\/scorecard-repository-metadata\.test\.mjs/);
   assert.match(full, /needs: \[codeql-analysis, dependency-scan, secret-scan, api-security, dependency-review, scorecard-analysis\]/);
+});
+
+// Hooks change real filesystem objects at deterministic syscall boundaries.
+function watchedIO(hooks = {}) {
+  const opened = [], closed = [], reads = [], directories = [];
+  const io = {
+    ...fs,
+    openSync(path, flags) { hooks.beforeOpen?.(path, flags); const fd = fs.openSync(path, flags); opened.push(fd); return fd; },
+    fstatSync(fd, options) { hooks.beforeStat?.(fd); const stat = fs.fstatSync(fd, options); hooks.afterStat?.(fd, stat); return stat; },
+    readSync(fd, bytes, offset, length, position) { hooks.beforeRead?.(fd, position); const count = fs.readSync(fd, bytes, offset, length, position); reads.push(Buffer.from(bytes.subarray(offset, offset + count))); hooks.afterRead?.(fd, position, count); return count; },
+    opendirSync(path, options) {
+      const directory = fs.opendirSync(path, options); directories.push(directory);
+      return {
+        readSync() { hooks.beforeDirectoryRead?.(); return directory.readSync(); },
+        closeSync() { directory.closeSync(); hooks.afterNames?.(path); hooks.afterDirectoryClose?.(); },
+      };
+    },
+    lstatSync(path, options) { hooks.beforePathStat?.(path); return fs.lstatSync(path, options); },
+    closeSync(fd) { fs.closeSync(fd); closed.push(fd); hooks.afterClose?.(fd); },
+  };
+  return { io, opened, closed, reads, assertClosed() { assert.deepEqual([...closed].sort(), [...opened].sort()); for (const fd of opened) assert.throws(() => fs.fstatSync(fd), { code: 'EBADF' }); for (const directory of directories) assert.throws(() => directory.readSync(), { code: 'ERR_DIR_CLOSED' }); } };
+}
+function fileFixture(action) {
+  const root = mkdtempSync(join(tmpdir(), 'scorecard-fd-')), path = join(root, 'input'), other = join(root, 'other');
+  writeFileSync(path, 'original'); writeFileSync(other, 'modified');
+  try { action({ root, path, other }); } finally { rmSync(root, { recursive: true, force: true }); }
+}
+test('native input reads only its opened FD with finite size, exact bytes, partial reads and required open flags', () => {
+  fileFixture(({ path }) => {
+    const watched = watchedIO({ beforeOpen(_path, flags) { assert.equal(flags, fs.constants.O_RDONLY | fs.constants.O_NOFOLLOW | fs.constants.O_NONBLOCK); } });
+    const read = watched.io.readSync;
+    watched.io.readSync = (fd, bytes, offset, length, position) => read(fd, bytes, offset, Math.min(2, length), position);
+    assert.deepEqual(readBoundedFile(path, { maxBytes: 8, io: watched.io }), Buffer.from('original')); watched.assertClosed();
+    for (const maxBytes of [0, -1, Infinity, 1.5, 64 * 1024 * 1024 + 1]) {
+      const invalid = watchedIO(); assert.throws(() => readBoundedFile(path, { maxBytes, io: invalid.io }), /Finite/); assert.deepEqual(invalid.opened, []);
+    }
+  });
+});
+test('unsafe pre-open replacements, file kinds, sizes and link counts are refused without descriptor leaks', () => {
+  for (const kind of ['symlink', 'directory', 'hardlink', 'empty', 'oversize']) fileFixture(({ path, other }) => {
+    const watched = watchedIO({ beforeOpen() {
+      unlinkSync(path);
+      if (kind === 'symlink') symlinkSync(other, path);
+      else if (kind === 'directory') mkdirSync(path);
+      else if (kind === 'hardlink') linkSync(other, path);
+      else writeFileSync(path, kind === 'empty' ? '' : 'oversized');
+    } });
+    assert.throws(() => readBoundedFile(path, { maxBytes: 8, io: watched.io })); assert.equal(watched.reads.length, 0); watched.assertClosed();
+  });
+});
+test('path swaps between open, stat and reads never read the replacement and must refuse', () => {
+  for (const phase of ['before-stat', 'after-stat', 'before-read', 'after-read']) for (const kind of ['regular', 'symlink', 'directory', 'hardlink', 'fifo']) fileFixture(({ root, path, other }) => {
+    let swapped = false;
+    const mutate = () => {
+      if (swapped) return; swapped = true; renameSync(path, join(root, 'retained'));
+      if (kind === 'symlink') symlinkSync(other, path);
+      else if (kind === 'directory') mkdirSync(path);
+      else if (kind === 'hardlink') linkSync(other, path);
+      else if (kind === 'fifo') assert.equal(spawnSync('mkfifo', [path], { timeout: 2_000 }).status, 0);
+      else writeFileSync(path, 'replaced');
+    };
+    const watched = watchedIO(phase === 'before-stat' ? { beforeStat: mutate } : phase === 'after-stat' ? { afterStat: mutate } : phase === 'before-read' ? { beforeRead: mutate } : { afterRead(_fd, _position, count) { if (count > 0) mutate(); } });
+    assert.throws(() => readBoundedFile(path, { io: watched.io }), /changed/);
+    assert.ok(watched.reads.some(value => value.equals(Buffer.from('original'))));
+    assert.equal(watched.reads.some(value => value.equals(Buffer.from('modified')) || value.equals(Buffer.from('replaced'))), false); watched.assertClosed();
+  });
+});
+test('resize, equal-length content change and new hardlink during bounded FD reads fail closed', () => {
+  for (const kind of ['grow', 'shrink', 'same-size', 'hardlink']) fileFixture(({ root, path }) => {
+    let changed = false;
+    const mutate = () => {
+      if (changed) return; changed = true;
+      if (kind === 'grow') fs.appendFileSync(path, 'growth');
+      else if (kind === 'shrink') fs.truncateSync(path, 2);
+      else if (kind === 'hardlink') linkSync(path, join(root, 'alias'));
+      else writeFileSync(path, 'modified');
+    };
+    const watched = watchedIO(kind === 'same-size' ? { afterRead(_fd, _position, count) { if (count > 0) mutate(); } } : { beforeRead: mutate });
+    assert.throws(() => readBoundedFile(path, { io: watched.io }), /grew|shortened|changed/); watched.assertClosed();
+  });
+});
+test('FIFO input fails promptly without a writer, while all read/stat/path/close errors retain FD cleanup', () => {
+  fileFixture(({ root, path }) => {
+    const fifo = join(root, 'fifo'); assert.equal(spawnSync('mkfifo', [fifo], { timeout: 2_000 }).status, 0);
+    const script = `import {readBoundedFile} from ${JSON.stringify(new URL('../scripts/scorecard-repository-metadata.mjs', import.meta.url).href)};try{readBoundedFile(${JSON.stringify(fifo)});process.exitCode=2;}catch{process.stdout.write('refused');}`;
+    const child = spawnSync(process.execPath, ['--input-type=module', '-e', script], { encoding: 'utf8', timeout: 2_000 });
+    assert.equal(child.error, undefined); assert.equal(child.signal, null); assert.equal(child.status, 0); assert.equal(child.stdout, 'refused');
+    for (const stage of ['stat', 'read', 'path', 'close']) {
+      const failure = () => { throw new Error(`${stage}-failure`); };
+      const watched = watchedIO(stage === 'stat' ? { afterStat: failure } : stage === 'read' ? { beforeRead: failure } : stage === 'path' ? { beforePathStat: failure } : { afterClose: failure });
+      assert.throws(() => readBoundedFile(path, { io: watched.io }), new RegExp(`${stage}-failure`)); watched.assertClosed();
+    }
+    const missing = watchedIO(); assert.throws(() => readBoundedFile(join(root, 'missing'), { io: missing.io }), { code: 'ENOENT' }); missing.assertClosed();
+  });
+});
+test('native directory FD anchors reject directory swaps and changes during enumeration or file reads', () => {
+  for (const kind of ['directory-swap', 'symlink-swap', 'enumeration', 'extra-after-read']) {
+    const root = mkdtempSync(join(tmpdir(), 'scorecard-dir-fd-')), native = join(root, 'native'); mkdirSync(native);
+    writeFileSync(join(native, 'remote-manual.sarif'), base('workflow_dispatch'));
+    let changed = false;
+    const changeDirectory = (_fd, stat) => {
+      if (changed || !stat.isDirectory()) return; changed = true; renameSync(native, join(root, 'retained'));
+      mkdirSync(join(root, 'replacement')); writeFileSync(join(root, 'replacement', 'remote-manual.sarif'), 'replacement');
+      if (kind === 'symlink-swap') symlinkSync(join(root, 'replacement'), native); else renameSync(join(root, 'replacement'), native);
+    };
+    const watched = watchedIO(kind.endsWith('swap') ? { afterStat: changeDirectory } : kind === 'enumeration' ? { afterNames() { if (!changed) { changed = true; renameSync(join(native, 'remote-manual.sarif'), join(root, 'retained.sarif')); writeFileSync(join(native, 'remote-manual.sarif'), base('workflow_dispatch')); } } } : { afterRead(_fd, _position, count) { if (count > 0 && !changed) { changed = true; writeFileSync(join(native, 'extra.txt'), 'unexpected'); } } });
+    try { assert.throws(() => readNativeDirectory(native, 'remote-manual', { io: watched.io }), kind === 'extra-after-read' ? /extra/ : /changed/); assert.equal(watched.reads.some(value => value.toString() === 'replacement'), false); watched.assertClosed(); }
+    finally { rmSync(root, { recursive: true, force: true }); }
+  }
+});
+test('native entry enumeration is finite and closes both directory handles on count, read and close errors', () => {
+  for (const kind of ['count', 'read', 'close']) {
+    const root = mkdtempSync(join(tmpdir(), 'scorecard-dir-count-')), native = join(root, 'native'); mkdirSync(native);
+    writeFileSync(join(native, 'remote-manual.sarif'), base('workflow_dispatch'));
+    if (kind === 'count') for (let index = 0; index < 10; index++) writeFileSync(join(native, `extra-${index}`), 'extra');
+    let entryReads = 0;
+    const watched = watchedIO({ beforeDirectoryRead() { entryReads++; if (kind === 'read') throw new Error('directory-read-failure'); }, afterDirectoryClose() { if (kind === 'close') throw new Error('directory-close-failure'); } });
+    try {
+      assert.throws(() => readNativeDirectory(native, 'remote-manual', { io: watched.io }), kind === 'count' ? /extra/ : new RegExp(`directory-${kind}-failure`));
+      assert.ok(entryReads <= 2); assert.equal(watched.reads.length, 0); watched.assertClosed();
+    } finally { rmSync(root, { recursive: true, force: true }); }
+  }
+});
+test('receipt uses the same bounded, single-link FD reader and a stable directory anchor', () => {
+  for (const kind of ['valid', 'malformed', 'symlink', 'hardlink', 'directory', 'oversize', 'swap']) {
+    const root = mkdtempSync(join(tmpdir(), 'scorecard-receipt-fd-')), directory = join(root, 'owned'); mkdirSync(directory);
+    const path = join(directory, 'receipt.json'); writeFileSync(path, JSON.stringify({ status: 'prepared' }));
+    if (kind === 'malformed') writeFileSync(path, '{broken');
+    if (kind === 'symlink' || kind === 'hardlink') { renameSync(path, join(root, 'source.json')); if (kind === 'symlink') symlinkSync(join(root, 'source.json'), path); else linkSync(join(root, 'source.json'), path); }
+    if (kind === 'directory') { unlinkSync(path); mkdirSync(path); }
+    if (kind === 'oversize') fs.truncateSync(path, 8 * 1024 * 1024 + 1);
+    let swapped = false;
+    const watched = watchedIO(kind === 'swap' ? { afterStat(_fd, stat) { if (!stat.isDirectory() && !swapped) { swapped = true; renameSync(path, join(root, 'retained.json')); writeFileSync(path, JSON.stringify({ status: 'forged' })); } } } : {});
+    try { if (kind === 'valid') assert.deepEqual(readReceipt(directory, { io: watched.io }), { status: 'prepared' }); else assert.throws(() => readReceipt(directory, { io: watched.io })); watched.assertClosed(); }
+    finally { rmSync(root, { recursive: true, force: true }); }
+  }
 });
