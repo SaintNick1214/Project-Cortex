@@ -4307,3 +4307,332 @@ test('actual metadata fences refuse changed installed state and preserve foreign
     }
   } finally { rmSync(directory, { recursive: true, force: true }); }
 });
+
+// SYNTHETIC successor-profile fixtures only. These exercise parser outcomes;
+// they are not actual CodeQL observations and never edit retained raw evidence.
+const syntheticCleanupId = 'codeql-action/toolcache-bundle-cleanup';
+function syntheticEngineRole(role, engine = '2.27.4', cleanup = false) {
+  for (const report of [role.report, role.server]) {
+    const driver = report.runs[0].tool.driver;
+    driver.semanticVersion = engine;
+    if (engine === '2.27.4' || cleanup) driver.notifications.push({ id: syntheticCleanupId });
+  }
+  role.analysis.tool.version = engine;
+  if (cleanup) role.report.runs[0].invocations[0].toolExecutionNotifications.push({
+    message: { text: '' }, level: 'none', timeUtc: '2026-11-02T10:00:30.123Z',
+    descriptor: { id: syntheticCleanupId, index: 4 },
+    properties: { attributes: { deletedVersions: ['2.27.3'], failed: false }, visibility: { statusPage: false, telemetry: true } },
+  });
+  return sealRole(role);
+}
+function syntheticEngineFixture(engine = '2.27.4', cleanup = false) {
+  const fixture = proofFixture();
+  for (const role of [fixture.current, fixture.baseline]) syntheticEngineRole(role, engine, cleanup);
+  return fixture;
+}
+const syntheticCleanupNote = role => role.report.runs[0].invocations[0].toolExecutionNotifications.find(note => note.descriptor.id === syntheticCleanupId);
+
+test('SYNTHETIC supported engine list is explicit and frozen while the legacy fixture engine stays pinned', () => {
+  assert.equal(sourcePolicy.engine, '2.27.3');
+  assert.deepEqual(sourcePolicy.engines, ['2.27.3', '2.27.4']);
+  assert.equal(Object.isFrozen(sourcePolicy), true); assert.equal(Object.isFrozen(sourcePolicy.engines), true);
+  assert.throws(() => sourcePolicy.engines.push('2.27.5'), TypeError);
+  assert.throws(() => sourcePolicy.engines[0] = '2.27.5', TypeError);
+  assert.throws(() => sourcePolicy.engines = ['2.27.5'], TypeError);
+  assert.equal(nativeRole(sha, 20).report.runs[0].tool.driver.semanticVersion, '2.27.3');
+});
+
+test('SYNTHETIC legacy and successor pairs retain complete coverage and original findings with optional cleanup', async () => {
+  for (const [engine, cleanup] of [['2.27.3', false], ['2.27.4', false], ['2.27.4', true]]) {
+    const f = syntheticEngineFixture(engine, cleanup);
+    const originals = canonical([f.current.report, f.current.server, f.baseline.report, f.baseline.server]);
+    const bytes = [f.current, f.baseline].map(role => [digest(role.zip), digest(role.serverBytes)]);
+    for (const role of [f.current, f.baseline]) {
+      const proof = validateNativeRole(role, role.sourceSha);
+      assert.equal(proof.run.tool.driver.semanticVersion, engine); assert.equal(proof.serverRun.tool.driver.semanticVersion, engine);
+      assert.deepEqual(proof.expected, { typescript: ['src/a.ts'], javascript: ['scripts/b.mjs'], actions: ['.github/workflows/security.yml'] });
+      assert.deepEqual(proof.extracted, ['.github/workflows/security.yml', 'scripts/b.mjs', 'src/a.ts']);
+      assert.equal(proof.run.results.length, 1); assert.equal(proof.serverRun.results.length, 1);
+    }
+    const result = await publicOutcome(f);
+    assert.equal(result.ready, true); assert.equal(result.qualification.findings.nativeResults, 1); assert.equal(result.qualification.findings.serverResults, 1);
+    assert.equal(canonical([f.current.report, f.current.server, f.baseline.report, f.baseline.server]), originals);
+    assert.deepEqual([f.current, f.baseline].map(role => [digest(role.zip), digest(role.serverBytes)]), bytes);
+    if (cleanup) assert.deepEqual(syntheticCleanupNote(f.current).properties.attributes.deletedVersions, ['2.27.3']);
+  }
+});
+
+test('SYNTHETIC unlisted future and malformed engine versions cannot qualify either source role', async () => {
+  for (const engine of ['2.27.2', '2.27.5', '2.28.0', '3.0.0', '2.27.4.0', 'v2.27.4', '2.27.4\n', '', null, 2.274]) {
+    const f = syntheticEngineFixture(engine);
+    for (const role of [f.current, f.baseline]) assert.throws(() => validateNativeRole(role, role.sourceSha), /Source proof/);
+    await assert.rejects(publicOutcome(f), /Source proof/);
+  }
+});
+
+test('SYNTHETIC native server and analysis engines must agree per role in either supported direction', async () => {
+  for (const engine of ['2.27.3', '2.27.4']) for (const role of ['current', 'baseline']) for (const field of ['native', 'server', 'analysis']) {
+    const f = syntheticEngineFixture(engine), other = engine === '2.27.3' ? '2.27.4' : '2.27.3', target = f[role];
+    if (field === 'analysis') target.analysis.tool.version = other;
+    else (field === 'native' ? target.report : target.server).runs[0].tool.driver.semanticVersion = other;
+    sealRole(target);
+    assert.throws(() => validateNativeRole(target, target.sourceSha), /analysis metadata invalid|CodeQL engine mismatch/, `${engine}/${role}/${field}`);
+    await assert.rejects(publicOutcome(f), /analysis metadata invalid|CodeQL engine mismatch/);
+  }
+  for (const engine of ['2.27.3', '2.27.4']) {
+    const f = syntheticEngineFixture(engine), other = engine === '2.27.3' ? '2.27.4' : '2.27.3';
+    for (const report of [f.current.report, f.current.server]) report.runs[0].tool.driver.semanticVersion = other;
+    f.current.analysis.tool.version = other; sealRole(f.current);
+    assert.equal(validateNativeRole(f.current, sha).run.tool.driver.semanticVersion, other);
+    assert.equal(validateNativeRole(f.baseline, prior).run.tool.driver.semanticVersion, engine);
+    assert.throws(() => compareNativeProof(f.current, f.baseline, f.comparison), /complete native\/server tool\/catalog changed/);
+    await assert.rejects(publicOutcome(f), /complete native\/server tool\/catalog changed/);
+  }
+});
+
+test('SYNTHETIC cleanup accepts bounded numeric strings and exact UTC job boundaries without changing raw data', () => {
+  const versions = [...Array.from({ length: 7 }, (_, index) => `2.26.${index}`), `${'1'.repeat(28)}.0.0`];
+  assert.equal(versions.length, 8); assert.equal(versions.at(-1).length, 32);
+  for (const at of ['2026-11-02T10:00:00Z', '2026-11-02T10:05:10.999Z']) {
+    const f = syntheticEngineFixture('2.27.4', true), role = f.current, note = syntheticCleanupNote(role);
+    note.properties.attributes.deletedVersions = [...versions]; note.timeUtc = at; sealRole(role);
+    const before = canonical(role.report), zip = digest(role.zip);
+    const proof = validateNativeRole(role, sha);
+    assert.equal(proof.extracted.length, 3); assert.deepEqual(syntheticCleanupNote(role).properties.attributes.deletedVersions, versions);
+    assert.equal(canonical(role.report), before); assert.equal(digest(role.zip), zip);
+  }
+  const role = syntheticEngineFixture('2.27.4', true).current;
+  assert.equal(nativeCoverage(role.report, role.log).extracted.length, 3, 'pure parser has no supplied producer window; full role validation always supplies one');
+});
+
+test('SYNTHETIC cleanup refuses every missing or extra structural key and malformed or failed advisory fact', () => {
+  const changes = [
+    ...['message', 'level', 'timeUtc', 'descriptor', 'properties'].map(key => [`missing ${key}`, note => delete note[key]]),
+    ...['locations', 'exception', 'associatedRule', 'unknown'].map(key => [`extra ${key}`, note => note[key] = {}]),
+    ...[null, [], ''].map(value => ['message type', note => note.message = value]),
+    ['message missing text', note => note.message = {}], ['nonempty message', note => note.message.text = 'cleanup failed'],
+    ['message extra key', note => note.message.markdown = ''],
+    ...['error', 'warning', 'note', '', null, 0].map(value => [`level ${value}`, note => note.level = value]),
+    ...['2026-02-30T10:00:30Z', '2026-11-02T10:00:30+00:00', '2026-11-02T10:00:30z', '2026-11-02T10:00:30Z\n', '2026-11-02T09:59:59.999Z', '2026-11-02T10:05:11Z', '', null, 0].map(value => [`time ${value}`, note => note.timeUtc = value]),
+    ...[null, [], ''].map(value => ['properties type', note => note.properties = value]),
+    ...['attributes', 'visibility'].map(key => [`missing properties.${key}`, note => delete note.properties[key]]),
+    ['extra properties key', note => note.properties.unknown = false],
+    ...[null, [], false].map(value => ['attributes type', note => note.properties.attributes = value]),
+    ...['deletedVersions', 'failed'].map(key => [`missing attributes.${key}`, note => delete note.properties.attributes[key]]),
+    ['extra attributes key', note => note.properties.attributes.unknown = false],
+    ...[true, null, 'false', 0].map(value => [`failed ${value}`, note => note.properties.attributes.failed = value]),
+    ...[null, [], false].map(value => ['visibility type', note => note.properties.visibility = value]),
+    ...['statusPage', 'telemetry'].map(key => [`missing visibility.${key}`, note => delete note.properties.visibility[key]]),
+    ['extra visibility key', note => note.properties.visibility.unknown = false],
+    ...[true, null, 'false', 0].map(value => [`statusPage ${value}`, note => note.properties.visibility.statusPage = value]),
+    ...[false, null, 'true', 1].map(value => [`telemetry ${value}`, note => note.properties.visibility.telemetry = value]),
+  ];
+  for (const role of ['current', 'baseline']) for (const [label, change] of changes) {
+    const f = syntheticEngineFixture('2.27.4', true), target = f[role]; change(syntheticCleanupNote(target)); sealRole(target);
+    const original = canonical(target.report);
+    assert.throws(() => validateNativeRole(target, target.sourceSha), /Source proof/, `${role}/${label}`);
+    assert.equal(canonical(target.report), original, 'malformed original advisory remains unchanged');
+  }
+});
+
+test('SYNTHETIC cleanup version inventories enforce count length ASCII grammar types and uniqueness', () => {
+  const lists = [null, {}, '2.27.3', [], [null], [2.273], [true], [''], ['2.27.3', '2.27.3'],
+    Array.from({ length: 9 }, (_, index) => `2.26.${index}`), [`${'1'.repeat(29)}.0.0`],
+    ...['02.27.3', '2.027.3', '2.27.03', '2.27', '2.27.3.0', '-2.27.3', '2.27.-3', '+2.27.3', 'v2.27.3', '2.27.3-beta', '2.27.3+build', ' 2.27.3', '2.27.3 ', '2.27.3\n', '2.27.3\r', '2.27.3\u0000', '２.27.3', '2.27.٣', '2e0.27.3'].map(version => [version])];
+  for (const role of ['current', 'baseline']) for (const versions of lists) {
+    const f = syntheticEngineFixture('2.27.4', true), target = f[role]; syntheticCleanupNote(target).properties.attributes.deletedVersions = versions; sealRole(target);
+    assert.throws(() => validateNativeRole(target, target.sourceSha), /toolcache cleanup version inventory/);
+  }
+});
+
+test('SYNTHETIC cleanup cannot use another engine unbound descriptor duplicate or unknown notification', async () => {
+  const changes = [
+    ['legacy engine', (note, run, role) => { run.tool.driver.semanticVersion = '2.27.3'; role.server.runs[0].tool.driver.semanticVersion = '2.27.3'; role.analysis.tool.version = '2.27.3'; }],
+    ['future engine', (note, run, role) => { run.tool.driver.semanticVersion = '2.27.5'; role.server.runs[0].tool.driver.semanticVersion = '2.27.5'; role.analysis.tool.version = '2.27.5'; }],
+    ['duplicate cleanup', (note, run) => run.invocations[0].toolExecutionNotifications.push(structuredClone(note))],
+    ['missing descriptor id', note => delete note.descriptor.id], ['missing descriptor index', note => delete note.descriptor.index],
+    ['extra descriptor key', note => note.descriptor.properties = {}], ['extra descriptor guid', note => note.descriptor.guid = '00000000-0000-4000-8000-000000000002'],
+    ...[null, [], ''].map(value => ['descriptor type', note => note.descriptor = value]),
+    ...[-1, 0, 99999, '4', 4.5, null].map(value => [`descriptor index ${value}`, note => note.descriptor.index = value]),
+    ['driver catalog absent', (note, run) => run.tool.driver.notifications.pop()],
+    ['driver catalog contradiction', (note, run) => run.tool.driver.notifications[note.descriptor.index].id = 'codeql-action/unknown'],
+    ['duplicate driver catalog identity', (note, run) => run.tool.driver.notifications.push({ id: syntheticCleanupId })],
+    ['extension owned cleanup', (note, run) => { run.tool.extensions[0].notifications.push({ id: syntheticCleanupId }); note.descriptor = { id: syntheticCleanupId, index: 1, toolComponent: { index: 0 } }; }],
+    ['explicit driver selector', note => note.descriptor.toolComponent = { name: 'CodeQL' }],
+    ['unknown notification', (note, run) => { note.descriptor.id = 'codeql-action/unknown'; run.tool.driver.notifications[note.descriptor.index].id = note.descriptor.id; }],
+  ];
+  for (const role of ['current', 'baseline']) for (const [label, change] of changes) {
+    const f = syntheticEngineFixture('2.27.4', true), target = f[role]; change(syntheticCleanupNote(target), target.report.runs[0], target); sealRole(target);
+    assert.throws(() => validateNativeRole(target, target.sourceSha), /Source proof/, `${role}/${label}`);
+    await assert.rejects(publicOutcome(f), /Source proof/, `${role}/${label}`);
+  }
+});
+
+function syntheticSecondTypeScript(role) {
+  const run = role.report.runs[0], notes = run.invocations[0].toolExecutionNotifications, index = run.artifacts.length;
+  const location = { uri: 'src/second.ts', uriBaseId: '%SRCROOT%', index };
+  run.artifacts.push({ location: structuredClone(location) });
+  for (const kind of ['cli/expected-extracted-files/typescript', 'js/diagnostics/successfully-extracted-files']) {
+    const note = structuredClone(notes.find(value => value.descriptor.id === kind));
+    note.locations[0].physicalLocation.artifactLocation = structuredClone(location); notes.push(note);
+  }
+  sealRole(role); role.log = role.log.replace('1 out of 1 TypeScript files', '2 out of 2 TypeScript files');
+}
+
+test('SYNTHETIC valid cleanup never substitutes for positive complete expected extracted metrics or native success proof', async () => {
+  const changes = [
+    ...['typescript', 'javascript', 'actions'].map(language => [`missing expected ${language}`, run => run.invocations[0].toolExecutionNotifications = run.invocations[0].toolExecutionNotifications.filter(note => note.descriptor.id !== `cli/expected-extracted-files/${language}`)]),
+    ['missing extracted', run => run.invocations[0].toolExecutionNotifications = run.invocations[0].toolExecutionNotifications.filter(note => note.descriptor.id !== 'js/diagnostics/successfully-extracted-files')],
+    ['incomplete extracted', run => run.invocations[0].toolExecutionNotifications = run.invocations[0].toolExecutionNotifications.filter(note => note.descriptor.id !== 'js/diagnostics/successfully-extracted-files' || note.locations[0].physicalLocation.artifactLocation.uri !== 'src/a.ts')],
+    ['missing overlay', run => run.invocations[0].toolExecutionNotifications = run.invocations[0].toolExecutionNotifications.filter(note => note.descriptor.id !== 'codeql-action/overlay-disabled')],
+    ['failed invocation', run => run.invocations[0].executionSuccessful = false], ['missing native success', run => delete run.invocations[0].executionSuccessful],
+    ['nonzero exit', run => run.invocations[0].exitCode = 2], ['configuration error', run => run.invocations[0].toolConfigurationNotifications = [{ level: 'error', message: { text: 'failed' } }]],
+    ['missing metrics', run => delete run.properties.metricResults], ['incomplete metrics', run => run.properties.metricResults.pop()],
+  ];
+  for (const role of ['current', 'baseline']) for (const [label, change] of changes) {
+    const f = syntheticEngineFixture('2.27.4', true), target = f[role]; change(target.report.runs[0]); sealRole(target);
+    assert.throws(() => validateNativeRole(target, target.sourceSha), /Source proof/, `${role}/${label}`);
+    await assert.rejects(publicOutcome(f), /Source proof/, `${role}/${label}`);
+  }
+  for (const kind of ['expected', 'extracted', 'both']) {
+    const f = syntheticEngineFixture('2.27.4', true);
+    for (const role of [f.current, f.baseline]) syntheticSecondTypeScript(role);
+    assert.equal((await publicOutcome(f)).ready, true, 'positive two-file synthetic inventory control');
+    const run = f.current.report.runs[0];
+    run.invocations[0].toolExecutionNotifications = run.invocations[0].toolExecutionNotifications.filter(note => {
+      const second = note.locations?.[0].physicalLocation.artifactLocation.uri === 'src/second.ts';
+      return !second || kind === 'expected' && note.descriptor.id === 'js/diagnostics/successfully-extracted-files' || kind === 'extracted' && note.descriptor.id === 'cli/expected-extracted-files/typescript';
+    });
+    sealRole(f.current);
+    if (kind === 'extracted') f.current.log = f.current.log.replace('1 out of 1 TypeScript files', '2 out of 2 TypeScript files');
+    assert.throws(() => compareNativeProof(f.current, f.baseline, f.comparison), /unextracted expected path|unexplained lost coverage/);
+    await assert.rejects(publicOutcome(f), /unextracted expected path|unexplained lost coverage/);
+  }
+});
+
+test('SYNTHETIC successor complete-original findings catalog config and mutable custody fences remain mandatory', async () => {
+  for (const change of [
+    f => f.current.report.runs[0].results[0].properties.typed = '1',
+    f => f.current.server.runs[0].results[0].properties.typed = '1',
+    f => f.current.report.runs[0].results.push(structuredClone(f.current.report.runs[0].results[0])),
+    f => f.current.report.runs[0].tool.extensions[0].semanticVersion = 'changed',
+    f => f.current.server.runs[0].tool.extensions[0].semanticVersion = 'changed',
+    f => f.current.config += 'changed: true\n',
+    f => f.current.log = f.current.log.replace('1 out of 1 TypeScript files', '0 out of 1 TypeScript files'),
+  ]) {
+    const f = syntheticEngineFixture('2.27.4', true); change(f);
+    // Seal only the synthetic artifact, preserving the intentionally changed log.
+    const log = f.current.log; sealRole(f.current);
+    if (log.includes('0 out of 1 TypeScript files')) f.current.log = log;
+    await assert.rejects(publicOutcome(f), /Source proof/);
+  }
+  for (const role of ['current', 'baseline']) for (const phase of ['final', 'cache']) {
+    const f = syntheticEngineFixture('2.27.4', true), cache = new Map();
+    if (phase === 'cache') assert.equal((await publicOutcome(f, cache)).ready, true);
+    interceptPhase(f, path => path.includes('/code-scanning/analyses?'), response => response.data.find(row => row.id === f[role].analysis.id).tool.version = '2.27.3', phase);
+    await deniesPublic(f, cache, `${role}/${phase} engine metadata`);
+  }
+});
+
+// SYNTHETIC causal upload controls only; these do not relabel actual observations.
+// Rewrite only the three upload lines of an existing sealed engine fixture.
+function syntheticUploadLog(role, times, order = [0, 1, 2]) {
+  const lines = role.log.split('\n'), upload = lines.splice(-3);
+  role.log = [...lines, ...order.map(index => upload[index].replace(/^[^ ]+ /, `2026-11-02T${times[index]}Z `))].join('\n');
+}
+
+test('SYNTHETIC both supported engines qualify complete roles when only the digest predates API creation', async () => {
+  for (const engine of ['2.27.3', '2.27.4']) {
+    const f = syntheticEngineFixture(engine), originals = canonical([f.current.report, f.current.server, f.baseline.report, f.baseline.server]);
+    const bytes = [f.current, f.baseline].map(role => [digest(role.zip), digest(role.serverBytes)]);
+    for (const role of [f.current, f.baseline]) {
+      syntheticUploadLog(role, ['10:05:01.900', '10:05:02.200', '10:05:02.300']);
+      assert.ok(Date.parse('2026-11-02T10:05:01.900Z') < Date.parse(role.artifact.created_at));
+      const proof = validateNativeRole(role, role.sourceSha);
+      assert.equal(proof.run.tool.driver.semanticVersion, engine); assert.equal(proof.serverRun.tool.driver.semanticVersion, engine);
+      assert.deepEqual(proof.expected, { typescript: ['src/a.ts'], javascript: ['scripts/b.mjs'], actions: ['.github/workflows/security.yml'] });
+      assert.deepEqual(proof.extracted, ['.github/workflows/security.yml', 'scripts/b.mjs', 'src/a.ts']);
+      assert.equal(proof.run.results.length, 1); assert.equal(proof.serverRun.results.length, 1);
+    }
+    const result = await publicOutcome(f);
+    assert.equal(result.ready, true); assert.equal(result.qualification.findings.nativeResults, 1); assert.equal(result.qualification.findings.serverResults, 1);
+    assert.equal(canonical([f.current.report, f.current.server, f.baseline.report, f.baseline.server]), originals);
+    assert.deepEqual([f.current, f.baseline].map(role => [digest(role.zip), digest(role.serverBytes)]), bytes);
+  }
+});
+
+test('SYNTHETIC ordered equal-time upload markers qualify within the unchanged whole update second', async () => {
+  for (const engine of ['2.27.3', '2.27.4']) for (const at of ['10:05:02.200', '10:05:02.999']) {
+    const f = syntheticEngineFixture(engine);
+    for (const role of [f.current, f.baseline]) {
+      syntheticUploadLog(role, [at, at, at]);
+      const proof = validateNativeRole(role, role.sourceSha);
+      assert.equal(proof.run.tool.driver.semanticVersion, engine); assert.equal(proof.extracted.length, 3);
+      assert.equal(proof.run.results.length, 1); assert.equal(proof.serverRun.results.length, 1);
+    }
+    const result = await publicOutcome(f);
+    assert.equal(result.ready, true); assert.equal(result.qualification.findings.nativeResults, 1); assert.equal(result.qualification.findings.serverResults, 1);
+  }
+});
+
+test('SYNTHETIC every noncausal upload permutation refuses even with identical timestamps', async () => {
+  const orders = [[1, 0, 2], [0, 2, 1], [2, 1, 0], [1, 2, 0], [2, 0, 1]];
+  for (const engine of ['2.27.3', '2.27.4']) for (const name of ['current', 'baseline']) for (const order of orders) {
+    const f = syntheticEngineFixture(engine), role = f[name], before = digest(role.zip), label = `${engine}/${name}/${order.join(',')}`;
+    syntheticUploadLog(role, ['10:05:02.200', '10:05:02.200', '10:05:02.200'], order);
+    assert.throws(() => validateNativeRole(role, role.sourceSha), /upload markers contradict causal order/, label);
+    await assert.rejects(publicOutcome(f), /upload markers contradict causal order/, label);
+    assert.equal(digest(role.zip), before);
+  }
+});
+
+test('SYNTHETIC each missing or duplicated upload marker refuses for either complete source role', async () => {
+  const orders = [[1, 2], [0, 2], [0, 1], [0, 0, 1, 2], [0, 1, 1, 2], [0, 1, 2, 2]];
+  for (const engine of ['2.27.3', '2.27.4']) for (const name of ['current', 'baseline']) for (const order of orders) {
+    const f = syntheticEngineFixture(engine), role = f[name], before = digest(role.zip), label = `${engine}/${name}/${order.join(',')}`;
+    syntheticUploadLog(role, ['10:05:02.200', '10:05:02.200', '10:05:02.200'], order);
+    assert.throws(() => validateNativeRole(role, role.sourceSha), /Source proof/, label);
+    await assert.rejects(publicOutcome(f), /Source proof/, label);
+    assert.equal(digest(role.zip), before);
+  }
+});
+
+test('SYNTHETIC digest phase artifact-end and both final-marker bounds retain original chronology refusals', async () => {
+  const changes = [
+    ['digest before upload step', ['10:05:00.999', '10:05:02.200', '10:05:02.300']],
+    ['digest at artifact endExclusive', ['10:05:03.000', '10:05:03.000', '10:05:03.000'], '10:05:04'],
+    ['finalized before artifact creation', ['10:05:01.800', '10:05:01.900', '10:05:02.300']],
+    ['completed before artifact creation', ['10:05:01.700', '10:05:01.800', '10:05:01.900']],
+    ['finalized at artifact endExclusive', ['10:05:01.900', '10:05:03.000', '10:05:03.000'], '10:05:04'],
+    ['completed at artifact endExclusive', ['10:05:01.900', '10:05:02.200', '10:05:03.000'], '10:05:04'],
+    ['finalized outside upload step', ['10:05:01.900', '10:05:03.000', '10:05:03.000']],
+    ['completed outside upload step', ['10:05:01.900', '10:05:02.200', '10:05:03.000']],
+    ['backwards upload timestamp', ['10:05:02.100', '10:05:02.300', '10:05:02.200']],
+  ];
+  for (const engine of ['2.27.3', '2.27.4']) for (const name of ['current', 'baseline']) for (const [label, times, phaseEnd] of changes) {
+    const f = syntheticEngineFixture(engine), role = f[name], before = digest(role.zip);
+    if (phaseEnd) role.job.steps.find(step => step.name === 'Preserve CodeQL results').completed_at = `2026-11-02T${phaseEnd}Z`;
+    syntheticUploadLog(role, times);
+    assert.throws(() => validateNativeRole(role, role.sourceSha), /Source proof/, `${engine}/${name}/${label}`);
+    await assert.rejects(publicOutcome(f), /Source proof/, `${engine}/${name}/${label}`);
+    assert.equal(digest(role.zip), before);
+  }
+});
+
+test('SYNTHETIC causal pre-creation digest never relaxes exact upload digest name ID or size', async () => {
+  const changes = [
+    ['digest', role => role.log.replace(`zip is ${role.artifact.digest.slice(7)}`, `zip is ${'0'.repeat(64)}`)],
+    ['finalized ID', role => role.log.replace(`.zip successfully finalized. Artifact ID ${role.artifact.id}`, `.zip successfully finalized. Artifact ID ${role.artifact.id + 1}`)],
+    ['finalized name', role => role.log.replace(`Artifact ${role.artifact.name}.zip successfully finalized`, `Artifact ${role.artifact.name}-other.zip successfully finalized`)],
+    ['completed size', role => role.log.replace(`Final size is ${role.artifact.size_in_bytes} bytes`, `Final size is ${role.artifact.size_in_bytes + 1} bytes`)],
+    ['completed ID', role => role.log.replace(`Artifact ID is ${role.artifact.id}`, `Artifact ID is ${role.artifact.id + 1}`)],
+    ['completed name', role => role.log.replace(`Artifact ${role.artifact.name} has been`, `Artifact ${role.artifact.name}-other has been`)],
+  ];
+  for (const engine of ['2.27.3', '2.27.4']) for (const name of ['current', 'baseline']) for (const [label, change] of changes) {
+    const f = syntheticEngineFixture(engine), role = f[name], before = digest(role.zip);
+    syntheticUploadLog(role, ['10:05:01.900', '10:05:02.200', '10:05:02.300']); role.log = change(role);
+    assert.throws(() => validateNativeRole(role, role.sourceSha), /Source proof/, `${engine}/${name}/${label}`);
+    await assert.rejects(publicOutcome(f), /Source proof/, `${engine}/${name}/${label}`);
+    assert.equal(digest(role.zip), before);
+  }
+});

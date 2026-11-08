@@ -5,7 +5,7 @@ import { fileURLToPath, pathToFileURL } from 'node:url';
 
 // This policy is deliberately specific to the approved public repository. It does
 // not infer vendor authority, scan freshness or an administrative merge audit.
-export const sourcePolicy = Object.freeze({ repository: 'SaintNick1214/Project-Cortex', repositoryId: 1082186834, snykUser: 63267399, snykContext: 'security/snyk (nicholasgeil)', category: '/language:javascript-typescript', environment: '{"language":"javascript-typescript"}', analysisKey: '.github/workflows/security.yml:codeql-analysis', engine: '2.27.3' });
+export const sourcePolicy = Object.freeze({ repository: 'SaintNick1214/Project-Cortex', repositoryId: 1082186834, snykUser: 63267399, snykContext: 'security/snyk (nicholasgeil)', category: '/language:javascript-typescript', environment: '{"language":"javascript-typescript"}', analysisKey: '.github/workflows/security.yml:codeql-analysis', engine: '2.27.3', engines: Object.freeze(['2.27.3', '2.27.4']) });
 export const proofLimits = Object.freeze({ requestMs: 10_000, deadlineMs: 290_000, pages: 10, metadata: 1_500_000, zip: 1_000_000, native: 3_000_000, server: 1_500_000, log: 8_000_000 });
 const demand = (condition, message) => { if (!condition) throw new Error(`Source proof: ${message}`); };
 const object = value => value !== null && typeof value === 'object' && !Array.isArray(value);
@@ -4821,7 +4821,7 @@ function validateToolReferences(run, records, native = false) {
 const runShape = report => {
   demand(report?.version === '2.1.0' && Array.isArray(report.runs) && report.runs.length === 1, 'complete SARIF 2.1.0 single run required');
   const run = report.runs[0];
-  demand(object(run.tool) && object(run.tool.driver) && Array.isArray(run.tool.extensions) && run.tool.driver.name === 'CodeQL' && run.tool.driver.semanticVersion === sourcePolicy.engine && Array.isArray(run.results) && run.results.every(object) && run.automationDetails?.id === `${sourcePolicy.category}/`, 'complete CodeQL tool/results/category required');
+  demand(object(run.tool) && object(run.tool.driver) && Array.isArray(run.tool.extensions) && run.tool.driver.name === 'CodeQL' && sourcePolicy.engines.includes(run.tool.driver.semanticVersion) && Array.isArray(run.results) && run.results.every(object) && run.automationDetails?.id === `${sourcePolicy.category}/`, 'complete CodeQL tool/results/category required');
   demand(run.tool.extensions.length > 0 && run.tool.extensions.every(component => typeof component.name === 'string' && typeof component.semanticVersion === 'string' && (component.rules === undefined || Array.isArray(component.rules))), 'complete query catalog required');
   const rules = run.tool.extensions.flatMap(component => component.rules ?? []);
   demand(rules.length > 0 && rules.every(rule => typeof rule.id === 'string' && object(rule)), 'nonempty full rules catalog required');
@@ -5219,12 +5219,24 @@ export function nativeCoverage(report, log, { jobWindow } = {}) {
   demand(object(run.properties?.codeqlConfigSummary) && run.properties.codeqlConfigSummary.disableDefaultQueries === false && canonical(run.properties.codeqlConfigSummary.queries) === canonical([{ type: 'builtinSuite', uses: 'security-extended' }]), 'native query/config proof required');
   demand(typeof run.properties.jobRunUuid === 'string' && /^[a-f0-9-]{36}$/.test(run.properties.jobRunUuid), 'native UUID required');
   demand(Array.isArray(run.artifacts) && run.artifacts.length > 0, 'native artifact inventory required');
-  const expected = { typescript: new Set(), javascript: new Set(), actions: new Set() }, extracted = new Set(); let overlay = 0;
+  const expected = { typescript: new Set(), javascript: new Set(), actions: new Set() }, extracted = new Set(); let overlay = 0, cleanup = 0;
   for (const notification of invocation.toolExecutionNotifications) {
     demand(object(notification), 'malformed native execution notification');
     const ref = notification.descriptor, component = ref?.toolComponent === undefined ? run.tool.driver : run.tool.extensions[ref.toolComponent.index];
     demand(object(ref) && Number.isInteger(ref.index) && component?.notifications?.[ref.index]?.id === ref.id && notification.level === 'none', 'unknown/error/invalid native notification');
     if (ref.id === 'codeql-action/overlay-disabled') { demand(!notification.locations && notification.properties?.attributes?.reason === 'non-default-queries', 'unknown overlay diagnostic'); overlay++; continue; }
+    if (ref.id === 'codeql-action/toolcache-bundle-cleanup') {
+      // One observed successor advisory is retained verbatim. It supplies no
+      // expected/extracted inventory or successful execution authority.
+      const keys = (value, fields) => object(value) && Object.keys(value).length === fields.length && fields.every(field => Object.hasOwn(value, field));
+      demand(run.tool.driver.semanticVersion === '2.27.4' && cleanup === 0 && component === run.tool.driver && keys(notification, ['message', 'level', 'timeUtc', 'descriptor', 'properties']) && keys(ref, ['id', 'index']) && keys(notification.message, ['text']) && notification.message.text === '', 'invalid/duplicate/unsupported native toolcache cleanup advisory');
+      demand(time(notification.timeUtc) && (!jobWindow || within(jobWindow, Date.parse(notification.timeUtc))), 'native toolcache cleanup timestamp invalid/outside actual job');
+      const properties = notification.properties;
+      demand(keys(properties, ['attributes', 'visibility']) && keys(properties.attributes, ['deletedVersions', 'failed']) && properties.attributes.failed === false && keys(properties.visibility, ['statusPage', 'telemetry']) && properties.visibility.statusPage === false && properties.visibility.telemetry === true, 'invalid/failed native toolcache cleanup properties');
+      const versions = properties.attributes.deletedVersions;
+      demand(Array.isArray(versions) && versions.length > 0 && versions.length <= 8 && versions.every(version => typeof version === 'string' && version.length <= 32 && /^(?:0|[1-9][0-9]*)\.(?:0|[1-9][0-9]*)\.(?:0|[1-9][0-9]*)(?![\s\S])/.test(version)) && new Set(versions).size === versions.length, 'invalid/unbounded native toolcache cleanup version inventory');
+      cleanup++; continue;
+    }
     const language = ref.id.startsWith('cli/expected-extracted-files/') ? ref.id.slice('cli/expected-extracted-files/'.length) : undefined;
     demand(ref.id === 'js/diagnostics/successfully-extracted-files' || Object.hasOwn(expected, language), 'unknown native extraction diagnostic');
     demand(Array.isArray(notification.locations) && notification.locations.length === 1, 'complete per-file extraction location required');
@@ -5331,10 +5343,14 @@ export function jobLogProof(log, { sourceSha, job, artifact, native, chronology 
   phaseEvidence(/^CodeQL scanned \d+ out of \d+ TypeScript files, \d+ out of \d+ JavaScript files and \d+ out of \d+ GitHub Actions files in this invocation\./, 'Perform CodeQL Analysis', false);
   phaseEvidence('Post-processing sarif files: ["/home/runner/work/Project-Cortex/Project-Cortex/codeql-results/javascript.sarif"]', 'Perform CodeQL Analysis');
   phaseEvidence('Analysis upload status is complete.', 'Perform CodeQL Analysis');
-  for (const text of [`SHA256 digest of uploaded artifact zip is ${artifact.digest.slice(7)}`, `Artifact ${artifact.name}.zip successfully finalized. Artifact ID ${artifact.id}`, `Artifact ${artifact.name} has been successfully uploaded! Final size is ${artifact.size_in_bytes} bytes. Artifact ID is ${artifact.id}`]) {
+  const uploadEntries = [`SHA256 digest of uploaded artifact zip is ${artifact.digest.slice(7)}`, `Artifact ${artifact.name}.zip successfully finalized. Artifact ID ${artifact.id}`, `Artifact ${artifact.name} has been successfully uploaded! Final size is ${artifact.size_in_bytes} bytes. Artifact ID is ${artifact.id}`].map(text => {
     const matches = phaseEvidence(text, 'Preserve CodeQL results');
-    demand(matches.length === 1 && (!chronology || matches.every(entry => within(chronology.artifact, entry.at))), 'native upload identity/digest/size contradicts artifact chronology');
-  }
+    demand(matches.length === 1, 'native upload identity/digest/size contradicts artifact chronology');
+    return matches[0];
+  });
+  demand(entries.indexOf(uploadEntries[0]) < entries.indexOf(uploadEntries[1]) && entries.indexOf(uploadEntries[1]) < entries.indexOf(uploadEntries[2]), 'native artifact upload markers contradict causal order');
+  // The uploader emits the blob digest before awaiting artifact finalization.
+  demand(!chronology || uploadEntries[0].at < chronology.artifact.endExclusive && uploadEntries.slice(1).every(entry => within(chronology.artifact, entry.at)), 'native upload identity/digest/size contradicts artifact chronology');
   // Strip only the transport timestamp prefix; preserve all actual configuration.
   const lines = log.replace(/^\uFEFF/, '').split(/\r?\n/).map(line => line.replace(/^\d{4}-\d\d-\d\dT[\d:.]+Z /, ''));
   const uuid = lines.filter(line => line.startsWith('Job run UUID is '));
@@ -5370,13 +5386,14 @@ export function validateNativeRole(role, sourceSha, { processedExport = true } =
   validateSarifSemantics(report, nativeSchema, { sourceContext: nativeSources });
   validateToolReferences(coverage.run, nativeSchema.references, true);
   const logged = jobLogProof(log, { sourceSha, job, artifact, native: coverage.run, chronology });
-  demand(analysis?.commit_sha === sourceSha && analysis.ref === 'refs/heads/main' && analysis.analysis_key === sourcePolicy.analysisKey && analysis.category === sourcePolicy.category && analysis.environment === sourcePolicy.environment && analysis.tool?.name === 'CodeQL' && analysis.tool.version === sourcePolicy.engine && analysis.error === '' && analysis.warning === '' && id(analysis.id) && time(analysis.created_at) && typeof analysis.sarif_id === 'string' && /^[a-f0-9-]{36}$/.test(analysis.sarif_id), 'newest server CodeQL analysis metadata invalid');
+  demand(analysis?.commit_sha === sourceSha && analysis.ref === 'refs/heads/main' && analysis.analysis_key === sourcePolicy.analysisKey && analysis.category === sourcePolicy.category && analysis.environment === sourcePolicy.environment && analysis.tool?.name === 'CodeQL' && analysis.tool.version === coverage.run.tool.driver.semanticVersion && analysis.error === '' && analysis.warning === '' && id(analysis.id) && time(analysis.created_at) && typeof analysis.sarif_id === 'string' && /^[a-f0-9-]{36}$/.test(analysis.sarif_id), 'newest server CodeQL analysis metadata invalid');
   demand(Date.parse(analysis.created_at) >= logged.start && Date.parse(analysis.created_at) < logged.end, 'server analysis/native job upload interval mismatch');
   demand(processing?.processing_status === 'complete' && (processing.errors === null || Array.isArray(processing.errors) && processing.errors.length === 0), 'server SARIF processing incomplete or errored');
   demand(Buffer.isBuffer(role.serverBytes) && role.serverBytes.length > 0 && role.serverBytes.length <= proofLimits.server, 'complete bounded raw server source bytes required');
   const rawServer = proofJson(new TextDecoder('utf-8', { fatal: true }).decode(role.serverBytes));
   demand(canonical(rawServer) === canonical(server), 'server source raw-body/object identity mismatch');
   const serverRun = runShape(server);
+  demand(serverRun.tool.driver.semanticVersion === coverage.run.tool.driver.semanticVersion, 'native/server CodeQL engine mismatch');
   demand(!Object.hasOwn(serverRun, 'artifacts') || Array.isArray(serverRun.artifacts), 'malformed server source artifact inventory');
   demand(!Object.hasOwn(serverRun, 'originalUriBaseIds') || object(serverRun.originalUriBaseIds), 'malformed server source URI base map');
   let serverSchema;
