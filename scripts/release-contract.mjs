@@ -68,10 +68,12 @@ export function deliveryReady({ runs, checks, statuses, sourceSha, repository, s
   if (sourceProof && !qualification && prerequisites.some(item => item.state === 'missing') && !prerequisites.some(item => item.state === 'failed' || item.state === 'pending')) reasons.push('Source-equivalent qualification refused: both latest authoritative H vendor passes and complete proof are required.');
   return { ready: reasons.length === 0, authorityComplete: !authorityError, checksRun: tests?.status === 'completed' && tests.conclusion === 'success' ? tests.id : undefined, securityRun: security?.id, prerequisites, qualification, reasons, retryable: !authorityError && reasons.length > 0 && !prerequisites.some(item => item.state === 'failed') && !sourceProof };
 }
-/** Only a structured registry E404 denotes a first publication. Auth/network errors propagate. */
+/** Unapproved npm staging placeholders have no release; auth/network errors propagate. */
 export function registryResult(stdout, error) {
   if (!error) {
     const parsed = JSON.parse(stdout);
+    // npm's initial staged package exposes this reserved placeholder without a gitHead.
+    if (Array.isArray(parsed) && parsed.length === 1 && parsed[0] === '0.0.0-stage') return undefined;
     const value = Array.isArray(parsed) && parsed.length === 1 ? parsed[0] : parsed;
     if (!value || typeof value !== 'object' || Array.isArray(value)) throw new Error('Invalid npm registry metadata');
     semver(value.version);
