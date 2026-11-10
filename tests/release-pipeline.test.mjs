@@ -4666,3 +4666,25 @@ test('registry metadata arrays refuse ambiguous or invalid responses and retain 
   }
   assert.throws(() => registryResult('not JSON', failure), failure);
 });
+
+test('npm staging placeholder plans the first real catalog release without accepting other prereleases', () => {
+  const placeholder = JSON.stringify(['0.0.0-stage']);
+  assert.equal(registryResult(placeholder), undefined);
+  const plan = makePlan({
+    paths: { sha },
+    registry: name => name === '@cortexmemory/templates'
+      ? registryResult(placeholder)
+      : { version: '0.38.0', gitHead: prior },
+    diffPaths: () => '',
+  });
+  const catalog = plan.packages.find(pkg => pkg.key === 'templates');
+  assert.equal(catalog.changed, true);
+  assert.equal(catalog.released, false);
+  assert.equal(catalog.version, versions.templates);
+  assert.deepEqual(plan.packages.filter(pkg => pkg.changed).map(pkg => pkg.key), ['templates']);
+  for (const value of ['0.0.0-stage', ['0.0.1-stage'], ['0.0.0-stage', '0.0.0-stage'], [['0.0.0-stage']], [{ version: '0.0.0-stage', gitHead: prior }]]) {
+    assert.throws(() => registryResult(JSON.stringify(value)), /metadata|semver/);
+  }
+  const failure = new Error('unauthorized registry response');
+  assert.throws(() => registryResult(placeholder, failure), failure);
+});
