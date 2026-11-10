@@ -4636,3 +4636,33 @@ test('SYNTHETIC causal pre-creation digest never relaxes exact upload digest nam
     assert.equal(digest(role.zip), before);
   }
 });
+
+
+test('npm 12 singleton metadata preserves registry identity and package planning', () => {
+  const metadata = { version: '0.37.0', gitHead: prior };
+  const observed = registryResult(JSON.stringify([metadata]));
+  assert.deepEqual(observed, metadata);
+  assert.deepEqual(registryResult(JSON.stringify(metadata)), observed);
+  const comparisons = [];
+  const plan = makePlan({
+    paths: { sha },
+    registry: () => observed,
+    diffPaths: (from, to, paths) => { comparisons.push([from, to]); return paths.includes('src/') ? 'src/index.ts' : ''; },
+  });
+  assert.deepEqual(plan.packages.filter(pkg => pkg.changed).map(pkg => pkg.key), ['sdk', 'provider', 'cli']);
+  assert.equal(comparisons.length, 4);
+  assert.ok(comparisons.every(([from, to]) => from === prior && to === sha));
+});
+
+test('registry metadata arrays refuse ambiguous or invalid responses and retain error gates', () => {
+  const metadata = { version: '0.37.0', gitHead: prior };
+  for (const value of [[], [metadata, metadata], [null], ['0.37.0'], [[metadata]], [{}]]) {
+    assert.throws(() => registryResult(JSON.stringify(value)), /metadata|semver/);
+  }
+  const failure = new Error('registry request failed');
+  assert.equal(registryResult(JSON.stringify({ error: { code: 'E404' } }), failure), undefined);
+  for (const code of ['E401', 'E403', 'ETIMEDOUT']) {
+    assert.throws(() => registryResult(JSON.stringify({ error: { code } }), failure), failure);
+  }
+  assert.throws(() => registryResult('not JSON', failure), failure);
+});

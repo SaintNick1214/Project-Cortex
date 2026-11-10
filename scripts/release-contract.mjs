@@ -71,7 +71,8 @@ export function deliveryReady({ runs, checks, statuses, sourceSha, repository, s
 /** Only a structured registry E404 denotes a first publication. Auth/network errors propagate. */
 export function registryResult(stdout, error) {
   if (!error) {
-    const value = JSON.parse(stdout);
+    const parsed = JSON.parse(stdout);
+    const value = Array.isArray(parsed) && parsed.length === 1 ? parsed[0] : parsed;
     if (!value || typeof value !== 'object' || Array.isArray(value)) throw new Error('Invalid npm registry metadata');
     semver(value.version);
     return value;
