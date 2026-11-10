@@ -303,7 +303,7 @@ jobs:
       - name: Verify package contents
         run: npm pack --dry-run --workspace=@cortexmemory/vercel-ai-provider
   test-cli:
-    timeout-minutes: 15
+    timeout-minutes: 20
     env:
       CORTEX_CI_RUN_ID: '${{ github.run_id }}-${{ github.run_attempt }}'
       CORTEX_CI_AUTH_ISSUER: '${{ vars.CORTEX_CI_AUTH_ISSUER }}'
