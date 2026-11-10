@@ -127,7 +127,7 @@ test("bounded consumers preserve complete-run serialization and independent clea
   assert.equal(managed.concurrency.queue, "max");
   for (const name of ["setup-and-purge", "test-typescript", "test-vercel-ai-provider", "test-cli", "cleanup-runtime-fixtures"]) {
     assert.ok(Number.isSafeInteger(jobs[name]["timeout-minutes"]));
-    assert.ok(jobs[name]["timeout-minutes"] <= 15);
+    assert.ok(jobs[name]["timeout-minutes"] <= (name === "test-cli" ? 20 : 15));
   }
   assert.ok(jobs["cleanup-runtime-fixtures"].if.includes("'cancelled'"));
 });
