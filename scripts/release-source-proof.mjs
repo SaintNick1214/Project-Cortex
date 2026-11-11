@@ -4648,10 +4648,14 @@ export function deliveryProducerProof({ run, job, artifact, log, sourceSha }) {
   const checkout = entries.filter(entry => entry.text === sourceSha);
   demand(checkout.length > 0 && checkout.every(entry => within(chronology.phases['Run actions/checkout@v6'], entry.at)), 'delivery producer checkout SHA not proven in checkout phase');
   const expected = [`SHA256 digest of uploaded artifact zip is ${artifact.digest.slice(7)}`, `Artifact delivery-paths.zip successfully finalized. Artifact ID ${artifact.id}`, `Artifact delivery-paths has been successfully uploaded! Final size is ${artifact.size_in_bytes} bytes. Artifact ID is ${artifact.id}`, `Artifact download URL: https://github.com/${sourcePolicy.repository}/actions/runs/${run.id}/artifacts/${artifact.id}`];
-  for (const text of expected) {
+  const uploadEntries = expected.map(text => {
     const matches = entries.filter(entry => entry.text === text);
-    demand(matches.length === 1 && matches.every(entry => within(chronology.phases['Run actions/upload-artifact@v4'], entry.at) && within(chronology.artifact, entry.at)), 'delivery producer upload ID/digest/size/run/timing mismatch');
-  }
+    demand(matches.length === 1 && matches.every(entry => within(chronology.phases['Run actions/upload-artifact@v4'], entry.at)), 'delivery producer upload ID/digest/size/run/timing mismatch');
+    return matches[0];
+  });
+  demand(uploadEntries.every((entry, index) => index === 0 || entries.indexOf(uploadEntries[index - 1]) < entries.indexOf(entry)), 'delivery artifact upload markers contradict causal order');
+  // The uploader emits the blob digest before awaiting artifact finalization.
+  demand(uploadEntries[0].at < chronology.artifact.endExclusive && uploadEntries.slice(1).every(entry => within(chronology.artifact, entry.at)), 'delivery producer upload ID/digest/size/run/timing mismatch');
   return { id: artifact.id, digest: artifact.digest, run: job.run_id, attempt: job.run_attempt, producerJob: job.id, createdAt: artifact.created_at, logSha256: digest(log), custodySha256: digest(canonical(chronology.identity)) };
 }
 // Separate endpoint reads may repeat the same proven immutable authority. They
