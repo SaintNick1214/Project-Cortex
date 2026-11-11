@@ -4688,3 +4688,54 @@ test('npm staging placeholder plans the first real catalog release without accep
   const failure = new Error('unauthorized registry response');
   assert.throws(() => registryResult(placeholder, failure), failure);
 });
+
+function syntheticDeliveryUploadFixture(times = ['09:01:00.900', '09:01:01.200', '09:01:01.300', '09:01:01.400'], order = [0, 1, 2, 3]) {
+  const f = proofFixture(), lines = f.deliveryLog.split('\n'), markers = lines.slice(1);
+  f.deliveryArtifact.created_at = f.deliveryArtifact.updated_at = '2026-11-02T09:01:01Z';
+  f.deliveryJob.steps.at(-1).completed_at = '2026-11-02T09:01:02Z';
+  f.deliveryLog = [lines[0], ...order.map(index => markers[index].replace(/^[^ ]+ /, `2026-11-02T${times[index]}Z `))].join('\n');
+  return f;
+}
+
+test('delivery upload accepts a causal pre-finalization digest through complete readiness and cache', async () => {
+  for (const times of [undefined, Array(4).fill('09:01:01.200')]) {
+    const f = syntheticDeliveryUploadFixture(times), cache = new Map();
+    for (let read = 0; read < 2; read++) {
+      const result = await publicOutcome(f, cache);
+      assert.equal(result.ready, true);
+      assert.equal(result.authorityComplete, true);
+      const proof = deliveryProducerProof({ run: f.ownRuns[0], job: f.deliveryJob, artifact: f.deliveryArtifact, log: f.deliveryLog, sourceSha: sha });
+      assert.equal(proof.id, f.deliveryArtifact.id);
+      assert.equal(proof.logSha256, digest(f.deliveryLog));
+    }
+  }
+});
+
+test('delivery causal upload preserves exact identities, phase bounds, finalization bounds and marker order', async () => {
+  const changes = [];
+  for (let index = 0; index < 4; index++) {
+    changes.push(f => { const lines = f.deliveryLog.split('\n'); lines.splice(index + 1, 1); f.deliveryLog = lines.join('\n'); });
+    changes.push(f => { const lines = f.deliveryLog.split('\n'); lines.splice(index + 1, 0, lines[index + 1]); f.deliveryLog = lines.join('\n'); });
+  }
+  changes.push(
+    f => f.deliveryLog = f.deliveryLog.replace('f'.repeat(64), '0'.repeat(64)),
+    f => f.deliveryLog = f.deliveryLog.replace('Artifact ID 999', 'Artifact ID 998'),
+    f => f.deliveryLog = f.deliveryLog.replace('Final size is 237 bytes', 'Final size is 236 bytes'),
+    f => f.deliveryLog = f.deliveryLog.replace('/runs/10/artifacts/999', '/runs/11/artifacts/999'),
+    f => f.deliveryLog = f.deliveryLog.replace('09:01:00.900', '09:00:59.999'),
+    f => f.deliveryLog = f.deliveryLog.replace('09:01:00.900', '09:01:02.000'),
+    f => f.deliveryLog = f.deliveryLog.replace('09:01:01.200', '09:01:00.999'),
+    f => f.deliveryLog = f.deliveryLog.replace('09:01:01.300', '09:01:00.999'),
+    f => f.deliveryLog = f.deliveryLog.replace('09:01:01.400', '09:01:00.999'),
+    f => f.deliveryLog = f.deliveryLog.replace('09:01:01.400', '09:01:02.000'),
+  );
+  for (const change of changes) {
+    const f = syntheticDeliveryUploadFixture(); change(f);
+    await deniesPublic(f, new Map(), 'delivery identity/chronology stays mandatory');
+  }
+  const permutations = values => values.length ? values.flatMap((value, index) => permutations(values.filter((_, position) => position !== index)).map(rest => [value, ...rest])) : [[]];
+  for (const order of permutations([0, 1, 2, 3]).slice(1)) {
+    const f = syntheticDeliveryUploadFixture(Array(4).fill('09:01:01.200'), order);
+    await assert.rejects(publicOutcome(f), /upload markers contradict causal order/);
+  }
+});
