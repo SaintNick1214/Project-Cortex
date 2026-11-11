@@ -6,7 +6,7 @@ memory. The application renders durable output and supplies its host-issued JWT.
 
 The current backend-runtime branch is under qualification and has not been released.
 Required missing services remain incomplete; see the
-[current acceptance record](../../_goals/convex-backend-runtime-2026-10-02/qa/completion-current.json).
+[current acceptance record](https://github.com/SaintNick1214/Project-Cortex/blob/dev/_goals/convex-backend-runtime-2026-10-02/qa/completion-current.json).
 
 ## Installation
 

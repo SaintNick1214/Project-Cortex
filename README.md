@@ -9,7 +9,7 @@ TypeScript and AI SDK 7 clients submit and observe durable runs.
 
 The backend runtime is under active implementation. The continuation's current
 acceptance and service gaps are recorded in
-[_goals/convex-backend-runtime-2026-10-02/qa/completion-current.json](_goals/convex-backend-runtime-2026-10-02/qa/completion-current.json).
+[_goals/convex-backend-runtime-2026-10-02/qa/completion-current.json](https://github.com/SaintNick1214/Project-Cortex/blob/dev/_goals/convex-backend-runtime-2026-10-02/qa/completion-current.json).
 An unavailable required capability does not establish functional completion.
 This branch has not been released or deployed to production.
 
@@ -226,11 +226,11 @@ npm run test:contracts
 npm run lint
 ```
 
-Read [AGENTS.md](AGENTS.md) and the
-[project profile](.agents/PROJECT-PROFILE.md) before changes. Service-dependent tests need
+Read [AGENTS.md](https://github.com/SaintNick1214/Project-Cortex/blob/dev/AGENTS.md) and the
+[project profile](https://github.com/SaintNick1214/Project-Cortex/blob/dev/.agents/PROJECT-PROFILE.md) before changes. Service-dependent tests need
 verified disposable targets and real configured prerequisites. A mocked suite, a skipped
 test or a missing service is never reported as actual runtime qualification. The goal's
-[execution record](_goals/convex-backend-runtime-2026-10-02/qa/execution-progress.md)
+[execution record](https://github.com/SaintNick1214/Project-Cortex/blob/dev/_goals/convex-backend-runtime-2026-10-02/qa/execution-progress.md)
 links scoped independent verdicts and raw receipts.
 
 The repository also retains meaningful native provenance, reference-maintenance,
