@@ -258,7 +258,7 @@ it("the whole deferred tool path keeps exact native schemas and its primary mode
   await runtime.toolStepHandler(f.ctx as unknown as ActionCtx, toolArgs);
   expect(executeTool).toHaveBeenCalledTimes(1); expect(executeTool.mock.calls[0][1]).toMatchObject({ runBudgetId: f.db.table("runtimeRuns")[0].runBudgetId, parentOperationId: native._id });
   expect(calls).toContain("runtimeAgent:checkActiveTool"); expect(calls).toContain("runtimeAgent:rememberToolSources");
-  expect(calls).toContain("runtimeAgent:finishOperation");
+  expect(calls).toContain("runtimeAgent:finishGeneratedOperation");
   await runtime.toolStepHandler(f.ctx as unknown as ActionCtx, toolArgs); expect(executeTool).toHaveBeenCalledTimes(1);
   expect(f.db.table("runtimeAgentOperations").filter(row => row.kind === "tool")).toHaveLength(1);
 });

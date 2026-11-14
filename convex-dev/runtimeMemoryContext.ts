@@ -1,3 +1,4 @@
+import { isFactExtractionEligible } from "../src/domain/sources";
 /** Contiguous stage progress and bounded, authorized pending context. */
 import { makeFunctionReference } from "convex/server";
 import { v } from "convex/values";
@@ -30,7 +31,7 @@ function state(event: Event, stage: "facts" | "vectors" | "graph", profileId = D
   if (skipsIngestion(event.eligibility)) return "skipped";
   if (event.eligibility !== "eligible") return "pending";
   if (stage === "graph") {
-    if (event.lineage.role === "assistant") return "skipped";
+    if (!isFactExtractionEligible(event.lineage)) return "skipped";
     if (["failed", "unknown", "dead_letter"].includes(event.factsState)) return "failed";
     if (event.graphState === "complete" && event.graphProfilesComplete?.includes(profileId)) return "complete";
     return event.graphState === "failed" ? "failed" : "pending";

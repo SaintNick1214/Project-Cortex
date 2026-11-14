@@ -120,7 +120,10 @@ export const setMetadata = mutation({ args: {
     userId: v.string(),
   }, handler: async (ctx, args) => {
   const { conversation, actor } = await requireConversation(ctx, args, args.conversationId, "admin"); bindDataActor(actor, args.userId);
-  const metadataCanonical = metadataInput(args.metadata); await ctx.db.patch("runtimeConversations", conversation._id, { metadataCanonical, updatedAt: Date.now() }); return view((await ctx.db.get("runtimeConversations", conversation._id))!);
+  const metadataCanonical = metadataInput(args.metadata);
+  const priorTitle = conversation.metadataCanonical ? (JSON.parse(conversation.metadataCanonical) as { title?: unknown }).title : undefined;
+  const nextTitle = metadataCanonical ? (JSON.parse(metadataCanonical) as { title?: unknown }).title : undefined;
+  await ctx.db.patch("runtimeConversations", conversation._id, { metadataCanonical, ...(priorTitle !== nextTitle ? { sourceTitleJobId: undefined } : {}), updatedAt: Date.now() }); return view((await ctx.db.get("runtimeConversations", conversation._id))!);
 } });
 
 export const checkAccess = mutation({ args: {

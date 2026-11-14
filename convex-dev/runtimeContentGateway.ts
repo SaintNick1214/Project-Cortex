@@ -57,4 +57,10 @@ export async function processContentStageHandler(ctx: ActionCtx, args: { jobId: 
     return null;
   } finally { await governed.lifecycle.complete(); }
 }
-export const processStage = internalAction({ args: work, handler: processContentStageHandler });
+async function workflowContentStage(ctx: ActionCtx, args: { jobId: string; leaseToken: string }, factory?: ContentModelFactory): Promise<null> {
+  // Workpool persists failed action messages outside the Workflow journal.
+  // The factory is a backend-only test port; the wire validator admits IDs only.
+  try { return await processContentStageHandler(ctx, args, factory); }
+  catch { throw new Error("CONTENT_OPERATION_FAILED"); }
+}
+export const processStage = internalAction({ args: work, handler: workflowContentStage });

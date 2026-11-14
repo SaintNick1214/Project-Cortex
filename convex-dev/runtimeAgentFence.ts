@@ -10,6 +10,7 @@ import { comparePosition } from "../src/domain/transcript";
 import { activeAttempt, currentRun } from "./runs";
 import { agentComponent, canonicalMessageHash, checkNativeMediaReferences, executionRevision, hydratePrivateCutoff, singleTranscript, transcriptDenied } from "./runtimeTranscript";
 import { checkContextSourceWitnesses } from "./runtimeContextWitness";
+import { checkSourceDependencies } from "./runtimeSourceDependencies";
 import { recheckAuthority, readV8AgentExecutionRows, readV8AgentToolRows } from "./runtimeAuth";
 import { NATIVE_TOOL_NAMES_V2 as NATIVE_TOOL_NAMES } from "../src/domain/agent-tools";
 
@@ -45,6 +46,8 @@ export async function guardAgentRunBudget(ctx: Pick<QueryCtx, "db" | "runQuery">
   if (canonicalModelJson(run.authorityReference) !== canonicalModelJson(reference)) transcriptDenied("POLICY_DENIED");
   const owned = singleTranscript(await readV8AgentExecutionRows(ctx, run.tenantId, run.memorySpaceId, run.runId, run.attemptNumber));
   if (!owned || !run.snapshotCanonical || canonicalModelJson(owned.reference) !== canonicalModelJson(reference)) transcriptDenied("INVALID_STATE");
+  if (owned.sourceErasedAt !== undefined) transcriptDenied("STALE_CONTEXT");
+  if (owned.hasExternalDependencies) await checkSourceDependencies(ctx, reference, { kind: "execution", id: owned._id });
   const args = { reference, runId: run.runId, attemptNumber: run.attemptNumber, leaseVersion: owned.leaseVersion };
   const snapshot = JSON.parse(run.snapshotCanonical) as CutoffV1;
   let current;

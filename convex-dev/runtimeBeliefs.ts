@@ -1,3 +1,4 @@
+import { isFactExtractionEligible } from "../src/domain/sources";
 /** A belief plan, read versions, ordered slot heads, history and outbox commit together. */
 import { v } from "convex/values";
 import { internalMutation } from "./_generated/server";
@@ -17,7 +18,7 @@ import { enqueueFactProjection } from "./runtimeGraph";
 
 export async function commitBeliefPlan(ctx: MutationCtx, args: StageLease & { planCanonical: string }) {
   const current = await requireStageCommit(ctx, args);
-  if (args.stage !== "facts" || current.source.lineage.role === "assistant" || new TextEncoder().encode(args.planCanonical).length > 1_000_000) ingestionDenied("INVALID_INPUT");
+  if (args.stage !== "facts" || !isFactExtractionEligible(current.source.lineage) || new TextEncoder().encode(args.planCanonical).length > 1_000_000) ingestionDenied("INVALID_INPUT");
   const plan = JSON.parse(args.planCanonical) as BeliefPlanV1;
   if (canonicalModelJson(plan) !== args.planCanonical || plan.version !== 1 || plan.eventId !== current.event.eventId
     || plan.sequence !== current.event.sequence || plan.sourceHash !== current.source.contentHash
@@ -91,7 +92,7 @@ export const commit = internalMutation({ args: { reference: runtimeAuthorityRefe
 export const replan = internalMutation({ args: { reference: runtimeAuthorityReference, eventId: v.string(), stage: ingestionStage,
   attempt: v.number(), leaseVersion: v.number(), planCanonical: v.string() }, handler: async (ctx, args) => {
   const current = await requireStageCommit(ctx, args);
-  if (args.stage !== "facts" || current.source.lineage.role === "assistant" || new TextEncoder().encode(args.planCanonical).length > 1_000_000) ingestionDenied("INVALID_INPUT");
+  if (args.stage !== "facts" || !isFactExtractionEligible(current.source.lineage) || new TextEncoder().encode(args.planCanonical).length > 1_000_000) ingestionDenied("INVALID_INPUT");
   const prior = JSON.parse(args.planCanonical) as BeliefPlanV1;
   if (canonicalModelJson(prior) !== args.planCanonical || prior.version !== 1 || prior.eventId !== current.event.eventId
     || prior.sequence !== current.event.sequence || prior.sourceHash !== current.source.contentHash
