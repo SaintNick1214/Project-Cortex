@@ -15,6 +15,7 @@ import { readArtifactContext, checkArtifactContextWitnesses } from "./runtimeArt
 import { deliveryExpiresAt } from "./runtimeDelivery";
 import { guardAgentRunBudget } from "./runtimeAgentFence";
 import type { CompletedAgentTitle } from "./runtimeAgentFence";
+import { assertSourceWitnessesNotErased, checkSourceDependencies } from "./runtimeSourceDependencies";
 type Ctx = Pick<QueryCtx, "db"> & Partial<Pick<QueryCtx, "runQuery">>;
 export type ContentJob = Doc<"runtimeContentJobs">;
 function titleParent(job: ContentJob): CompletedAgentTitle | undefined {
@@ -54,6 +55,9 @@ export async function checkContentJob(ctx: Ctx, job: ContentJob, reference: Runt
       await checkArtifactContextWitnesses(ctx, reference, bridge.artifactContextWitnesses ?? [], deadlines);
     }
   } else if (job.ownerPrincipalId !== reference.principalId) contentDenied();
+  if (job.sourceErasedAt !== undefined) contentDenied("STALE_CONTEXT");
+  await assertSourceWitnessesNotErased(ctx, s, job.sourceWitnesses);
+  await checkSourceDependencies(ctx, reference, { kind: "content", id: job.jobId }, deadlines);
   await checkContextSourceWitnesses(ctx, reference, job.sourceWitnesses, deadlines);
   await checkArtifactContextWitnesses(ctx, reference, execution ? job.artifactWitnesses : job.deliveryArtifactWitnesses, deadlines);
   const artifact = await contentArtifact(ctx, job, reference, deadlines);

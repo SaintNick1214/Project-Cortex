@@ -9,6 +9,7 @@ export const sourceReference = { sourceId: v.string(), sourceEventId: v.string()
 export const sourceLineage = v.union(
   v.object({ ...sourceReference, role: v.literal("user"), trust: v.literal("user_assertion") }),
   v.object({ ...sourceReference, role: v.literal("assistant"), trust: v.literal("assistant_claim") }),
+  v.object({ ...sourceReference, role: v.literal("external"), trust: v.literal("unverified_external") }),
   v.object({ ...sourceReference, role: v.literal("tool"), trust: v.literal("verified_tool_evidence"), operationId: v.string() }),
 );
 export const embeddingProfile = v.object({
@@ -93,7 +94,9 @@ export const runtimeMemoryTables = {
     .index("by_scope_source", ["tenantId", "memorySpaceId", "lineage.sourceId"])
     .index("by_scope_event", ["tenantId", "memorySpaceId", "lineage.sourceEventId"]),
   runtimeMemoryChunks: defineTable(sourceChunk.fields)
-    .index("by_scope_chunk", ["tenantId", "memorySpaceId", "chunkId"]),
+    .index("by_scope_chunk", ["tenantId", "memorySpaceId", "chunkId"])
+    .index("by_source", ["tenantId", "memorySpaceId", "sourceId"])
+    .index("by_source_revision", ["tenantId", "memorySpaceId", "sourceId", "sourceRevision"]),
   runtimeMemoryVectors: defineTable({ ...derivedVector.fields, embedding: v.optional(v.array(v.float64())),
     embeddingLarge: v.optional(v.array(v.float64())), profileId: v.string(), scopeProfileKey: v.string(),
     ownerPrincipalId: v.string(), scopeProfileOwnerKey: v.string() })
@@ -107,9 +110,13 @@ export const runtimeMemoryTables = {
     ...sourceReference, contentHash: v.string(), profile: embeddingProfile, receiptId: v.string() })
     .index("by_scope", ["tenantId", "memorySpaceId"])
     .index("by_owner", ["tenantId", "memorySpaceId", "ownerPrincipalId"])
+    .index("by_source", ["tenantId", "memorySpaceId", "sourceId"])
+    .index("by_source_revision", ["tenantId", "memorySpaceId", "sourceId", "sourceRevision"])
     .index("by_scope_profile_source", ["tenantId", "memorySpaceId", "profile.profileId", "sourceId", "sourceRevision"]),
   runtimeMemoryReceipts: defineTable({
     tenantId: v.string(), memorySpaceId: v.string(), receiptId: v.string(),
     identity: processingIdentity, canonicalIdentity: v.string(), canonicalPayload: v.string(), createdAt: v.number(),
-  }).index("by_scope_receipt", ["tenantId", "memorySpaceId", "receiptId"]),
+  }).index("by_scope_receipt", ["tenantId", "memorySpaceId", "receiptId"])
+    .index("by_source", ["tenantId", "memorySpaceId", "identity.sourceId"])
+    .index("by_source_revision", ["tenantId", "memorySpaceId", "identity.sourceId", "identity.sourceRevision"]),
 };

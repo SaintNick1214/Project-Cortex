@@ -8,7 +8,7 @@ export const mediaInputBinding = v.object({ assetId: v.string(), assetVersion: v
 export const runtimeMediaTables = {
   runtimeMediaJobs: defineTable({ tenantId: v.string(), memorySpaceId: v.string(), ownerPrincipalId: v.string(), jobId: v.string(), artifactId: v.string(), requestId: v.string(), requestCanonical: v.string(),
     kind: v.union(v.literal("image"), v.literal("video")), prompt: v.string(), reference: runtimeAuthorityReference, conversationId: v.optional(v.string()), input: v.optional(mediaInputBinding),
-    contextSourceWitnesses: v.array(contextSourceWitness), runBudgetId: v.string(), runAccountId: v.id("runtimeBudgetAccounts"), parentOperationId: v.optional(v.id("runtimeModelOperations")),
+    contextSourceWitnesses: v.array(contextSourceWitness), sourceErasedAt: v.optional(v.number()), runBudgetId: v.string(), runAccountId: v.id("runtimeBudgetAccounts"), parentOperationId: v.optional(v.id("runtimeModelOperations")),
     state: mediaJobState, revision: v.number(), leaseToken: v.optional(v.string()), leaseExpiresAt: v.optional(v.number()), expiresAt: v.number(), createdAt: v.number(), updatedAt: v.number(),
     snapshotCanonical: v.optional(v.string()), proofCanonical: v.optional(v.string()), envelopeCanonical: v.optional(v.string()), attemptId: v.optional(v.id("runtimeModelAttempts")), modelOperationId: v.optional(v.id("runtimeModelOperations")), dispatchIdentity: v.optional(v.string()),
     operation: v.optional(v.string()), inferenceId: v.optional(v.string()), webhookSecret: v.optional(v.string()), terminalStatus: v.optional(v.union(v.literal("completed"), v.literal("failed"), v.literal("cancelled"), v.literal("expired"))),

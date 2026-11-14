@@ -31,6 +31,8 @@ import type { CompletedAgentTitle } from "./runtimeAgentFence";
 import { currentControlRun } from "./runs";
 import { assertIngestionPolicyPin, guardIngestionRunBudget } from "./runtimeIngestion";
 import { unreservedCapacityRefusal } from "./runtimeIngestionSchema";
+import { checkSourceDependencies, registerSourceDependencies, sourceDependencyWitnesses, hasExternalEvidenceAncestry } from "./runtimeSourceDependencies";
+import type { ContextSourceWitness } from "../src/domain/context-witness";
 
 type ReadCtx = Pick<QueryCtx, "db" | "runQuery">;
 type WriteCtx = Pick<MutationCtx, "db" | "runQuery">;
@@ -127,6 +129,7 @@ async function checkSource(ctx: ReadCtx, reference: RuntimeAuthorityReference, k
   const capability = purpose(key) === "write" ? "write" : "read";
   const row = await new ConvexMemoryRepository(ctx, reference, capability).getSource(source.sourceId);
   if (!row || row.lineage.sourceEventId !== source.sourceEventId || row.lineage.sourceRevision !== source.sourceRevision || row.contentHash !== source.contentHash) fail("FORBIDDEN");
+  if (row.lineage.role !== "user" && (key === "memory.extract" || key === "facts.resolve") && await hasExternalEvidenceAncestry(ctx, memoryScope(reference), row.lineage)) fail("CAPABILITY_UNAVAILABLE");
   if (await semanticHash(row.content) !== source.contentHash) fail("FORBIDDEN");
 }
 function validManifest(manifest: DeploymentPolicyManifest | undefined): asserts manifest is DeploymentPolicyManifest {
@@ -318,6 +321,8 @@ async function currentOperation(ctx: ReadCtx, reference: RuntimeAuthorityReferen
   if (!sameAuthority(reference, operation.reference)) fail("FORBIDDEN");
   await currentAuthority(ctx, reference, operation.operationKey);
   await checkSource(ctx, reference, operation.operationKey, operation.source);
+  if (operation.sourceErasedAt !== undefined) fail("STALE_CONTEXT");
+  await checkSourceDependencies(ctx, reference, { kind: "model", id: operation._id });
   if (operation.cancelled && !permitCancelled) fail("RUN_CANCELLED");
   const run = await ctx.db.get("runtimeBudgetAccounts", operation.runAccountId);
   if (!run || !run.reference || !sameAuthority(run.reference, reference) || run.tenantId !== reference.tenantId || (run.cancelled && !permitCancelled)) fail("FORBIDDEN");
@@ -667,6 +672,37 @@ export function deriveQualifiedInputBound(proof: QualifiedDispatchEvidence, requ
 const admitArgs = { ...resolveArgs, semanticId: v.string(), ordinal: v.number(), requestCanonical: v.string() };
 const _admissionValidator = v.object(admitArgs);
 export type AdmitModelArgs = Infer<typeof _admissionValidator>;
+/** Admission and dependency custody commit together, including the window
+ * before the producer binds its operation ID. Financial recovery never needs
+ * to store a private result merely because its producer no longer exists. */
+async function registerAdmittedDependencies(ctx: MutationCtx, reference: RuntimeAuthorityReference, operation: Operation, source?: Source) {
+  const scope = { tenantId: reference.tenantId, memorySpaceId: reference.memorySpaceId! };
+  const witnesses: ContextSourceWitness[] = source ? [source] : [];
+  const run = await ctx.db.query("runtimeRuns").withIndex("by_run_account", q => q.eq("runAccountId", operation.runAccountId)).first();
+  if (run?.executionRequested) {
+    const execution = await ctx.db.query("runtimeAgentExecutions").withIndex("by_attempt", q => q.eq("tenantId", scope.tenantId).eq("memorySpaceId", scope.memorySpaceId).eq("runId", run.runId).eq("attemptNumber", run.attemptNumber)).unique();
+    if (execution) {
+      witnesses.push(...execution.sourceWitnesses, ...await sourceDependencyWitnesses(ctx, scope, { kind: "execution", id: execution._id }));
+      await registerSourceDependencies(ctx, scope, { kind: "execution", id: execution._id }, execution.sourceWitnesses, execution.artifactContextWitnesses ?? []);
+      const inherited = await sourceDependencyWitnesses(ctx, scope, { kind: "execution", id: execution._id });
+      if (inherited.length && !execution.hasExternalDependencies) await ctx.db.patch("runtimeAgentExecutions", execution._id, { hasExternalDependencies: true });
+      witnesses.push(...inherited);
+    }
+  }
+  const jobs = await ctx.db.query("runtimeContentJobs").withIndex("by_account", q => q.eq("runAccountId", operation.runAccountId)).take(129);
+  if (jobs.length > 128) fail("CONTEXT_LIMIT_EXCEEDED");
+  for (const job of jobs) if (operation.semanticId === `${job.jobId}:primary` || operation.semanticId === `${job.jobId}:title`) {
+    await registerSourceDependencies(ctx, scope, { kind: "content", id: job.jobId }, job.sourceWitnesses, job.artifactWitnesses);
+    witnesses.push(...await sourceDependencyWitnesses(ctx, scope, { kind: "content", id: job.jobId }));
+  }
+  const media = await ctx.db.query("runtimeMediaJobs").withIndex("by_account", q => q.eq("runAccountId", operation.runAccountId).eq("jobId", operation.semanticId)).unique();
+  if (media) {
+    await registerSourceDependencies(ctx, scope, { kind: "media", id: media.jobId }, media.contextSourceWitnesses);
+    witnesses.push(...await sourceDependencyWitnesses(ctx, scope, { kind: "media", id: media.jobId }));
+  }
+  if (operation.parentOperationId) witnesses.push(...await sourceDependencyWitnesses(ctx, scope, { kind: "model", id: operation.parentOperationId }));
+  await registerSourceDependencies(ctx, scope, { kind: "model", id: operation._id }, witnesses);
+}
 export async function admitHandler(ctx: MutationCtx, args: Infer<typeof _admissionValidator>) {
   await currentAuthority(ctx, args.reference, args.operationKey); integer(args.ordinal); text(args.semanticId);
   await checkSource(ctx, args.reference, args.operationKey, args.source);
@@ -743,6 +779,7 @@ export async function admitHandler(ctx: MutationCtx, args: Infer<typeof _admissi
       reservedUnits: 0, settledUnits: 0, uncertainUnits: 0, overrun: false, cancelled: false, createdAt: Date.now() });
     operation = (await ctx.db.get("runtimeModelOperations", operationDocumentId))!;
   }
+  await registerAdmittedDependencies(ctx, args.reference, operation, args.source);
   const attemptId = await ctx.db.insert("runtimeModelAttempts", { operationDocumentId: operation._id, childCallId, ordinal: args.ordinal, attemptNumber: 1,
     canonical: validated.canonical, hash: requestHash, resolutionCanonical: resolved.resolutionCanonical, snapshotCanonical: canonical(snapshot), inputProofCanonical: canonical({ proof, requestCanonical: canonical(validated.request), inputTokens: validated.request.inputTokens, outputTokens: validated.request.outputTokens }),
     measuredInputTokens: validated.request.inputTokens, maximumOutputTokens: validated.request.outputTokens, tenantAccountId: tenant._id, runAccountId: run._id, reservationUnits: ceiling, state: "reserved", dispatchIdentity: await semanticHash(canonical([bindingHash, childCallId, 1])),
@@ -1088,7 +1125,7 @@ async function settleAttempt(ctx: WriteCtx, reference: RuntimeAuthorityReference
   if (deploymentRetirement) await retiredScope(ctx, operation);
   else if (liabilityOnly) await liabilityAuthority(ctx, reference, operation);
   else if (!sameAuthority(reference, operation.reference)) fail("FORBIDDEN");
-  const canDeliver = !liabilityOnly && await permittedResult(ctx, reference, operation);
+  const canDeliver = !liabilityOnly && attempt.sourceErasedAt === undefined && await permittedResult(ctx, reference, operation);
   if (!liabilityOnly) await currentAuthority(ctx, reference, operation.operationKey);
   const parsed = receiptSchema.safeParse(decode(receiptCanonical));
   if (!parsed.success) return await writeUnknown(ctx, state);
@@ -1193,7 +1230,7 @@ export async function captureTerminalEvidenceHandler(ctx: MutationCtx, args: { a
   }
   const cost = knownCost(receipt, proof);
   if (captured && cost === undefined) fail("IDEMPOTENCY_CONFLICT", "uncertain");
-  const deliverable = !captured && !attempt.terminalEvidenceCanonical
+  const deliverable = attempt.sourceErasedAt === undefined && !captured && !attempt.terminalEvidenceCanonical
     && ((cost !== undefined && cost <= attempt.reservationUnits && receipt.outcome === "confirmed") || confirmedUnknownResult(attempt, snapshot, receipt, proof))
     && completeExtractionUsage(snapshot, receipt) && !observationViolation(attempt, snapshot, receipt, proof)
     && await permittedAttachment(ctx, operation.reference, state);
@@ -1213,6 +1250,7 @@ export const captureTerminalEvidenceV8 = internalMutation({ args: terminalCaptur
 /** Private delivery is independently fenced by exact current original authority. Closed never reopens. */
 export async function attachTerminalResultHandler(ctx: MutationCtx, args: { reference: RuntimeAuthorityReference; attemptId: Id<"runtimeModelAttempts">; evidenceId: string; privateResultCanonical: string }) {
   const state = await attemptContext(ctx, args.attemptId); const { attempt, operation, snapshot } = state;
+  if (attempt.sourceErasedAt !== undefined) return { attached: false, resultWithheld: true };
   if (!capturedAttempt(attempt)) return { attached: false, resultWithheld: true };
   if (args.evidenceId !== await captureIdentity(attempt)) fail("IDEMPOTENCY_CONFLICT", "uncertain");
   if (attempt.resultAttachmentState === "closed") return { attached: false, resultWithheld: true };

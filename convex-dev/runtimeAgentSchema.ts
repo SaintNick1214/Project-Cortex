@@ -8,7 +8,7 @@ export const agentAttempt = { reference: runtimeAuthorityReference, runId: v.str
 export const sourceWitness = contextSourceWitness;
 const scope = { tenantId: v.string(), memorySpaceId: v.string(), runId: v.string(), attemptNumber: v.number() };
 export const runtimeAgentTables = {
-  runtimeAgentExecutions: defineTable({ ...scope, workflowId: v.optional(v.string()), reference: runtimeAuthorityReference,
+  runtimeAgentExecutions: defineTable({ ...scope, workflowId: v.optional(v.string()), sourceErasedAt: v.optional(v.number()), hasExternalDependencies: v.optional(v.literal(true)), reference: runtimeAuthorityReference,
     executionMode: v.optional(v.union(v.literal("direct-v6"), v.literal("direct-v8"))), scheduledActionId: v.optional(v.id("_scheduled_functions")),
     directState: v.optional(v.union(v.literal("scheduled"), v.literal("started"), v.literal("continuation_pending"), v.literal("continuation"))),
     leaseVersion: v.number(), state: v.union(v.literal("ready"), v.literal("running"), v.literal("waiting_approval"),
@@ -28,14 +28,15 @@ export const runtimeAgentTables = {
   runtimeAgentOutput: defineTable({ ...scope, sequence: v.number(), partCanonical: v.string(), final: v.boolean(), createdAt: v.number() })
     .index("by_sequence", ["tenantId", "memorySpaceId", "runId", "attemptNumber", "sequence"])
     .index("by_delivery", ["tenantId", "memorySpaceId", "runId", "attemptNumber", "final", "sequence"]),
-  runtimeAgentOperations: defineTable({ ...scope, operationId: v.string(), semanticId: v.string(), kind: v.union(v.literal("model"), v.literal("tool")),
+  runtimeAgentOperations: defineTable({ ...scope, sourceErasedAt: v.optional(v.number()), operationId: v.string(), semanticId: v.string(), kind: v.union(v.literal("model"), v.literal("tool")),
     ordinal: v.number(), toolCallId: v.optional(v.string()), toolName: v.optional(v.string()), requestCanonical: v.string(),
     nativeRequestCanonical: v.optional(v.string()),
     state: v.union(v.literal("prepared"), v.literal("waiting_approval"), v.literal("approved"), v.literal("started"), v.literal("complete"), v.literal("unknown")),
     resultCanonical: v.optional(v.string()), nativeMessageIds: v.array(v.string()), nativeModelOperationId: v.optional(v.id("runtimeModelOperations")), approvalActor: v.optional(runtimeAuthorityReference),
     startedAt: v.optional(v.number()), endedAt: v.optional(v.number()), createdAt: v.number(),
   }).index("by_operation", ["tenantId", "memorySpaceId", "operationId"])
-    .index("by_attempt", ["tenantId", "memorySpaceId", "runId", "attemptNumber", "kind", "ordinal"]),
+    .index("by_attempt", ["tenantId", "memorySpaceId", "runId", "attemptNumber", "kind", "ordinal"])
+    .index("by_attempt_erasure", ["tenantId", "memorySpaceId", "runId", "attemptNumber", "sourceErasedAt"]),
   runtimeAgentIngestion: defineTable({ ...scope, receiptId: v.string(), identityCanonical: v.string(), outputMessageIds: v.array(v.string()),
     sourceEvents: v.array(v.object({ sourceEventId: v.string(), sourceRevision: v.number() })), state: v.literal("pending"), createdAt: v.number() })
     .index("by_run", ["tenantId", "memorySpaceId", "runId"]),

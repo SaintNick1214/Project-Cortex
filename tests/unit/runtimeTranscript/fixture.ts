@@ -175,6 +175,9 @@ export async function transcriptFixture(options: { maxContextTokens?: number } =
     const args = input as Record<string, unknown>;
     if (!path && getFunctionName(ref as Parameters<typeof getFunctionName>[0]) === "runtimeModelPolicy:embeddingProfile") return await invoke(ledger.embeddingProfile, ctx, args);
     if (path?.endsWith("/getMessagesByIds")) return (args.messageIds as string[]).map(id => native.messages.get(id) ?? null);
+    // This fixture has no native stream rows; focused owning-component tests
+    // replace this explicit empty inventory with the actual stream handlers.
+    if (path?.endsWith("/streams/list")) return [];
     if (path?.endsWith("/listMessagesByThreadId")) {
       const anchor = typeof args.upToAndIncludingMessageId === "string" ? native.messages.get(args.upToAndIncludingMessageId) : undefined;
       const pagination = args.paginationOpts as { cursor: string | null; numItems: number };

@@ -1,3 +1,4 @@
+import { isFactExtractionEligible } from "../src/domain/sources";
 /** Durable source/stage jobs. Scheduler actions never inherit an Agent response budget. */
 import { makeFunctionReference } from "convex/server";
 import type { FunctionReference } from "convex/server";
@@ -25,6 +26,8 @@ import type { UnreservedCapacityRefusal } from "./runtimeModelPolicy";
 import type { ConflictDecision } from "../src/domain/conflicts";
 import { createGatewayMemoryModel } from "./runtimeMemoryGateway";
 import { deferForegroundStage } from "./runtimeIngestionPriority";
+import { publishExternalIndexTransition } from "./runtimeChangesStore";
+import { hasExternalEvidenceAncestry } from "./runtimeSourceDependencies";
 
 type ReadCtx = Pick<QueryCtx, "db">;
 type Event = Doc<"runtimeIngestionEvents">;
@@ -156,14 +159,15 @@ export async function enqueueSourceEvent(ctx: MutationCtx, reference: RuntimeAut
     await ctx.db.insert("runtimeIngestionSequenceHeads", { tenantId: source.tenantId, memorySpaceId: source.memorySpaceId, version: 1, sequence });
   }
   const eligibility = origin.eligibility ?? (source.lineage.role === "tool" ? "awaiting_tool" : "eligible");
+  const extractsFacts = isFactExtractionEligible(source.lineage) && !await hasExternalEvidenceAncestry(ctx, source, source.lineage);
   const value = { version: 1 as const, tenantId: source.tenantId, memorySpaceId: source.memorySpaceId, eventId, identityCanonical,
     ownerPrincipalId: source.ownerPrincipalId, sequence, lineage: source.lineage, contentHash: source.contentHash,
-    authorityReference: reference, eligibility, factsState: source.lineage.role === "assistant" ? "skipped" as const : "pending" as const,
+    authorityReference: reference, eligibility, factsState: !extractsFacts ? "skipped" as const : "pending" as const,
     vectorsState: "pending" as const, extractionVersion: SOURCE_EXTRACTION_POLICY_VERSION, beliefVersion: BELIEF_POLICY_VERSION, profile: DEFAULT_EMBEDDING_PROFILE,
     ...Object.fromEntries(Object.entries(origin).filter(([key, value]) => key !== "eligibility" && value !== undefined)), createdAt: now, updatedAt: now };
   const id = await ctx.db.insert("runtimeIngestionEvents", value);
   for (const stage of ["extract", "facts", "vectors"] as const) await ctx.db.insert("runtimeIngestionStages", { tenantId: source.tenantId,
-    memorySpaceId: source.memorySpaceId, eventId, stage, state: source.lineage.role === "assistant" && stage !== "vectors" ? "skipped" : "pending",
+    memorySpaceId: source.memorySpaceId, eventId, stage, state: !extractsFacts && stage !== "vectors" ? "skipped" : "pending",
     attempt: 0, leaseVersion: 0, updatedAt: now });
   const event = (await ctx.db.get("runtimeIngestionEvents", id))!;
   // A tracked edit preserves its cancelled run/message identity. It must not
@@ -172,7 +176,7 @@ export async function enqueueSourceEvent(ctx: MutationCtx, reference: RuntimeAut
     .eq("memorySpaceId", event.memorySpaceId).eq("runId", event.runId!)).unique() : null;
   if (run?.responseStatus === "cancelled" && run.attemptNumber === 0 && run.approvedAt === undefined) await retireCancelledUnapprovedInputs(ctx, run);
   else await readiness(ctx, event);
-  if (eligibility === "eligible") await ctx.scheduler.runAfter(0, processRef, { reference, eventId, stage: source.lineage.role === "assistant" ? "vectors" : "extract" });
+  if (eligibility === "eligible") await ctx.scheduler.runAfter(0, processRef, { reference, eventId, stage: !extractsFacts ? "vectors" : "extract" });
   return { eventId, sequence, created: true };
 }
 export async function retireSourceEvents(ctx: MutationCtx, reference: RuntimeAuthorityReference, sourceId: string, state: "superseded" | "tombstoned") {
@@ -224,6 +228,8 @@ export const retireScopedSource = internalMutation({ args: { tenantId: v.string(
   handler: async (ctx, args) => { await retireScopedSourceEvents(ctx, args, args.sourceId, "tombstoned"); return null; } });
 async function writeStage(ctx: MutationCtx, event: Event, row: Doc<"runtimeIngestionStages">,
   patch: Partial<Omit<Doc<"runtimeIngestionStages">, "_id" | "_creationTime">>) {
+  const previous = event.lineage.role === "external" && row.stage === "vectors" ? await ctx.db.get("runtimeIngestionStages", row._id) : row;
+  if (!previous) ingestionDenied("INGESTION_CONFLICT");
   await ctx.db.patch("runtimeIngestionStages", row._id, patch);
   // Lease/running activity lives on the stage. Event summaries publish readiness,
   // whose pending/running states are equivalent for every foreground consumer.
@@ -238,6 +244,7 @@ async function writeStage(ctx: MutationCtx, event: Event, row: Doc<"runtimeInges
       await ctx.db.patch("runtimeIngestionEvents", event._id, { ...summary, updatedAt: Date.now() });
     }
   }
+  await publishExternalIndexTransition(ctx, event, previous, { ...previous, ...patch });
 }
 async function stageRow(ctx: ReadCtx, event: Event, stage: IngestionStage) {
   const row = exactOne(await ctx.db.query("runtimeIngestionStages").withIndex("by_event_stage", q => q.eq("tenantId", event.tenantId)
@@ -253,6 +260,7 @@ export async function requireStageLease(ctx: ReadCtx, args: StageLease) {
 /** Resolve the same job/stage/source again in the parent commit; policy changes cannot attach an old paid draft. */
 export async function requireStageCommit(ctx: MutationCtx, args: StageLease) {
   const current = await requireStageLease(ctx, args);
+  if (args.stage !== "vectors" && await hasExternalEvidenceAncestry(ctx, current.source, current.source.lineage)) ingestionDenied("CAPABILITY_UNAVAILABLE");
   const job = await ctx.db.query("runtimeIngestionJobs").withIndex("by_event", q => q.eq("tenantId", current.event.tenantId)
     .eq("memorySpaceId", current.event.memorySpaceId).eq("eventId", current.event.eventId)).unique();
   if (!job) ingestionDenied("INVALID_STATE");
@@ -285,7 +293,7 @@ export async function assertIngestionPolicyPin(ctx: ReadCtx, accountId: Id<"runt
   if (row.policyCanonical !== canonicalModelJson(snapshot)) ingestionDenied("POLICY_CHANGED");
 }
 async function extractionParent(ctx: ReadCtx, event: Event, job: Doc<"runtimeIngestionJobs">) {
-  if (event.lineage.role === "assistant") return undefined;
+  if (!isFactExtractionEligible(event.lineage) || event.factsState === "skipped") return undefined;
   const extraction = await stageRow(ctx, event, "extract");
   const semanticId = await semanticHash(canonicalModelJson(["memory.extract", `${event.eventId}:extract:${extraction.attempt}`, event.extractionVersion]));
   const operation = await ctx.db.query("runtimeModelOperations").withIndex("by_identity", q => q.eq("tenantId", event.tenantId).eq("memorySpaceId", event.memorySpaceId)
@@ -299,6 +307,8 @@ const MAX_CLAIM_WAKES = 4;
 export const claim = internalMutation({ args: stageArgs, handler: async (ctx, args) => {
   const current = await readEventCurrent(ctx, args.reference, args.eventId, "write"); const row = await stageRow(ctx, current.event, args.stage);
   if (row.state === "complete" || row.state === "skipped") return null;
+  const extractsFacts = isFactExtractionEligible(current.source.lineage) && !await hasExternalEvidenceAncestry(ctx, current.source, current.source.lineage);
+  if (args.stage !== "vectors" && !extractsFacts) ingestionDenied("CAPABILITY_UNAVAILABLE");
   if (row.state === "running") {
     if ((row.leaseExpiresAt ?? 0) > Date.now()) return null;
     await writeStage(ctx, current.event, row, { state: "unknown", failureCode: "INTERRUPTED_REQUIRES_RECONCILIATION", updatedAt: Date.now() });
@@ -326,14 +336,14 @@ export const claim = internalMutation({ args: stageArgs, handler: async (ctx, ar
     }
     if (Date.now() < row.claimWait.notBefore) return null;
   }
-  if (args.stage !== "extract" && current.source.lineage.role !== "assistant") {
+  if (args.stage !== "extract" && extractsFacts) {
     const dependency = await stageRow(ctx, current.event, args.stage === "facts" ? "extract" : "facts");
     if (dependency.state !== "complete" && dependency.state !== "skipped") return null;
   }
   let job = await ctx.db.query("runtimeIngestionJobs").withIndex("by_event", q => q.eq("tenantId", current.event.tenantId).eq("memorySpaceId", current.event.memorySpaceId).eq("eventId", args.eventId)).unique();
   if (!job) {
     const requestCanonical = canonicalModelJson([current.event.identityCanonical, current.event.extractionVersion, current.event.beliefVersion, current.event.profile]);
-    const budget = await bindTrustedBudget(ctx, { reference: args.reference, operationKey: current.source.lineage.role === "assistant" ? "embedding.memory" : "memory.extract", requestId: args.eventId, requestCanonical });
+    const budget = await bindTrustedBudget(ctx, { reference: args.reference, operationKey: !extractsFacts ? "embedding.memory" : "memory.extract", requestId: args.eventId, requestCanonical });
     const id = await ctx.db.insert("runtimeIngestionJobs", { tenantId: current.event.tenantId, memorySpaceId: current.event.memorySpaceId,
       eventId: args.eventId, ...budget, requestCanonical, createdAt: Date.now() }); job = (await ctx.db.get("runtimeIngestionJobs", id))!;
   }
@@ -799,6 +809,9 @@ export async function registerCompletedDerivedSource(ctx: MutationCtx, reference
   const source = await new ConvexMemoryRepository(ctx, reference, "write").getSource(receipt.identity.sourceId);
   if (!source || source.lineage.sourceEventId !== receipt.identity.sourceEventId || source.lineage.sourceRevision !== receipt.identity.sourceRevision
     || payload.vectors.some(vector => canonicalModelJson(vector.profile) !== canonicalModelJson(profile))) ingestionDenied("STALE_SOURCE");
+  const externalEvidence = source.lineage.role !== "user" && await hasExternalEvidenceAncestry(ctx, source, source.lineage);
+  const extractsFacts = isFactExtractionEligible(source.lineage) && !externalEvidence;
+  if (payload.identity.stage === "facts" && externalEvidence) ingestionDenied("CAPABILITY_UNAVAILABLE");
   const admitted = await enqueueSourceEvent(ctx, reference, source, { ...origin, eligibility: source.lineage.role === "tool" ? "awaiting_tool" : "eligible",
     ...(source.lineage.role === "tool" ? { toolOperationId: source.lineage.operationId } : {}) });
   const event = (await eventById(ctx, reference, admitted.eventId))!;
@@ -811,12 +824,12 @@ export async function registerCompletedDerivedSource(ctx: MutationCtx, reference
   }
   for (const stage of await readEventStages(ctx, event)) {
     if (payload.identity.stage === "vectors" && stage.stage !== "vectors") continue;
-    const state = stage.stage === "extract" || source.lineage.role === "assistant" && stage.stage === "facts" ? "skipped" as const : "complete" as const;
+    const state = stage.stage === "extract" || !extractsFacts && stage.stage === "facts" ? "skipped" as const : "complete" as const;
     if (stage.state !== state || stage.receiptId !== receiptId) await writeStage(ctx, event, stage,
       { state, receiptId, updatedAt: Date.now() });
   }
   const oldOutbox = await ctx.db.query("runtimeBeliefOutbox").withIndex("by_event", q => q.eq("tenantId", event.tenantId).eq("memorySpaceId", event.memorySpaceId).eq("eventId", event.eventId)).unique();
-  if (!oldOutbox && payload.identity.stage === "facts" && source.lineage.role !== "assistant") {
+  if (!oldOutbox && payload.identity.stage === "facts" && extractsFacts) {
     for (const [ordinal, fact] of (payload.facts ?? []).entries()) {
       const slotKey = canonicalModelJson([source.ownerPrincipalId, beliefSlot(fact)]);
       const head = await ctx.db.query("runtimeBeliefHeads").withIndex("by_slot", q => q.eq("tenantId", event.tenantId).eq("memorySpaceId", event.memorySpaceId).eq("slotKey", slotKey)).unique();

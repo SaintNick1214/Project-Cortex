@@ -51,6 +51,7 @@ class MemoryDb {
       },
       filter: (callback: (q: typeof filters) => Expr) => { predicates.push(callback(filters)); return result; },
       unique: async () => { const values = selected(); if (values.length > 1) throw new Error("Duplicate unique control record"); return values[0] ?? null; },
+      first: async () => selected()[0] ?? null,
       take: async (limit: number) => selected().slice(0, limit), collect: async () => selected(),
       paginate: async (options: { cursor: string | null; numItems: number }) => { const rows = selected(); const offset = Number(options.cursor ?? 0); return { page: rows.slice(offset, offset + options.numItems), isDone: offset + options.numItems >= rows.length, continueCursor: String(offset + options.numItems) }; },
     };

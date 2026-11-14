@@ -21,6 +21,7 @@ import { checkMediaJob, mediaDenied } from "./runtimeMediaFence";
 import { processSubmissionHandler, processPollHandler, processDownloadHandler } from "./runtimeMediaGateway";
 import { contextSourceWitness } from "./runtimeContextWitnessSchema";
 import { guardAgentRunBudget } from "./runtimeAgentFence";
+import { registerSourceDependencies, sourceDependencyWitnesses } from "./runtimeSourceDependencies";
 type Job = Doc<"runtimeMediaJobs">;
 const selectors = { tenantId: v.optional(v.string()), memorySpaceId: v.optional(v.string()) };
 const jobSelector = { ...selectors, jobId: v.string() };
@@ -31,8 +32,20 @@ export async function mediaJob(ctx: Pick<MutationCtx, "db">, jobId: string): Pro
   const row = await ctx.db.query("runtimeMediaJobs").withIndex("by_job", q => q.eq("jobId", jobId)).unique();
   if (!row) mediaDenied("MEDIA_JOB_NOT_FOUND"); return row;
 }
-export async function publicMediaJob(ctx: Pick<MutationCtx, "db">, job: Job, reference: RuntimeAuthorityReference): Promise<RuntimeMediaJobV1> {
+async function mediaDependencies(ctx: Pick<MutationCtx, "db">, job: Pick<Job, "tenantId" | "memorySpaceId" | "contextSourceWitnesses" | "parentOperationId" | "input">) {
+  const inherited = job.parentOperationId ? await sourceDependencyWitnesses(ctx, job, { kind: "model", id: job.parentOperationId }) : [];
+  const input = job.input ? await assetVersion(ctx, job, job.input.assetId, job.input.assetVersion) : undefined;
+  if (input?.lineage.kind === "generated") inherited.push(...await sourceDependencyWitnesses(ctx, job, { kind: "model", id: input.lineage.operationId }));
+  return [...job.contextSourceWitnesses, ...inherited];
+}
+/** Reindex existing recorded witnesses before any new private checkpoint writes. */
+async function registerMediaDependencies(ctx: MutationCtx, job: Job) {
+  if (job.sourceErasedAt !== undefined) mediaDenied("STALE_CONTEXT");
+  await registerSourceDependencies(ctx, job, { kind: "media", id: job.jobId }, await mediaDependencies(ctx, job));
+}
+export async function publicMediaJob(ctx: MutationCtx, job: Job, reference: RuntimeAuthorityReference): Promise<RuntimeMediaJobV1> {
   const deadlines: number[] = []; await checkMediaJob(ctx, job, reference, false, deadlines);
+  await registerMediaDependencies(ctx, job);
   const asset = job.assetVersionId ? await versionById(ctx, job, job.assetVersionId) : undefined;
   if (asset) await authorizeAsset(ctx, reference, asset, "storage:read", new Set(), deadlines);
   const expiresAt = await deliveryExpiresAt(ctx, reference, deadlines);
@@ -70,6 +83,9 @@ export async function enqueueMediaJob(ctx: MutationCtx, reference: RuntimeAuthor
     if (!account || account.runBudgetId !== binding.runBudgetId || canonicalModelJson(account.reference) !== canonicalModelJson(reference) || !parent || parent.runAccountId !== account._id || parent.operationKey !== "agent.respond") mediaDenied();
     await guardAgentRunBudget(ctx, reference, account._id);
   }
+  const witnesses = await mediaDependencies(ctx, { ...s, contextSourceWitnesses: binding?.witnesses ?? [], parentOperationId: binding?.parentOperationId, input: inputBinding });
+  await registerSourceDependencies(ctx, s, { kind: "media", id: jobId }, witnesses);
+  await registerSourceDependencies(ctx, s, { kind: "artifact", id: artifactId, revision: 1 }, witnesses);
   const now = Date.now(); const title = args.kind === "image" ? "Generated image" : "Generated video";
   await ctx.db.insert("artifacts", { ...s, artifactId, ownerPrincipalId: reference.principalId, lastActorPrincipalId: reference.principalId,
     kind: args.kind, streamingState: "draft", title, content: "", version: 1, versionPointer: 1,
@@ -129,25 +145,26 @@ export const reconcile = mutation({ args: jobSelector, handler: async (ctx, args
 } });
 async function transition(ctx: MutationCtx, job: Job, state: MediaJobState, failureCode?: string) { await ctx.db.patch("runtimeMediaJobs", job._id, { state, ...(failureCode ? { failureCode } : {}), revision: job.revision + 1, updatedAt: Date.now() }); if (["failed", "cancelled", "expired"].includes(state)) await ctx.scheduler.runAfter(0, ref("cleanupOutput"), { jobId: job.jobId }); }
 export const claimSubmission = internalMutation({ args: { jobId: v.string() }, handler: async (ctx, args) => {
-  const job = await mediaJob(ctx, args.jobId); if (job.state !== "pending") return null; await checkMediaJob(ctx, job, job.reference, true);
+  const job = await mediaJob(ctx, args.jobId); if (job.state !== "pending") return null; await registerMediaDependencies(ctx, job); await checkMediaJob(ctx, job, job.reference, true);
   const leaseToken = crypto.randomUUID(); await ctx.db.patch("runtimeMediaJobs", job._id, { state: "submitting", leaseToken, leaseExpiresAt: Date.now() + MEDIA_LEASE_MS, revision: job.revision + 1, updatedAt: Date.now() });
   await ctx.scheduler.runAfter(MEDIA_LEASE_MS, ref("expireSubmission"), { jobId: job.jobId, leaseToken }); return { ...job, state: "submitting" as const, leaseToken };
 } });
 export const expireSubmission = internalMutation({ args: { jobId: v.string(), leaseToken: v.string() }, handler: async (ctx, args) => { const job = await mediaJob(ctx, args.jobId); if (job.state === "submitting" && job.leaseToken === args.leaseToken && Date.now() >= (job.leaseExpiresAt ?? 0)) await transition(ctx, job, "submission_unknown", "MEDIA_SUBMISSION_UNKNOWN"); return null; } });
-export const chargeState = internalMutation({ args: { jobId: v.string() }, handler: async (ctx, args) => mediaJob(ctx, args.jobId) });
+export const chargeState = internalMutation({ args: { jobId: v.string() }, handler: async (ctx, args) => { const job = await mediaJob(ctx, args.jobId); await registerMediaDependencies(ctx, job); return job; } });
 export const checkpoint = internalMutation({ args: { jobId: v.string(), leaseToken: v.optional(v.string()) }, handler: async (ctx, args) => {
   const job = await mediaJob(ctx, args.jobId); if (terminal(job.state) || job.state === "submission_unknown" || Date.now() >= job.expiresAt || args.leaseToken !== undefined && (job.leaseToken !== args.leaseToken || Date.now() >= (job.leaseExpiresAt ?? 0))) mediaDenied("MEDIA_JOB_EXPIRED");
-  await checkMediaJob(ctx, job, job.reference, true); return job;
+  await registerMediaDependencies(ctx, job); await checkMediaJob(ctx, job, job.reference, true); return job;
 } });
 export const bindAttempt = internalMutation({ args: { jobId: v.string(), leaseToken: v.string(), attemptId: v.id("runtimeModelAttempts"), modelOperationId: v.id("runtimeModelOperations"), dispatchIdentity: v.string(), snapshotCanonical: v.string(), proofCanonical: v.string(), envelopeCanonical: v.string() }, handler: async (ctx, args) => {
-  const job = await mediaJob(ctx, args.jobId); await checkMediaJob(ctx, job, job.reference, true);
+  const job = await mediaJob(ctx, args.jobId); await registerMediaDependencies(ctx, job); await checkMediaJob(ctx, job, job.reference, true);
   if (job.state !== "submitting" || job.leaseToken !== args.leaseToken || Date.now() >= (job.leaseExpiresAt ?? 0) || job.attemptId) mediaDenied("MEDIA_JOB_EXPIRED");
   const attempt = await ctx.db.get("runtimeModelAttempts", args.attemptId); const operation = await ctx.db.get("runtimeModelOperations", args.modelOperationId);
   if (!attempt || !operation || attempt.operationDocumentId !== operation._id || operation.semanticId !== job.jobId || operation.runAccountId !== job.runAccountId || attempt.dispatchIdentity !== args.dispatchIdentity || attempt.snapshotCanonical !== args.snapshotCanonical) mediaDenied();
+  await registerSourceDependencies(ctx, job, { kind: "model", id: operation._id }, [...await mediaDependencies(ctx, job), ...await sourceDependencyWitnesses(ctx, job, { kind: "media", id: job.jobId })]);
   const { jobId: _id, leaseToken: _lease, ...pin } = args; await ctx.db.patch("runtimeMediaJobs", job._id, { ...pin, costStatus: "incurred_unknown" }); return null;
 } });
 export const acknowledge = internalMutation({ args: { jobId: v.string(), leaseToken: v.string(), operation: v.string(), inferenceId: v.string(), webhookSecret: v.optional(v.string()) }, handler: async (ctx, args) => {
-  const job = await mediaJob(ctx, args.jobId); await checkMediaJob(ctx, job, job.reference, true);
+  const job = await mediaJob(ctx, args.jobId); await registerMediaDependencies(ctx, job); await checkMediaJob(ctx, job, job.reference, true);
   if (job.state !== "submitting" || job.leaseToken !== args.leaseToken || Date.now() >= (job.leaseExpiresAt ?? 0) || !job.attemptId || !args.operation || args.operation.length > 8192 || !args.inferenceId || args.inferenceId.length > 256 || args.webhookSecret !== undefined && (!args.webhookSecret || args.webhookSecret.length > 256)) mediaDenied("MEDIA_JOB_EXPIRED");
   await ctx.db.patch("runtimeMediaJobs", job._id, { state: "processing", operation: args.operation, inferenceId: args.inferenceId, ...(args.webhookSecret ? { webhookSecret: args.webhookSecret } : {}), revision: job.revision + 1, updatedAt: Date.now() });
   await ctx.scheduler.runAfter(1000, action("processPoll"), { jobId: job.jobId }); return null;
@@ -158,7 +175,7 @@ export const markFailure = internalMutation({ args: { jobId: v.string(), code: v
   await transition(ctx, job, args.uncertain ? "submission_unknown" : code === "MEDIA_JOB_EXPIRED" ? "expired" : "failed", code); return null;
 } });
 export const pollCheckpoint = internalMutation({ args: { jobId: v.string() }, handler: async (ctx, args) => {
-  const job = await mediaJob(ctx, args.jobId); if (job.state !== "processing" || !job.operation) return null; await checkMediaJob(ctx, job, job.reference, true);
+  const job = await mediaJob(ctx, args.jobId); if (job.state !== "processing" || !job.operation) return null; await registerMediaDependencies(ctx, job); await checkMediaJob(ctx, job, job.reference, true);
   if (Date.now() >= job.expiresAt) { await transition(ctx, job, "expired", "MEDIA_JOB_EXPIRED"); return null; }
   if (job.pollLeaseExpiresAt !== undefined && Date.now() < job.pollLeaseExpiresAt) return null;
   if (job.pollCount >= MEDIA_MAX_POLLS) { await transition(ctx, job, "expired", "MEDIA_JOB_EXPIRED"); return null; }
@@ -185,6 +202,7 @@ export const expirePoll = internalMutation({ args: { jobId: v.string(), leaseTok
 } });
 export const providerTerminal = internalMutation({ args: { jobId: v.string(), pollLeaseToken: v.optional(v.string()), status: v.union(v.literal("completed"), v.literal("failed"), v.literal("cancelled"), v.literal("expired")) }, handler: async (ctx, args) => {
   const job = await mediaJob(ctx, args.jobId); if (terminal(job.state) || job.terminalStatus) return null;
+  await registerMediaDependencies(ctx, job);
   if (args.pollLeaseToken !== undefined && (job.state !== "processing" || job.pollLeaseToken !== args.pollLeaseToken || Date.now() >= (job.pollLeaseExpiresAt ?? 0))) return null;
   if (!job.attemptId || !job.dispatchIdentity || !job.modelOperationId) mediaDenied("MEDIA_RESULT_WITHHELD");
   if (args.pollLeaseToken !== undefined && args.status === "failed") {
@@ -203,7 +221,7 @@ export const providerTerminal = internalMutation({ args: { jobId: v.string(), po
 } });
 export const claimDownload = internalMutation({ args: { jobId: v.string() }, handler: async (ctx, args) => {
   const job = await mediaJob(ctx, args.jobId); if (job.state !== "downloading" || !job.modelOperationId || !job.attemptId) return null;
-  await checkMediaJob(ctx, job, job.reference, true);
+  await registerMediaDependencies(ctx, job); await checkMediaJob(ctx, job, job.reference, true);
   if (Date.now() >= job.expiresAt) { await transition(ctx, job, "failed", "MEDIA_DOWNLOAD_FAILED"); return null; }
   if (job.leaseExpiresAt && Date.now() < job.leaseExpiresAt) return null;
   if (job.downloadAttempt >= MEDIA_MAX_DOWNLOAD_ATTEMPTS) { await transition(ctx, job, "failed", "MEDIA_DOWNLOAD_FAILED"); return null; }
@@ -215,7 +233,7 @@ export const downloadFailed = internalMutation({ args: { jobId: v.string(), leas
   await ctx.db.patch("runtimeMediaJobs", job._id, { leaseExpiresAt: Date.now() }); await ctx.scheduler.runAfter(1000, action("processDownload"), { jobId: job.jobId }); return null;
 } });
 export const materialized = internalMutation({ args: { jobId: v.string(), resultCanonical: v.string(), versionId: v.string() }, handler: async (ctx, args) => {
-  const job = await mediaJob(ctx, args.jobId); if (job.state === "ready") { if (job.resultCanonical !== args.resultCanonical || job.assetVersionId !== args.versionId) mediaDenied("MEDIA_IDEMPOTENCY_CONFLICT"); return null; }
+  const job = await mediaJob(ctx, args.jobId); await registerMediaDependencies(ctx, job); if (job.state === "ready") { if (job.resultCanonical !== args.resultCanonical || job.assetVersionId !== args.versionId) mediaDenied("MEDIA_IDEMPOTENCY_CONFLICT"); return null; }
   if (job.state !== "downloading" || !job.attemptId || !job.modelOperationId) mediaDenied("MEDIA_RESULT_WITHHELD");
   if (Date.now() >= job.expiresAt) { await transition(ctx, job, "expired", "MEDIA_JOB_EXPIRED"); return null; }
   if (!await mediaResultPublicationAllowed(ctx, job.reference, job.attemptId, job.modelOperationId, args.resultCanonical)) { await transition(ctx, job, "failed", "MEDIA_RESULT_WITHHELD"); return null; }
@@ -226,18 +244,20 @@ export const materialized = internalMutation({ args: { jobId: v.string(), result
   const fileRef = { storageId: value.storageId, assetId: value.assetId, assetVersion: value.assetVersion, versionId: value.versionId, mimeType: value.mimeType, size: value.sizeBytes, checksum: value.contentHash };
   const version = artifact.version + 1; const patch = { fileRef, content: undefined, streamingState: "final" as const, version, versionPointer: version,
     versionHistory: [...artifact.versionHistory, { version, fileRef, title: artifact.title, timestamp: Date.now(), changedBy: job.ownerPrincipalId, changeType: "update" as const }], updatedAt: Date.now() };
+  await registerSourceDependencies(ctx, job, { kind: "artifact", id: artifact.artifactId, revision: version }, [...await mediaDependencies(ctx, job), ...await sourceDependencyWitnesses(ctx, job, { kind: "media", id: job.jobId })]);
   await ctx.db.patch("artifacts", artifact._id, patch); await syncArtifactAssets(ctx, job.reference, { ...artifact, ...patch });
   await releaseAssetReferences(ctx, job, "upload", value.assetId);
   await ctx.db.patch("runtimeMediaJobs", job._id, { state: "ready", resultCanonical: args.resultCanonical, assetVersionId: value.versionId, costStatus: attempt.state === "settled" ? "settled" : "incurred_unknown", revision: job.revision + 1, updatedAt: Date.now() }); return null;
 } });
 export const retainResult = internalMutation({ args: { jobId: v.string(), resultCanonical: v.string() }, handler: async (ctx, args) => {
-  const job = await mediaJob(ctx, args.jobId); await checkMediaJob(ctx, job, job.reference, true);
+  const job = await mediaJob(ctx, args.jobId); await registerMediaDependencies(ctx, job); await checkMediaJob(ctx, job, job.reference, true);
   const result = mediaResultSchema.safeParse(JSON.parse(args.resultCanonical));
   if (job.state !== "downloading" || !result.success || result.data.jobId !== job.jobId || job.resultCanonical && job.resultCanonical !== args.resultCanonical) mediaDenied("MEDIA_RESULT_WITHHELD");
   await ctx.db.patch("runtimeMediaJobs", job._id, { resultCanonical: args.resultCanonical }); return null;
 } });
 export const recoverStoredOutput = internalMutation({ args: { jobId: v.string() }, handler: async (ctx, args) => {
   const job = await mediaJob(ctx, args.jobId); if (job.state !== "downloading" || !job.resultCanonical) return null;
+  await registerMediaDependencies(ctx, job);
   if (Date.now() >= job.expiresAt) { await transition(ctx, job, "expired", "MEDIA_JOB_EXPIRED"); return null; }
   if (!job.attemptId || !job.modelOperationId || !await mediaResultPublicationAllowed(ctx, job.reference, job.attemptId, job.modelOperationId, job.resultCanonical)) { await transition(ctx, job, "failed", "MEDIA_RESULT_WITHHELD"); return null; }
   await checkMediaJob(ctx, job, job.reference, true);
@@ -246,9 +266,10 @@ export const recoverStoredOutput = internalMutation({ args: { jobId: v.string() 
   const value = await versionById(ctx, job, stored.versionId); if (!value) mediaDenied("MEDIA_RESULT_WITHHELD");
   return { asset: publicAsset(value), resultCanonical: job.resultCanonical };
 } });
-export const callbackLookup = internalMutation({ args: { jobId: v.string() }, handler: async (ctx, args) => { const job = await mediaJob(ctx, args.jobId); if (!job.webhookSecret || !job.operation || !job.inferenceId || terminal(job.state)) return null; return { secret: job.webhookSecret, operation: job.operation, inferenceId: job.inferenceId }; } });
+export const callbackLookup = internalMutation({ args: { jobId: v.string() }, handler: async (ctx, args) => { const job = await mediaJob(ctx, args.jobId); if (!job.webhookSecret || !job.operation || !job.inferenceId || terminal(job.state)) return null; await registerMediaDependencies(ctx, job); return { secret: job.webhookSecret, operation: job.operation, inferenceId: job.inferenceId }; } });
 export const acceptCallback = internalMutation({ args: { jobId: v.string(), operation: v.string(), inferenceId: v.string(), secretHash: v.string(), bodyHash: v.string(), status: v.union(v.literal("completed"), v.literal("failed"), v.literal("cancelled"), v.literal("expired")) }, handler: async (ctx, args) => {
   const job = await mediaJob(ctx, args.jobId); if (!job.webhookSecret || job.operation !== args.operation || job.inferenceId !== args.inferenceId || await semanticHash(job.webhookSecret) !== args.secretHash) mediaDenied("MEDIA_CALLBACK_DENIED");
+  await registerMediaDependencies(ctx, job);
   const old = await ctx.db.query("runtimeMediaCallbacks").withIndex("by_identity", q => q.eq("jobId", job.jobId).eq("inferenceId", args.inferenceId).eq("status", args.status)).unique();
   if (old) { if (old.bodyHash !== args.bodyHash) mediaDenied("MEDIA_CALLBACK_DENIED"); return { accepted: true }; }
   if (terminal(job.state) || job.terminalStatus) return { accepted: true };

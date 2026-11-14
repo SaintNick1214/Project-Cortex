@@ -11,7 +11,26 @@ import {
 } from "./template-backend.js";
 
 export const BACKEND_MANIFEST = ".cortex/backend.json";
-export const SDK_VERSION = "0.39.0";
+/** The release planner owns this CLI dependency; its base is an exact composer target. */
+function plannedSdkVersion(): string {
+  let manifest: unknown;
+  try {
+    // src/utils and published dist/utils have the same path to the owning package.
+    manifest = JSON.parse(fs.readFileSync(new URL("../../package.json", import.meta.url), "utf8"));
+  } catch (cause) {
+    throw new Error("Invalid CLI release metadata: unable to read package.json", { cause });
+  }
+  const dependency = isObject(manifest) && manifest.name === "@cortexmemory/cli" && isObject(manifest.dependencies)
+    ? manifest.dependencies["@cortexmemory/sdk"] : undefined;
+  // Only the stable caret format written by plan-release.mjs is supported. This
+  // extracts one version, never range-matches an installed or host-selected SDK.
+  const match = typeof dependency === "string"
+    ? /^\^((?:0|[1-9]\d*)\.(?:0|[1-9]\d*)\.(?:0|[1-9]\d*))$/.exec(dependency) : null;
+  if (!match || match[0] !== dependency || !match[1].split(".").every((part) => Number.isSafeInteger(Number(part))))
+    throw new Error("Invalid CLI release metadata: expected @cortexmemory/cli SDK dependency in ^X.Y.Z release-plan format");
+  return match[1];
+}
+export const SDK_VERSION = plannedSdkVersion();
 // Reviewed current runtime admin helpers; registrations still require the strict grammar.
 const SDK_ADMIN_RUNTIME_SOURCE_HASH = "8b2eb63eaf6ff4fc41cdb64085840ad70f49bf377f394afd194f7ab08d450345";
 export interface BackendOwnership {

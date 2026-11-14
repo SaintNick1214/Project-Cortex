@@ -16,8 +16,25 @@ import {rememberInput,rememberResult} from './remember.js';
 import type {RuntimeRememberInput,RuntimeRememberResult} from './types.js';
 import type { ContentSubmitV1, RuntimeContentJobV1 } from "../domain/content.js";
 import { probeAuthenticationDenial } from "./authentication-denial.js";
+import { changesInput, changesPage, externalCapabilities, externalGetInput, externalHistoryInput, externalHistoryPage,
+  externalIngestInput, externalIngestResult, externalSearchInput, externalSearchPage, externalSourceVersion,
+  externalTombstoneInput, RUNTIME_EXTERNAL_LIMITS } from "./external.js";
+import type { RuntimeChangesInput, RuntimeChangesPage, RuntimeExternalBatchItem, RuntimeExternalBatchResult,
+  RuntimeExternalCapabilities, RuntimeExternalGetInput, RuntimeExternalHistoryInput, RuntimeExternalHistoryPage,
+  RuntimeExternalIngestInput, RuntimeExternalIngestResult, RuntimeExternalSearchInput, RuntimeExternalSearchPage,
+  RuntimeExternalSourceVersion, RuntimeExternalTombstoneInput } from "./external.js";
 
 export type RuntimeClientPort = Pick<ConvexClient, "setAuth" | "query" | "mutation" | "action" | "onUpdate" | "close">;
+/** External custody and reads use the same authenticated connection as the agent runtime. */
+export interface RuntimeExternalSourcesClient {
+  ingest(input: RuntimeExternalIngestInput): Promise<RuntimeExternalBatchResult>;
+  get(input: RuntimeExternalGetInput): Promise<RuntimeExternalSourceVersion>;
+  history(input: RuntimeExternalHistoryInput): Promise<RuntimeExternalHistoryPage>;
+  search(input: RuntimeExternalSearchInput): Promise<RuntimeExternalSearchPage>;
+  status(receiptId: string): Promise<RuntimeExternalIngestResult>;
+  tombstone(input: RuntimeExternalTombstoneInput): Promise<RuntimeExternalIngestResult>;
+}
+export interface RuntimeChangesClient { list(input?: RuntimeChangesInput): Promise<RuntimeChangesPage> }
 /** Metadata only, timed with this client's monotonic clock. RPC end/failed describe
  * the official port promise; a local deadline may already have suppressed delivery. */
 export interface RuntimeLatencyEvent {
@@ -55,10 +72,23 @@ const refs = { session: mutation("runtimeClient:session"), signal: query("runtim
   mediaSubmit: mutation("runtimeMediaJobs:submit"), mediaGet: mutation("runtimeMediaJobs:get"), mediaList: mutation("runtimeMediaJobs:list"),
   mediaCancel: mutation("runtimeMediaJobs:cancel"), mediaReconcile: mutation("runtimeMediaJobs:reconcile"), artifact: mutation("artifacts:get"),
   contentSubmit: mutation("runtimeContentJobs:submit"), contentGet: mutation("runtimeContentJobs:get"), contentList: mutation("runtimeContentJobs:list"),
-  contentCancel: mutation("runtimeContentJobs:cancel"), contentReconcile: mutation("runtimeContentJobs:reconcile"), contentApply: mutation("runtimeContentJobs:applySuggestion") };
+  contentCancel: mutation("runtimeContentJobs:cancel"), contentReconcile: mutation("runtimeContentJobs:reconcile"), contentApply: mutation("runtimeContentJobs:applySuggestion"),
+  externalIngest: mutation("runtimeExternalSources:ingest"), externalGet: mutation("runtimeExternalSources:get"),
+  externalHistory: mutation("runtimeExternalSources:history"), externalSearch: mutation("runtimeExternalSources:search"),
+  externalStatus: mutation("runtimeExternalSources:status"), externalTombstone: mutation("runtimeExternalSources:tombstone"),
+  externalCapabilities: mutation("runtimeExternalSources:capabilities"), changes: mutation("runtimeChanges:list") };
 
 /** One authenticated Convex connection. JWTs stay inside the host's official fetchToken callback. */
 export class CortexRuntimeClient {
+  readonly sources: Readonly<RuntimeExternalSourcesClient> = Object.freeze({
+    ingest: (input: RuntimeExternalIngestInput) => this.ingestExternalSources(input),
+    get: (input: RuntimeExternalGetInput) => this.getExternalSource(input),
+    history: (input: RuntimeExternalHistoryInput) => this.externalSourceHistory(input),
+    search: (input: RuntimeExternalSearchInput) => this.searchExternalSources(input),
+    status: (receiptId: string) => this.externalSourceStatus(receiptId),
+    tombstone: (input: RuntimeExternalTombstoneInput) => this.tombstoneExternalSource(input),
+  });
+  readonly changes: Readonly<RuntimeChangesClient> = Object.freeze({ list: (input: RuntimeChangesInput = {}) => this.listChanges(input) });
   private readonly port: RuntimeClientPort;
   private readonly scope: Partial<RuntimeScope>;
   private readonly watchers = new Set<(error: CortexRuntimeError) => void>();
@@ -479,6 +509,120 @@ export class CortexRuntimeClient {
     const captured=rememberResult(result);
     if(!sameScope(current,captured.scope)||current.principalId!==captured.principalId||captured.receiptId!==id)invalid('INVALID_RESPONSE');
     this.trackDelivery(captured.deliveryExpiresAt);return captured;
+  }
+  private externalScope(current: RuntimeSession, value: RuntimeScope): void {
+    if (!sameScope(current, value)) invalid("INVALID_RESPONSE");
+  }
+  private externalReader(current: RuntimeSession, value: { scope: RuntimeScope; principalId: string }): void {
+    this.externalScope(current, value.scope);
+    if (current.principalId !== value.principalId) invalid("INVALID_RESPONSE");
+  }
+  /** Validate the full envelope first, then retain every independently committed outcome. */
+  private async ingestExternalSources(input: RuntimeExternalIngestInput): Promise<RuntimeExternalBatchResult> {
+    const normalized = externalIngestInput(input), generation = this.generation, current = await this.session();
+    if (generation !== this.generation) invalid("SESSION_CHANGED");
+    const results: RuntimeExternalBatchItem[] = [];
+    for (const [index, source] of normalized.sources.entries()) {
+      const delivery = { dispatched: false, returned: false };
+      try {
+        const acquired = await this.inSession(actor => {
+          // A batch never starts writing under a different actor after a refresh.
+          if (generation !== this.generation || !sameScope(actor, current) || actor.principalId !== current.principalId) invalid("SESSION_CHANGED");
+          delivery.dispatched = true;
+          return this.mutation(refs.externalIngest, { tenantId: actor.tenantId, memorySpaceId: actor.memorySpaceId,
+            requestId: normalized.requestId, input: source });
+        });
+        delivery.returned = true;
+        const value = externalIngestResult(acquired.result), receipt = value.receipt;
+        this.externalReader(current, receipt);
+        if (receipt.externalEventId !== source.externalEventId || receipt.reference.externalRevision !== source.externalRevision
+          || receipt.outcome === "tombstoned") invalid("INVALID_RESPONSE");
+        // requestId correlates this call, not source identity. An idempotent
+        // retry in another batch returns the immutable original requestId.
+        this.trackDelivery(value.deliveryExpiresAt);
+        results.push({ index, status: "accepted", result: value });
+      } catch (error) {
+        const failure = runtimeError(error), outcome = !delivery.dispatched ? "not_dispatched"
+          : delivery.returned || failure.outcome === "uncertain" ? "uncertain" : "not_dispatched";
+        results.push({ index, status: "rejected", code: failure.code, outcome,
+          retryable: outcome === "uncertain" || failure.retryable });
+      }
+    }
+    if (results.some(item => item.status === "accepted")) {
+      // Independent commits can outlive an early receipt's delivery authority
+      // while later records run. Fence the aggregate before exposing any of it.
+      try {
+        this.check(); if (generation !== this.generation) invalid("SESSION_CHANGED");
+        const after = await this.session();
+        if (generation !== this.generation || !sameScope(current, after) || current.principalId !== after.principalId) invalid("SESSION_CHANGED");
+        for (const item of results) if (item.status === "accepted") this.trackDelivery(item.result.deliveryExpiresAt);
+      } catch (error) { throw new CortexRuntimeError(runtimeError(error).code, "uncertain", true); }
+    }
+    return { version: 1, requestId: normalized.requestId, scope: { tenantId: current.tenantId, memorySpaceId: current.memorySpaceId },
+      principalId: current.principalId, results };
+  }
+  private async getExternalSource(input: RuntimeExternalGetInput): Promise<RuntimeExternalSourceVersion> {
+    const args = externalGetInput(input);
+    const { current, result } = await this.inSession(actor => this.mutation(refs.externalGet,
+      { tenantId: actor.tenantId, memorySpaceId: actor.memorySpaceId, ...args }));
+    const value = externalSourceVersion(result); this.externalScope(current, value.scope);
+    if (value.reference.sourceId !== args.sourceId || args.versionId !== undefined && value.reference.versionId !== args.versionId
+      || args.versionId === undefined && !value.current) invalid("INVALID_RESPONSE");
+    this.trackDelivery(value.deliveryExpiresAt); return value;
+  }
+  private async externalSourceHistory(input: RuntimeExternalHistoryInput): Promise<RuntimeExternalHistoryPage> {
+    const args = externalHistoryInput(input);
+    const { current, result } = await this.inSession(actor => this.mutation(refs.externalHistory,
+      { tenantId: actor.tenantId, memorySpaceId: actor.memorySpaceId, ...args }));
+    const value = externalHistoryPage(result); this.externalReader(current, value);
+    if (value.sourceId !== args.sourceId || value.items.length > (args.limit ?? RUNTIME_EXTERNAL_LIMITS.maxPageSize)) invalid("INVALID_RESPONSE");
+    this.trackDelivery(value.deliveryExpiresAt); return value;
+  }
+  private async searchExternalSources(input: RuntimeExternalSearchInput): Promise<RuntimeExternalSearchPage> {
+    const args = externalSearchInput(input);
+    const { current, result } = await this.inSession(actor => this.mutation(refs.externalSearch,
+      { tenantId: actor.tenantId, memorySpaceId: actor.memorySpaceId, ...args }));
+    const value = externalSearchPage(result); this.externalReader(current, value);
+    if (value.items.length > (args.limit ?? RUNTIME_EXTERNAL_LIMITS.maxPageSize)
+      || value.items.some(item => !item.originalText.includes(args.literal) || !args.includeHistory && !item.current)) invalid("INVALID_RESPONSE");
+    this.trackDelivery(value.deliveryExpiresAt);
+    for (const item of value.items) this.trackDelivery(item.deliveryExpiresAt);
+    return value;
+  }
+  private async externalSourceStatus(value: string): Promise<RuntimeExternalIngestResult> {
+    const receiptId = identifier(value, 512);
+    const { current, result } = await this.inSession(actor => this.mutation(refs.externalStatus,
+      { tenantId: actor.tenantId, memorySpaceId: actor.memorySpaceId, receiptId }));
+    const status = externalIngestResult(result); this.externalScope(current, status.receipt.scope);
+    if (status.receipt.receiptId !== receiptId) invalid("INVALID_RESPONSE");
+    this.trackDelivery(status.deliveryExpiresAt); return status;
+  }
+  private async tombstoneExternalSource(input: RuntimeExternalTombstoneInput): Promise<RuntimeExternalIngestResult> {
+    const args = externalTombstoneInput(input);
+    const { current, result } = await this.inSession(actor => this.mutation(refs.externalTombstone,
+      { tenantId: actor.tenantId, memorySpaceId: actor.memorySpaceId, ...args }));
+    try {
+      const value = externalIngestResult(result), receipt = value.receipt; this.externalScope(current, receipt.scope);
+      if (receipt.reference.sourceId !== args.sourceId || receipt.reference.externalRevision !== args.externalRevision
+        || receipt.externalEventId !== args.externalEventId || receipt.outcome !== "tombstoned") invalid("INVALID_RESPONSE");
+      this.trackDelivery(value.deliveryExpiresAt); return value;
+    } catch (error) { throw new CortexRuntimeError(runtimeError(error).code, "uncertain"); }
+  }
+  private async listChanges(input: RuntimeChangesInput): Promise<RuntimeChangesPage> {
+    const args = changesInput(input);
+    const { current, result } = await this.inSession(actor => this.mutation(refs.changes,
+      { tenantId: actor.tenantId, memorySpaceId: actor.memorySpaceId, ...args }));
+    const value = changesPage(result); this.externalReader(current, value);
+    if (value.events.length > (args.limit ?? RUNTIME_EXTERNAL_LIMITS.maxChangePageSize)
+      || args.types !== undefined && value.events.some(event => !args.types!.includes(event.type))) invalid("INVALID_RESPONSE");
+    this.trackDelivery(value.deliveryExpiresAt); return value;
+  }
+  /** The authenticated backend advertises installed capabilities; transport failure is never support. */
+  async capabilities(): Promise<RuntimeExternalCapabilities> {
+    const { current, result } = await this.inSession(actor => this.mutation(refs.externalCapabilities,
+      { tenantId: actor.tenantId, memorySpaceId: actor.memorySpaceId }));
+    const value = externalCapabilities(result); this.externalReader(current, value);
+    this.trackDelivery(value.deliveryExpiresAt); return value;
   }
   /** Admit one backend-owned job and pending artifact. The backend chooses its qualified model and options. */
   async submitMediaJob(input: RuntimeMediaSubmit): Promise<RuntimeMediaJob> {
