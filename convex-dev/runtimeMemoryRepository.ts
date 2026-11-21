@@ -1,3 +1,4 @@
+import { isFactExtractionEligible } from "../src/domain/sources";
 import { deliveryExpiresAt } from "./runtimeDelivery";
 /** Scoped Convex adapters. Every sensitive operation reloads the persisted grant. */
 import { ConvexError } from "convex/values";
@@ -15,6 +16,7 @@ import { managedSourceIsCurrent } from "./runtimeDataAuth";
 import type { EmbeddingProfile } from "../src/domain/profile";
 import type { ContextSourcePermission } from "../src/domain/context-witness";
 import { enqueueFactProjection } from "./runtimeGraph";
+import { assertSourceWitnessesNotErased, registerSourceDependencies, hasExternalEvidenceAncestry } from "./runtimeSourceDependencies";
 
 export type DerivedCommit = Parameters<MemoryRepository["commitDerived"]>[0];
 export type FactQuery = Parameters<MemoryRepository["listFacts"]>[0];
@@ -127,6 +129,9 @@ export class ConvexMemoryRepository {
     const db = this.writeDb();
     await this.authority(sourceResource(source));
     assertSourceLineage(source.lineage);
+    await assertSourceWitnessesNotErased(this.ctx, this.scope, [{ ...source.lineage, contentHash: source.contentHash }]);
+    if (source.lineage.role === "assistant" || source.lineage.role === "tool") await registerSourceDependencies(this.ctx as MutationCtx, this.scope,
+      { kind: "source", id: source.lineage.sourceId, revision: source.lineage.sourceRevision }, source.contextSourceWitnesses ?? [], source.artifactContextWitnesses ?? []);
     if (source.ownerPrincipalId !== this.scope.principalId || source.tombstonedAt !== undefined
       || normalizeSourceText(source.content) !== source.content || await semanticHash(source.content) !== source.contentHash
       || !Number.isFinite(source.createdAt) || source.createdAt < 0 || source.createdAt > 8.64e15) {
@@ -176,6 +181,7 @@ export class ConvexMemoryRepository {
     if (!source || !sameReference(source.lineage, input.source) || !sameReference(source.lineage, input.identity)) {
       memoryError("STALE_SOURCE", "Source event/revision is no longer current");
     }
+    if (source.lineage.role !== "user" && (input.identity.stage !== "vectors" || input.facts?.length) && await hasExternalEvidenceAncestry(this.ctx, this.scope, source.lineage)) memoryError(source.lineage.role === "external" ? "INVALID_INPUT" : "CAPABILITY_UNAVAILABLE", "External evidence cannot become authoritative user facts");
     const profile = input.vectors?.length ? await this.selectedProfile("embedding.memory", input.embeddingRunBudgetId) : DEFAULT_EMBEDDING_PROFILE;
     for (const vector of input.vectors ?? []) assertProfileMatches(vector.profile, profile);
     const receiptId = await processingIdentityKey(input.identity);
@@ -221,7 +227,7 @@ export class ConvexMemoryRepository {
       if (factIds.has(fact.factId) || fact.ownerPrincipalId !== source.ownerPrincipalId
         || fact.tenantId !== source.tenantId || fact.memorySpaceId !== source.memorySpaceId
         || canonicalMemoryValue(fact.lineage) !== canonicalMemoryValue(source.lineage)
-        || source.lineage.role === "assistant" || !fact.extractionPolicyVersion.trim()
+        || !isFactExtractionEligible(source.lineage) || !fact.extractionPolicyVersion.trim()
         || !Number.isFinite(fact.confidence) || fact.confidence < 0 || fact.confidence > 100
         || !fact.fact.trim() || !Number.isSafeInteger(fact.version) || fact.version < 1) memoryError("INVALID_INPUT", "Invalid attributed fact");
       factIds.add(fact.factId);
@@ -332,7 +338,8 @@ export class ConvexMemoryRepository {
         || await reader.hasTombstone({ tenantId: this.scope.tenantId, resourceType: "fact", resourceId: row.factId })) return null;
       const source = await this.visibleSource(row.lineage.sourceId, authority, "canViewFacts");
       if (!source || !sameReference(source.lineage, row.lineage) || source.ownerPrincipalId !== row.ownerPrincipalId
-        || row.lineage.role === "assistant" || canonicalMemoryValue(row.lineage) !== canonicalMemoryValue(source.lineage)) return null;
+        || !isFactExtractionEligible(row.lineage) || canonicalMemoryValue(row.lineage) !== canonicalMemoryValue(source.lineage)) return null;
+      if (source.lineage.role !== "user" && await hasExternalEvidenceAncestry(this.ctx, this.scope, source.lineage)) return null;
       const { _creationTime: _creationTime, tombstonedAt: _tombstonedAt, processingReceiptId: _receipt,
         lineage, ownerPrincipalId, extractionPolicyVersion, ...record } = row;
       // fact-extraction is an old schema-only source type; fresh runtime writes use manual/tool.
@@ -375,8 +382,9 @@ export class ConvexMemoryRepository {
         memorySpaceId: row.memorySpaceId, ownerPrincipalId: row.ownerPrincipalId }, "read");
       if (row.validUntil !== undefined) deadlines.push(row.validUntil);
       const source = await this.getSource(row.lineage.sourceId, "canViewFacts", deadlines);
-      if (!source || source.ownerPrincipalId !== row.ownerPrincipalId || source.lineage.role === "assistant"
+      if (!source || source.ownerPrincipalId !== row.ownerPrincipalId || !isFactExtractionEligible(source.lineage)
         || canonicalMemoryValue(source.lineage) !== canonicalMemoryValue(row.lineage)) memoryError("STALE_SOURCE", "Consumed recall fact lost source attribution");
+      if (source.lineage.role !== "user" && await hasExternalEvidenceAncestry(this.ctx, this.scope, source.lineage)) memoryError("STALE_SOURCE", "External evidence is not an authoritative fact");
       const { _creationTime: _creationTime, tombstonedAt: _tombstone, processingReceiptId: _receipt, ...payload } = row;
       if (await semanticHash(canonicalMemoryValue(payload)) !== expected.payloadHash) memoryError("STALE_SOURCE", "Consumed recall fact changed before delivery");
     }

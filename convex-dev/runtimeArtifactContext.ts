@@ -11,6 +11,7 @@ import { managedConversationAccess } from "./runtimeDataAuth";
 import { assetVersion, authorizeAsset, publicAsset } from "./runtimeAssetCatalog";
 import { agentComponent, verifyMessage } from "./runtimeTranscript";
 import { checkContextSourceWitnesses } from "./runtimeContextWitness";
+import { checkSourceDependencies } from "./runtimeSourceDependencies";
 type Ctx = Pick<QueryCtx, "db"> & Partial<Pick<QueryCtx, "runQuery">>;
 function denied(code = "FORBIDDEN"): never { throw new ConvexError({ version: 1, code, message: "Artifact context denied.", retryable: false, outcome: "not_dispatched" }); }
 export async function readArtifactContext(ctx: Ctx, reference: RuntimeAuthorityReference, artifactId: string, deadlines?: number[], expected?: ArtifactContextWitness) {
@@ -20,6 +21,7 @@ export async function readArtifactContext(ctx: Ctx, reference: RuntimeAuthorityR
   if (!artifact || !artifact.ownerPrincipalId || artifact.isDeleted || artifact.tombstonedAt !== undefined) denied();
   if (expected && artifact.versionPointer !== expected.artifactVersion) denied("STALE_CONTEXT");
   await recheckAuthority(ctx, reference, { ...s, capability: "read", resource: { ...s, resourceType: "artifact", resourceId: artifact.artifactId, ownerPrincipalId: artifact.ownerPrincipalId } });
+  await checkSourceDependencies(ctx, reference, { kind: "artifact", id: artifact.artifactId, revision: artifact.versionPointer }, reliedOnDeadlines);
   if (artifact.conversationRef) {
     const conversation = await ctx.db.query("runtimeConversations").withIndex("by_scoped_id", q => q.eq("tenantId", s.tenantId).eq("memorySpaceId", s.memorySpaceId).eq("conversationId", artifact.conversationRef!.conversationId)).unique();
     if (!conversation) denied();

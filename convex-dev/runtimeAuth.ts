@@ -870,7 +870,9 @@ export const deletePrincipal = internalMutation({
     if (principal && principal.deletedAt === undefined) await ctx.db.patch("runtimeAuthPrincipals", principal._id,
       { deletedAt: Date.now(), version: principal.version + 1 });
     if (principal) { await retireGraphAuthority(ctx, { principalId: String(principal._id) });
-      await ctx.runMutation(makeFunctionReference<"mutation">("runtimeAssets:retireAuthority"), { principalId: String(principal._id) }); }
+      await ctx.runMutation(makeFunctionReference<"mutation">("runtimeAssets:retireAuthority"), { principalId: String(principal._id) });
+      if (await ctx.db.query("runtimeExternalSources").withIndex("by_principal", q => q.eq("ownerPrincipalId", String(principal._id))).first())
+        await ctx.runMutation(makeFunctionReference<"mutation">("runtimeExternalErasure:retireAuthority"), { principalId: String(principal._id) }); }
   },
 });
 export const deleteScope = internalMutation({
@@ -885,6 +887,10 @@ export const deleteScope = internalMutation({
     if (!await createAuthorityReader(ctx).hasTombstone(key)) await ctx.db.insert("runtimeAuthTombstones", { ...key, deletedAt: Date.now() });
     await retireGraphAuthority(ctx, args);
     await ctx.runMutation(makeFunctionReference<"mutation">("runtimeAssets:retireAuthority"), args);
+    const external = args.memorySpaceId === undefined
+      ? await ctx.db.query("runtimeExternalSources").withIndex("by_source", q => q.eq("tenantId", args.tenantId)).first()
+      : await ctx.db.query("runtimeExternalSources").withIndex("by_source", q => q.eq("tenantId", args.tenantId).eq("memorySpaceId", args.memorySpaceId!)).first();
+    if (external) await ctx.runMutation(makeFunctionReference<"mutation">("runtimeExternalErasure:retireAuthority"), args);
   },
 });
 export const tombstoneResource = internalMutation({
@@ -897,6 +903,13 @@ export const tombstoneResource = internalMutation({
         tenantId: string; memorySpaceId: string; sourceId: string }, null>,
       { tenantId: args.tenantId, memorySpaceId: args.memorySpaceId, sourceId: args.resourceId });
     else if (args.resourceType === "source") await retireGraphAuthority(ctx, { tenantId: args.tenantId, sourceId: args.resourceId });
+    if (args.resourceType === "source") {
+      const external = args.memorySpaceId === undefined
+        ? await ctx.db.query("runtimeExternalSources").withIndex("by_tenant_source", q => q.eq("tenantId", args.tenantId).eq("sourceId", args.resourceId)).take(2)
+        : await ctx.db.query("runtimeExternalSources").withIndex("by_source", q => q.eq("tenantId", args.tenantId).eq("memorySpaceId", args.memorySpaceId!).eq("sourceId", args.resourceId)).take(2);
+      if (external.length > 1) deny();
+      for (const head of external) await ctx.runMutation(makeFunctionReference<"mutation">("runtimeExternalErasure:eraseSource"), { tenantId: head.tenantId, memorySpaceId: head.memorySpaceId, sourceId: head.sourceId });
+    }
     if (args.resourceType === "conversation") await retireGraphAuthority(ctx, { tenantId: args.tenantId,
       ...(args.memorySpaceId ? { memorySpaceId: args.memorySpaceId } : {}), conversationId: args.resourceId });
     if (args.resourceType === "fact") {

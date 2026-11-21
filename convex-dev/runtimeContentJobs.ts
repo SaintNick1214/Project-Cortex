@@ -23,6 +23,7 @@ import { bindTrustedBudget } from "./runtimeModelPolicy";
 import { deliveryExpiresAt } from "./runtimeDelivery";
 import { guardAgentRunBudget } from "./runtimeAgentFence";
 import { currentRun } from "./runs";
+import { registerSourceDependencies, sourceDependencyWitnesses } from "./runtimeSourceDependencies";
 
 const selectors = { tenantId: v.optional(v.string()), memorySpaceId: v.optional(v.string()) };
 const select = { ...selectors, jobId: v.string() };
@@ -30,8 +31,19 @@ const work = { jobId: v.string(), leaseToken: v.string() };
 const workflow = new WorkflowManager((components as unknown as { workflow: ConstructorParameters<typeof WorkflowManager>[0] }).workflow);
 const jobMutation = (name: string) => makeFunctionReference<"mutation">(`runtimeContentJobs:${name}`);
 const stageAction = makeFunctionReference<"action">("runtimeContentGateway:processStage");
+/** Upgrade recorded in-progress lineage in the same transaction as every private write. */
+async function registerContentDependencies(ctx: MutationCtx, job: ContentJob) {
+  if (job.sourceErasedAt !== undefined) contentDenied("STALE_CONTEXT");
+  await registerSourceDependencies(ctx, job, { kind: "content", id: job.jobId }, job.sourceWitnesses, job.artifactWitnesses);
+}
+async function registerContentArtifact(ctx: MutationCtx, job: ContentJob, version: number) {
+  if (!job.artifactId) contentDenied();
+  const inherited = await sourceDependencyWitnesses(ctx, job, { kind: "content", id: job.jobId });
+  await registerSourceDependencies(ctx, job, { kind: "artifact", id: job.artifactId, revision: version }, [...job.sourceWitnesses, ...inherited], job.artifactWitnesses);
+}
 export async function publicContentJob(ctx: MutationCtx, job: ContentJob, reference: RuntimeAuthorityReference): Promise<RuntimeContentJobV1> {
   const deadlines: number[] = []; await checkContentJob(ctx, job, reference, false, deadlines);
+  await registerContentDependencies(ctx, job);
   const expiresAt = await deliveryExpiresAt(ctx, reference, deadlines);
   const result = job.state === "ready" && job.resultCanonical ? JSON.parse(job.resultCanonical) as Pick<RuntimeContentJobV1, "artifactVersion" | "title" | "content" | "suggestions"> : {};
   return { version: 1, jobId: job.jobId, intent: job.intent, state: job.state, revision: job.revision, createdAt: job.createdAt, updatedAt: job.updatedAt,
@@ -61,7 +73,7 @@ export async function enqueueContent(ctx: MutationCtx, reference: RuntimeAuthori
   let conversation; if (args.conversationId) { conversation = await conversationById(ctx, reference, args.conversationId); if (!conversation) contentDenied(); await managedConversationAccess(ctx, reference, conversation, "write", "canContinue"); }
   const existing = await ctx.db.query("runtimeContentJobs").withIndex("by_request", q => q.eq("tenantId", s.tenantId).eq("memorySpaceId", s.memorySpaceId).eq("ownerPrincipalId", reference.principalId).eq("requestId", args.requestId)).unique();
   const requestCanonical = canonicalModelJson(args);
-  if (existing) { if (existing.requestCanonical !== requestCanonical) contentDenied("CONTENT_IDEMPOTENCY_CONFLICT"); return existing; }
+  if (existing) { if (existing.requestCanonical !== requestCanonical) contentDenied("CONTENT_IDEMPOTENCY_CONFLICT"); await registerContentDependencies(ctx, existing); return existing; }
   const jobId = `content:${await semanticHash(canonicalModelJson([s, reference.principalId, args.requestId]))}`;
   const parent = args.parentRunId ? await parentBinding(ctx, reference, args.parentRunId, args.conversationId, automaticTitle) : undefined;
   const binding = parent ?? await bindTrustedBudget(ctx, { reference, operationKey: contentOperation(args.intent), requestId: jobId, requestCanonical });
@@ -83,6 +95,9 @@ export async function enqueueContent(ctx: MutationCtx, reference: RuntimeAuthori
     validateArtifact(row); await ctx.db.insert("artifacts", row);
   }
   if (sourceWitnesses.length > 64 || artifactWitnesses.length > 32) contentDenied("CONTEXT_LIMIT_EXCEEDED");
+  // The job and its empty generated placeholder acquire ancestry atomically.
+  await registerSourceDependencies(ctx, s, { kind: "content", id: jobId }, sourceWitnesses, artifactWitnesses);
+  if (artifactId && !args.artifact) await registerSourceDependencies(ctx, s, { kind: "artifact", id: artifactId, revision: 1 }, sourceWitnesses, artifactWitnesses);
   const id = await ctx.db.insert("runtimeContentJobs", { ...s, ownerPrincipalId: reference.principalId, jobId, requestId: args.requestId, requestCanonical, reference, intent: args.intent, prompt: args.prompt,
     ...conversation ? { conversationId: conversation.conversationId, conversationEpoch: conversation.epoch, conversationRevision: executionRevision(conversation) } : {},
     ...args.sourceMessageId ? { sourceMessageId: args.sourceMessageId, sourceMessagePin } : {}, ...args.parentRunId ? { parentRunId: args.parentRunId } : {},
@@ -106,16 +121,19 @@ export const list = mutation({ args: { ...selectors, conversationId: v.optional(
 } });
 export const claim = internalMutation({ args: { jobId: v.string() }, handler: async (ctx, args) => {
   const job = await contentJob(ctx, args.jobId); if (["ready", "failed", "unknown", "cancelled", "expired"].includes(job.state)) return null;
+  await registerContentDependencies(ctx, job);
   if (job.expiresAt <= Date.now()) { await ctx.db.patch("runtimeContentJobs", job._id, { state: "expired", failureCode: "CONTENT_JOB_EXPIRED", revision: job.revision + 1, updatedAt: Date.now() }); return null; }
   if (job.state === "running") { if (job.leaseExpiresAt! > Date.now()) return null; await ctx.db.patch("runtimeContentJobs", job._id, { state: "unknown", failureCode: "CONTENT_OPERATION_UNKNOWN", revision: job.revision + 1, updatedAt: Date.now() }); return null; }
   const leaseToken = crypto.randomUUID(); const next = { ...job, state: "running" as const, leaseToken, leaseExpiresAt: Date.now() + CONTENT_LEASE_MS };
   await checkContentJob(ctx, next, job.reference, true); await ctx.db.patch("runtimeContentJobs", job._id, { state: next.state, leaseToken, leaseExpiresAt: next.leaseExpiresAt, revision: job.revision + 1, updatedAt: Date.now() }); return { jobId: job.jobId, leaseToken };
 } });
-export async function leasedContent(ctx: MutationCtx, args: { jobId: string; leaseToken: string }) { const job = await contentJob(ctx, args.jobId); if (job.leaseToken !== args.leaseToken) contentDenied("CONTENT_LEASE_EXPIRED"); await checkContentJob(ctx, job, job.reference, true); return job; }
+export async function leasedContent(ctx: MutationCtx, args: { jobId: string; leaseToken: string }) { const job = await contentJob(ctx, args.jobId); if (job.leaseToken !== args.leaseToken) contentDenied("CONTENT_LEASE_EXPIRED"); await registerContentDependencies(ctx, job); await checkContentJob(ctx, job, job.reference, true); return job; }
 export const input = internalMutation({ args: work, handler: async (ctx, args) => { const job = await leasedContent(ctx, args); const artifact = await checkContentJob(ctx, job, job.reference, true); return { job, document: job.sourceArtifactId ? artifact?.content ?? "" : "" }; } });
 export const pin = internalMutation({ args: { ...work, snapshotCanonical: v.string() }, handler: async (ctx, args) => { const job = await leasedContent(ctx, args); const key = job.stage === "primary" ? "primarySnapshot" : "titleSnapshot"; if (job[key] && job[key] !== args.snapshotCanonical) contentDenied("POLICY_DENIED"); await ctx.db.patch("runtimeContentJobs", job._id, { [key]: args.snapshotCanonical }); return null; } });
 export const bindOperation = internalMutation({ args: { ...work, operationId: v.id("runtimeModelOperations") }, handler: async (ctx, args) => { const job = await leasedContent(ctx, args), op = await ctx.db.get("runtimeModelOperations", args.operationId); const key = job.stage === "primary" ? "primaryOperationId" : "titleOperationId";
-  if (!op || op.runAccountId !== job.runAccountId || op.operationKey !== (job.stage === "primary" ? contentOperation(job.intent) : "conversation.title") || canonicalModelJson(op.reference) !== canonicalModelJson(job.reference) || job[key] && job[key] !== op._id) contentDenied(); await ctx.db.patch("runtimeContentJobs", job._id, { [key]: op._id }); return null;
+  if (!op || op.runAccountId !== job.runAccountId || op.operationKey !== (job.stage === "primary" ? contentOperation(job.intent) : "conversation.title") || canonicalModelJson(op.reference) !== canonicalModelJson(job.reference) || job[key] && job[key] !== op._id) contentDenied();
+  await registerSourceDependencies(ctx, job, { kind: "model", id: op._id }, [...job.sourceWitnesses, ...await sourceDependencyWitnesses(ctx, job, { kind: "content", id: job.jobId })], job.artifactWitnesses);
+  await ctx.db.patch("runtimeContentJobs", job._id, { [key]: op._id }); return null;
 } });
 export async function confirmedContentDraft(ctx: MutationCtx, job: ContentJob, stage: "primary" | "title", text: string) {
   const operationId = stage === "primary" ? job.primaryOperationId : job.titleOperationId; if (!operationId) contentDenied("CONTENT_RECOVERY_INCOMPLETE");
@@ -186,7 +204,7 @@ async function publishContent(ctx: MutationCtx, job: ContentJob) {
   if (job.intent === "title") {
     const conversation = await conversationById(ctx, job.reference, job.conversationId!); if (!conversation) contentDenied(); const title = output as string;
     const metadata = conversation.metadataCanonical ? JSON.parse(conversation.metadataCanonical) as Record<string, unknown> : {};
-    await ctx.db.patch("runtimeConversations", conversation._id, { metadataCanonical: canonicalModelJson({ ...metadata, title }), updatedAt: Date.now() }); result = { title };
+    await ctx.db.patch("runtimeConversations", conversation._id, { metadataCanonical: canonicalModelJson({ ...metadata, title }), sourceTitleJobId: job.jobId, updatedAt: Date.now() }); result = { title };
   } else if (job.intent === "suggestions") {
     if (!artifact || !Array.isArray(output) || output.some(item => !artifact.content?.includes(item.originalText))) contentDenied("CONTENT_OUTPUT_INVALID");
     result = { artifactVersion: artifact.versionPointer, suggestions: await Promise.all(output.map(async (item, ordinal) => ({ ...item, suggestionId: await semanticHash(canonicalModelJson([job.jobId, ordinal, item])) }))) };
@@ -195,6 +213,7 @@ async function publishContent(ctx: MutationCtx, job: ContentJob) {
     if (!job.sourceArtifactId && !job.generatedTitle) contentDenied("CONTENT_RECOVERY_INCOMPLETE");
     const version = artifact.version + 1; const patch = { content: output, title, version, versionPointer: version, streamingState: "final" as const, lastActorPrincipalId: job.ownerPrincipalId,
       versionHistory: [...artifact.versionHistory, { version, content: output, title, timestamp: Date.now(), changedBy: job.ownerPrincipalId, changeType: "update" as const }], updatedAt: Date.now() };
+    await registerContentArtifact(ctx, job, version);
     validateArtifact({ ...artifact, ...patch }); await ctx.db.patch("artifacts", artifact._id, patch); result = { artifactVersion: version, content: output, title };
   }
   await ctx.db.patch("runtimeContentJobs", job._id, { state: "ready", resultCanonical: canonicalModelJson(result), revision: job.revision + 1, updatedAt: Date.now() }); return null;
@@ -209,7 +228,7 @@ export const reconcile = mutation({ args: select, handler: async (ctx, args) => 
   if (["cancelled", "expired", "failed"].includes(job.state) || !job.primaryResult || job.expiresAt <= Date.now()) contentDenied("CONTENT_RECOVERY_INCOMPLETE");
   let next = { ...job, state: "running" as const, leaseToken: crypto.randomUUID(), leaseExpiresAt: Date.now() + CONTENT_LEASE_MS };
   // Recovery joins only durable confirmed drafts; it never issues a model call.
-  await checkContentJob(ctx, next, job.reference, true);
+  await registerContentDependencies(ctx, job); await checkContentJob(ctx, next, job.reference, true);
   // The policy guard reads this same transaction's current job state. Any
   // evidence or publication denial rolls this recovery lease back atomically.
   await ctx.db.patch("runtimeContentJobs", job._id, { state: "running", leaseToken: next.leaseToken, leaseExpiresAt: next.leaseExpiresAt });
@@ -231,7 +250,7 @@ export const execute = workflow.define({ args: { jobId: v.string() }, returns: v
 export const applySuggestion = mutation({ args: { ...select, suggestionId: v.string(), artifactVersion: v.number() }, handler: async (ctx, args): Promise<RuntimeContentJobV1> => {
   const reference = dataAuthorityReference(await requireDataAuthority(ctx, args, "write")), job = await contentJob(ctx, args.jobId);
   if (job.intent !== "suggestions" || job.state !== "ready" || !job.resultCanonical || job.ownerPrincipalId !== reference.principalId) contentDenied();
-  const artifact = await checkContentJob(ctx, job, reference); if (!artifact) contentDenied();
+  await registerContentDependencies(ctx, job); const artifact = await checkContentJob(ctx, job, reference); if (!artifact) contentDenied();
   if (job.appliedSuggestionId) { if (job.appliedSuggestionId !== args.suggestionId || job.artifactVersion !== args.artifactVersion) contentDenied("CONTENT_IDEMPOTENCY_CONFLICT"); return publicContentJob(ctx, job, reference); }
   const result = JSON.parse(job.resultCanonical) as Pick<RuntimeContentJobV1, "suggestions">;
   const suggestion = result.suggestions?.find(value => value.suggestionId === args.suggestionId);
@@ -241,6 +260,7 @@ export const applySuggestion = mutation({ args: { ...select, suggestionId: v.str
   const content = artifact.content.replace(suggestion.originalText, suggestion.suggestedText), version = artifact.version + 1;
   const patch = { content, version, versionPointer: version, updatedAt: Date.now(), lastActorPrincipalId: reference.principalId,
     versionHistory: [...artifact.versionHistory, { version, content, title: artifact.title, timestamp: Date.now(), changedBy: reference.principalId, changeType: "update" as const }] };
+  await registerContentArtifact(ctx, job, version);
   validateArtifact({ ...artifact, ...patch }); await ctx.db.patch("artifacts", artifact._id, patch);
   await ctx.db.patch("runtimeContentJobs", job._id, { appliedSuggestionId: args.suggestionId, appliedArtifactVersion: version, resultCanonical: canonicalModelJson({ ...result, artifactVersion: version, content, title: artifact.title }), revision: job.revision + 1, updatedAt: Date.now() });
   return publicContentJob(ctx, (await ctx.db.get("runtimeContentJobs", job._id))!, reference);

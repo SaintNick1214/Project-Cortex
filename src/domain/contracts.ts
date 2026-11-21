@@ -39,6 +39,7 @@ export type SourceLineage = SourceReference & (
   | { role: "user"; trust: "user_assertion" }
   | { role: "tool"; trust: "verified_tool_evidence"; operationId: string }
   | { role: "assistant"; trust: "assistant_claim" }
+  | { role: "external"; trust: "unverified_external" }
 );
 
 export interface SourceContent {

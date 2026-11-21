@@ -1,3 +1,5 @@
+import { isFactExtractionEligible } from "../src/domain/sources";
+import { hasExternalEvidenceAncestry } from "./runtimeSourceDependencies";
 import { replaceFactEntityLinks } from "./runtimeMemoryTraversal";
 /** Durable external graph intent, trusted worker leases and current-authorized reads. */
 import { ConvexError, v } from "convex/values";
@@ -116,10 +118,11 @@ export async function enqueueSourceProjection(ctx: ProjectionCtx, reference: Run
       q.or(q.eq(q.field("validUntil"), undefined), q.gt(q.field("validUntil"), Date.now())))).take(GRAPH_PROJECTION_LIMITS.maximumFacts + 1);
   if (rows.length > GRAPH_PROJECTION_LIMITS.maximumFacts) dataDenied("GRAPH_SCOPE_TOO_BROAD");
   const reader = createAuthorityReader(ctx); const facts: GraphProjectionPayloadV1["facts"] = [];
+  const externalEvidence = source.lineage.role !== "user" && await hasExternalEvidenceAncestry(ctx, source, source.lineage);
   for (const fact of rows) {
     if (fact.tombstonedAt !== undefined || fact.supersededBy || fact.validUntil !== undefined && fact.validUntil <= Date.now()
       || fact.lineage?.sourceRevision !== source.lineage.sourceRevision || fact.lineage.sourceEventId !== source.lineage.sourceEventId
-      || fact.ownerPrincipalId !== source.ownerPrincipalId || fact.lineage.role === "assistant") continue;
+      || fact.ownerPrincipalId !== source.ownerPrincipalId || !isFactExtractionEligible(fact.lineage) || externalEvidence) continue;
     if (await reader.hasTombstone({ ...s, resourceType: "fact", resourceId: fact.factId })) continue;
     await replaceFactEntityLinks(ctx.db,{tenantId:s.tenantId,memorySpaceId:s.memorySpaceId,ownerPrincipalId:fact.ownerPrincipalId!,factId:fact.factId,version:fact.version,lineage:fact.lineage,
       subject:fact.subject,object:fact.object,entities:fact.entities,relations:fact.relations});

@@ -1,3 +1,4 @@
+import { isFactExtractionEligible } from "./sources.js";
 /** Ordered conflict plans are data; only the scoped native mutation can commit them. */
 import type { AttributedFact, DerivedFact, SourceContent } from "./contracts.js";
 import type { ConflictDecision } from "./conflicts.js";
@@ -30,7 +31,7 @@ function sameCandidate(left: AttributedFact, right: AttributedFact): boolean {
 export async function sourceCandidateBindings(input: { eventId: string; sequence: number; source: SourceContent;
   candidates: readonly AttributedFact[]; attempt: number }): Promise<{ candidate: AttributedFact; binding: BeliefCandidateBinding }[]> {
   if (!Number.isSafeInteger(input.attempt) || input.attempt < 1 || !Number.isSafeInteger(input.sequence) || input.sequence < 1
-    || input.candidates.length > MAX_INGESTION_FACTS || input.source.lineage.role === "assistant") throw new Error("INVALID_BELIEF_PLAN");
+    || input.candidates.length > MAX_INGESTION_FACTS || !isFactExtractionEligible(input.source.lineage)) throw new Error("INVALID_BELIEF_PLAN");
   const selected: { candidate: AttributedFact; binding: BeliefCandidateBinding }[] = [];
   const lineageCanonical = canonicalModelJson(input.source.lineage);
   for (const [sourceOrdinal, candidate] of input.candidates.entries()) {
@@ -53,7 +54,7 @@ export async function planBeliefs(input: { eventId: string; sequence: number; so
   resolve(candidate: AttributedFact, existing: readonly DerivedFact[], ordinal: number,
     binding?: BeliefCandidateBinding): Promise<ConflictDecision | BoundBeliefDecision> }): Promise<BeliefPlanV1> {
   if (!Number.isSafeInteger(input.sequence) || input.sequence < 1 || input.candidates.length > MAX_INGESTION_FACTS
-    || input.existing.length > MAX_INGESTION_FACTS || input.source.lineage.role === "assistant") throw new Error("INVALID_BELIEF_PLAN");
+    || input.existing.length > MAX_INGESTION_FACTS || !isFactExtractionEligible(input.source.lineage)) throw new Error("INVALID_BELIEF_PLAN");
   const expectedVersions = Object.fromEntries(input.existing.map(fact => [fact.factId, fact.version]));
   const entries: BeliefPlanEntry[] = []; const virtual = new Map(input.existing.map(fact => [fact.factId, fact]));
   const used = new Map<string, AttributedFact>();

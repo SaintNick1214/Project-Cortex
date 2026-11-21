@@ -7,6 +7,9 @@ import { ConvexError, convexToJson, type Value } from "convex/values";
 import type { FilterBuilder, GenericTableInfo } from "convex/server";
 import type { Doc, Id } from "./_generated/dataModel";
 import type { MutationCtx, QueryCtx } from "./_generated/server";
+import { checkSourceDependencies } from "./runtimeSourceDependencies";
+import { canonicalModelJson } from "../src/domain/model-policy";
+import { semanticHash } from "../src/domain/profile";
 import {
   assertResourceScope, createAuthorityReader, resolveAuthority, resolveAuthorityReference,
   type AuthorityReader, type GrantRecord, type MembershipRecord, type PrincipalRecord,
@@ -332,6 +335,24 @@ export class ArtifactOperation<W extends boolean> {
       // resource decision is pinned before effects, including create's insert.
       this.witnesses.push({ authority, requirement });
     }
+    await this.checkArtifactDependencies(row);
+  }
+  private async checkArtifactDependencies(row: ArtifactState): Promise<void> {
+    // Reads include retained history; each declared generated version must remain
+    // current until erasure has physically pruned that exact version.
+    for (const version of new Set([row.versionPointer, ...row.versionHistory.map(entry => entry.version)])) {
+      const entry = row.versionHistory.find(value => value.version === version);
+      if (version !== row.versionPointer && entry?.content === "" && entry.title === "Erased source"
+        && Object.keys(entry).sort().join(",") === "changeType,content,timestamp,title,version") {
+        // A completed trusted erasure may retain this minimal history marker.
+        // Its old fence must not hide an independent later authored version.
+        const identity = await semanticHash(canonicalModelJson([row.tenantId, row.memorySpaceId, "artifact", row.artifactId, version]));
+        const purge = await this.ctx.db.query("runtimeSourceConsumerErasureJobs").withIndex("by_identity", q => q.eq("identity", identity)).unique();
+        if (purge?.complete && purge.tenantId === row.tenantId && purge.memorySpaceId === row.memorySpaceId
+          && purge.targetKind === "artifact" && purge.targetId === row.artifactId && purge.targetRevision === version) continue;
+      }
+      await checkSourceDependencies(this.ctx, dataAuthorityReference(this.authority), { kind: "artifact", id: row.artifactId, revision: version });
+    }
   }
   private async admitLinks(row: ArtifactState): Promise<void> {
     for (const file of [row.fileRef, ...row.versionHistory.map(entry => entry.fileRef)]) if (file) await validateAssetFile(this.ctx, dataAuthorityReference(this.authority), file);
@@ -481,6 +502,7 @@ export class ArtifactOperation<W extends boolean> {
     for (const witness of this.rows.values()) {
       if (payloadWitness(await this.ctx.db.get(witness.id)) !== witness.snapshot) artifactDeny();
     }
+    for (const row of this.artifacts.values()) await this.checkArtifactDependencies(row);
     for (const witness of this.witnesses) {
       if (witness.source && this.rows.get(witness.source.rowId)?.snapshot !== witness.source.canonicalSnapshot) artifactDeny();
     }

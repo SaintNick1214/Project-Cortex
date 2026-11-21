@@ -13,10 +13,10 @@ import { ASSET_MAX_BYTES, ASSET_UPLOAD_LEASE_MS, assetMediaKind, assertAssetSize
 import { canonicalModelJson } from "../src/domain/model-policy";
 import { semanticHash } from "../src/domain/profile";
 import { runtimeAuthorityReference } from "./runtimeAuthSchema";
-import { assetLineage } from "./runtimeAssetsSchema";
+import { assetLineage, assetOwnerKind } from "./runtimeAssetsSchema";
 import { requireDataAuthority, dataAuthorityReference } from "./runtimeDataAuth";
 import { createAuthorityReader, recheckAuthority } from "./runtimeAuth";
-import { assetDenied, authorizeAsset, publicAsset, assetVersion, versionById, addAssetReference, releaseAssetReferences, reconcileAssetOwnerReferences } from "./runtimeAssetCatalog";
+import { assetDenied, authorizeAsset, publicAsset, assetVersion, versionById, addAssetReference, releaseAssetReferences, reconcileAssetOwnerReferences, checkGeneratedAssetLineage } from "./runtimeAssetCatalog";
 const scopeArgs = { tenantId: v.optional(v.string()), memorySpaceId: v.optional(v.string()) };
 const metadataArgs = { requestId: v.string(), contentHash: v.string(), sizeBytes: v.number(), mimeType: v.string(), filename: v.optional(v.string()) };
 type Job = Doc<"runtimeAssetJobs">;
@@ -43,6 +43,7 @@ async function jobRow(ctx: Pick<MutationCtx, "db">, jobId: string) { const row =
 async function currentGeneratedInputs(ctx: Pick<MutationCtx, "db">, reference: RuntimeAuthorityReference, lineage: RuntimeAssetLineage) {
   if (lineage.kind !== "generated") return;
   if (!lineage.operationId || lineage.operationId.length > 256 || !lineage.modelId || lineage.modelId.length > 256 || (lineage.sourceVersionIds?.length ?? 0) > 16) assetDenied("INVALID_ASSET_METADATA");
+  await checkGeneratedAssetLineage(ctx, reference, lineage);
   for (const id of lineage.sourceVersionIds ?? []) {
     if (!id || id.length > 256) assetDenied("INVALID_ASSET_METADATA");
     const source = await versionById(ctx, scope(reference), id); if (!source) assetDenied();
@@ -50,6 +51,7 @@ async function currentGeneratedInputs(ctx: Pick<MutationCtx, "db">, reference: R
   }
 }
 async function jobCurrent(ctx: Pick<MutationCtx, "db">, job: Job) {
+  if (job.sourceErasedAt !== undefined) assetDenied("ASSET_UPLOAD_EXPIRED");
   if (job.state !== "uploading" || Date.now() >= job.leaseExpiresAt) assetDenied("ASSET_UPLOAD_EXPIRED");
   await recheckAuthority(ctx, job.reference, { capability: "storage:write", ...scope(job.reference), resource: { ...scope(job.reference), resourceType: "storage", resourceId: job.assetId, ownerPrincipalId: job.ownerPrincipalId } });
   await currentGeneratedInputs(ctx, job.reference, job.lineage);
@@ -75,7 +77,7 @@ export async function beginAssetJob(ctx: MutationCtx, reference: RuntimeAuthorit
   const assetVersion = (head?.latestVersion ?? 0) + 1; const versionId = `${assetId}:version:${assetVersion}`; const now = Date.now();
   if (!head) await ctx.db.insert("runtimeAssets", { ...s, assetId, ownerPrincipalId: reference.principalId, latestVersion: 0, createdAt: now });
   const marker = `application/vnd.cortex.asset-${crypto.randomUUID()}`;
-  await ctx.db.insert("runtimeAssetJobs", { ...s, requestId: args.requestId, contentHash: args.contentHash, sizeBytes: args.sizeBytes, mimeType: args.mimeType, ...(args.filename !== undefined ? { filename: args.filename } : {}), lineage: args.lineage, jobId, assetId, assetVersion, versionId, ownerPrincipalId: reference.principalId, reference, marker, state: "uploading", createdAt: now, leaseExpiresAt: now + ASSET_UPLOAD_LEASE_MS });
+  await ctx.db.insert("runtimeAssetJobs", { ...s, requestId: args.requestId, contentHash: args.contentHash, sizeBytes: args.sizeBytes, mimeType: args.mimeType, ...(args.filename !== undefined ? { filename: args.filename } : {}), lineage: args.lineage, ...(args.lineage.kind === "generated" ? { transferState: "not_issued" as const } : {}), jobId, assetId, assetVersion, versionId, ownerPrincipalId: reference.principalId, reference, marker, state: "uploading", createdAt: now, leaseExpiresAt: now + ASSET_UPLOAD_LEASE_MS });
   await ctx.scheduler.runAfter(ASSET_UPLOAD_LEASE_MS, makeFunctionReference<"mutation">("runtimeAssets:cleanupJob"), { jobId }); return { jobId, marker };
 }
 export const uploadAuthorization = internalMutation({ args: scopeArgs, handler: async (ctx, args) => dataAuthorityReference(await requireDataAuthority(ctx, args, "storage:write")) });
@@ -84,6 +86,13 @@ export const beginUpload = internalMutation({ args: { ...scopeArgs, ...metadataA
   const actor = await requireDataAuthority(ctx, args, "storage:write"); return beginAssetJob(ctx, dataAuthorityReference(actor), { requestId: args.requestId, contentHash: args.contentHash, sizeBytes: args.sizeBytes, mimeType: args.mimeType, ...(args.filename !== undefined ? { filename: args.filename } : {}), ...(args.assetId !== undefined ? { assetId: args.assetId } : {}), lineage: { kind: "upload", requestId: args.requestId } });
 } });
 export const beginGenerated = internalMutation({ args: { reference: runtimeAuthorityReference, ...metadataArgs, lineage: assetLineage }, handler: async (ctx, args) => { if (args.lineage.kind !== "generated") assetDenied("INVALID_ASSET_METADATA"); const { reference, ...input } = args; return beginAssetJob(ctx, reference, input); } });
+/** Commit the one generated transfer before its nontransactional storage call. */
+export const issueStorage = internalMutation({ args: { jobId: v.string(), marker: v.string(), contentHash: v.string(), sizeBytes: v.number() }, handler: async (ctx, args) => {
+  const job = await jobRow(ctx, args.jobId); if (job.lineage.kind !== "generated") return null;
+  await jobCurrent(ctx, job);
+  if (job.transferState !== "not_issued" || job.marker !== args.marker || job.contentHash !== args.contentHash || job.sizeBytes !== args.sizeBytes) assetDenied("ASSET_UPLOAD_IN_PROGRESS");
+  await ctx.db.patch("runtimeAssetJobs", job._id, { transferState: "issued" }); return null;
+} });
 export const stageStorage = internalMutation({ args: { jobId: v.string(), storageId: v.id("_storage") }, handler: async (ctx, args) => {
   const job = await jobRow(ctx, args.jobId); await jobCurrent(ctx, job); if (job.storageId && job.storageId !== args.storageId) assetDenied("ASSET_IDEMPOTENCY_CONFLICT");
   const stored = await ctx.storage.getMetadata(args.storageId); if (!stored || stored.contentType !== job.marker || stored.size !== job.sizeBytes || stored.sha256 !== job.contentHash) assetDenied("ASSET_INTEGRITY_FAILED");
@@ -91,13 +100,18 @@ export const stageStorage = internalMutation({ args: { jobId: v.string(), storag
 } });
 export const finalize = internalMutation({ args: { jobId: v.string() }, handler: async (ctx, args) => {
   const job = await jobRow(ctx, args.jobId);
-  if (job.state === "ready") { const value = await versionById(ctx, job, job.versionId); if (!value) assetDenied(); await authorizeAsset(ctx, job.reference, value, "storage:write"); return publicAsset(value); }
+  if (job.sourceErasedAt !== undefined) assetDenied("ASSET_UPLOAD_EXPIRED");
+  if (job.state === "ready") {
+    const value = await versionById(ctx, job, job.versionId); if (!value) assetDenied(); await authorizeAsset(ctx, job.reference, value, "storage:write");
+    if (job.lineage.kind === "generated" && job.transferState !== "settled") await ctx.db.patch("runtimeAssetJobs", job._id, { storageId: value.storageId, transferState: "settled" });
+    return publicAsset(value);
+  }
   await jobCurrent(ctx, job); if (!job.storageId) assetDenied("ASSET_NOT_READY");
   const stored = await ctx.storage.getMetadata(job.storageId); if (!stored || stored.size !== job.sizeBytes || stored.sha256 !== job.contentHash || stored.contentType !== job.marker) assetDenied("ASSET_INTEGRITY_FAILED"); metadata(job);
   const id = await ctx.db.insert("runtimeAssetVersions", { tenantId: job.tenantId, memorySpaceId: job.memorySpaceId, assetId: job.assetId, versionId: job.versionId, assetVersion: job.assetVersion, ownerPrincipalId: job.ownerPrincipalId, storageId: job.storageId, contentHash: job.contentHash, sizeBytes: job.sizeBytes, mimeType: job.mimeType, mediaKind: assetMediaKind(job.mimeType), ...(job.filename !== undefined ? { filename: job.filename } : {}), lineage: job.lineage, state: "ready", cleanupAttempt: 0, createdAt: Date.now() });
   const value = (await ctx.db.get("runtimeAssetVersions", id))!;
   const head = await ctx.db.query("runtimeAssets").withIndex("by_asset", q => q.eq("tenantId", job.tenantId).eq("memorySpaceId", job.memorySpaceId).eq("assetId", job.assetId)).unique(); if (!head) assetDenied(); await ctx.db.patch("runtimeAssets", head._id, { latestVersion: job.assetVersion });
-  await addAssetReference(ctx, value, { kind: "upload", ownerId: job.assetId, ownerVersion: String(job.assetVersion), ownerPrincipalId: job.ownerPrincipalId }); await ctx.db.patch("runtimeAssetJobs", job._id, { state: "ready" }); return publicAsset(value);
+  await addAssetReference(ctx, value, { kind: "upload", ownerId: job.assetId, ownerVersion: String(job.assetVersion), ownerPrincipalId: job.ownerPrincipalId }); await ctx.db.patch("runtimeAssetJobs", job._id, { state: "ready", ...(job.lineage.kind === "generated" ? { transferState: "settled" as const } : {}) }); return publicAsset(value);
 } });
 export const get = mutation({ args: { ...scopeArgs, assetId: v.string(), version: v.number() }, handler: async (ctx, args) => {
   const actor = await requireDataAuthority(ctx, args, "storage:read"), reference = dataAuthorityReference(actor), deadlines: number[] = [];
@@ -145,25 +159,39 @@ export const cleanupVersion = internalMutation({ args: { tenantId: v.string(), m
   try { await ctx.storage.delete(value.storageId); await ctx.db.patch("runtimeAssetVersions", value._id, { state: "deleted", deletedAt: Date.now() }); }
   catch { const attempt = value.cleanupAttempt + 1; await ctx.db.patch("runtimeAssetVersions", value._id, { state: "cleanup_pending", cleanupAttempt: attempt }); if (attempt < 3) await ctx.scheduler.runAfter(1000 * attempt, makeFunctionReference<"mutation">("runtimeAssets:cleanupVersion"), args); } return null;
 } });
-export const reconcileOwnerReferences = internalMutation({ args: { tenantId: v.string(), memorySpaceId: v.string(), kind: v.union(v.literal("upload"), v.literal("artifact"), v.literal("attachment"), v.literal("agent")), ownerId: v.string(), afterOwnerVersion: v.optional(v.string()) }, handler: async (ctx, args) => reconcileAssetOwnerReferences(ctx, { tenantId: args.tenantId, memorySpaceId: args.memorySpaceId }, args.kind, args.ownerId, args.afterOwnerVersion) });
+export const reconcileOwnerReferences = internalMutation({ args: { tenantId: v.string(), memorySpaceId: v.string(), kind: assetOwnerKind, ownerId: v.string(), afterOwnerVersion: v.optional(v.string()) }, handler: async (ctx, args) => reconcileAssetOwnerReferences(ctx, { tenantId: args.tenantId, memorySpaceId: args.memorySpaceId }, args.kind, args.ownerId, args.afterOwnerVersion) });
 export const cleanupJob = internalMutation({ args: { jobId: v.string() }, handler: async (ctx, args) => {
   const job = await jobRow(ctx, args.jobId); if (job.state === "ready" || job.state === "uploading" && Date.now() < job.leaseExpiresAt) return null;
   const rows = job.storageId ? [await ctx.db.system.get("_storage", job.storageId)] : await ctx.db.system.query("_storage").withIndex("by_creation_time", q => q.gte("_creationTime", job.createdAt)).filter(q => q.eq(q.field("contentType"), job.marker)).take(2);
   try {
-    for (const row of rows) if (row && row.contentType === job.marker && row.size === job.sizeBytes) { const checked = await ctx.storage.getMetadata(row._id); if (checked?.sha256 === job.contentHash) await ctx.storage.delete(row._id); }
-    await ctx.db.patch("runtimeAssetJobs", job._id, { state: job.state === "cancelled" ? "cancelled" : "failed", failureCode: undefined });
+    let acknowledged: Id<"_storage"> | undefined;
+    for (const row of rows) if (row && row.contentType === job.marker && row.size === job.sizeBytes) {
+      const checked = await ctx.storage.getMetadata(row._id);
+      if (checked?.contentType === job.marker && checked.size === job.sizeBytes && checked.sha256 === job.contentHash) { acknowledged = row._id; await ctx.storage.delete(row._id); }
+    }
+    // Neither a lease deadline nor an empty scan proves an issued store ended.
+    await ctx.db.patch("runtimeAssetJobs", job._id, { state: job.state === "cancelled" ? "cancelled" : "failed", failureCode: undefined,
+      ...(job.lineage.kind === "generated" && acknowledged ? { storageId: acknowledged, transferState: "settled" as const } : {}) });
   } catch { const cleanupAttempt = (job.cleanupAttempt ?? 0) + 1; await ctx.db.patch("runtimeAssetJobs", job._id, { cleanupAttempt, failureCode: "ASSET_CLEANUP_PENDING" }); if (cleanupAttempt < 3) await ctx.scheduler.runAfter(cleanupAttempt * 1000, makeFunctionReference<"mutation">("runtimeAssets:cleanupJob"), args); } return null;
 } });
 /** Lost ready acknowledgements cannot delete committed referenced bytes. */
 export const abandonJob = internalMutation({ args: { jobId: v.string(), storageId: v.optional(v.id("_storage")) }, handler: async (ctx, args) => {
-  const job = await jobRow(ctx, args.jobId); if (job.state === "ready") return null;
-  if (args.storageId) { const stored = await ctx.storage.getMetadata(args.storageId); if (stored && stored.contentType !== job.marker || job.storageId && job.storageId !== args.storageId) assetDenied("ASSET_REFERENCE_CONFLICT"); }
+  const job = await jobRow(ctx, args.jobId);
+  if (job.state === "ready" && job.lineage.kind !== "generated") return null;
+  if (args.storageId) {
+    const stored = await ctx.storage.getMetadata(args.storageId);
+    if (stored && stored.contentType !== job.marker || job.storageId && job.storageId !== args.storageId) assetDenied("ASSET_REFERENCE_CONFLICT");
+    if (job.lineage.kind === "generated" && (!stored || stored.size !== job.sizeBytes || stored.sha256 !== job.contentHash)) assetDenied("ASSET_REFERENCE_CONFLICT");
+    if (job.lineage.kind === "generated") await ctx.db.patch("runtimeAssetJobs", job._id, { storageId: args.storageId, transferState: "settled" });
+  }
+  if (job.state === "ready") return null;
   await ctx.db.patch("runtimeAssetJobs", job._id, { state: job.state === "cancelled" ? "cancelled" : "failed", ...(args.storageId ? { storageId: args.storageId } : {}) }); await ctx.scheduler.runAfter(0, makeFunctionReference<"mutation">("runtimeAssets:cleanupJob"), { jobId: job.jobId }); return null;
 } });
 export async function storeJobBytes(ctx: ActionCtx, job: { jobId: string; marker: string }, bytes: ArrayBuffer): Promise<RuntimeAssetVersion> {
   try { assertAssetSize(bytes.byteLength); } catch { assetDenied("ASSET_TOO_LARGE"); }
   let storageId: Id<"_storage"> | undefined;
   try {
+    await ctx.runMutation(makeFunctionReference<"mutation">("runtimeAssets:issueStorage"), { jobId: job.jobId, marker: job.marker, contentHash: await assetContentHash(bytes), sizeBytes: bytes.byteLength });
     storageId = await ctx.storage.store(new Blob([bytes], { type: job.marker }));
     await ctx.runMutation(makeFunctionReference<"mutation">("runtimeAssets:stageStorage"), { jobId: job.jobId, storageId });
     const value = await ctx.runMutation(makeFunctionReference<"mutation", { jobId: string }, RuntimeAssetVersion>("runtimeAssets:finalize"), { jobId: job.jobId });

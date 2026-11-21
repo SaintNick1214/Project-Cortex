@@ -57,8 +57,9 @@ export const runtimePolicyTables = {
     memorySpaceId: v.string(), principalId: v.string(), semanticId: v.string(), operationKey: modelOperationKey,
     runAccountId: v.id("runtimeBudgetAccounts"), parentOperationId: v.optional(v.id("runtimeModelOperations")), source: v.optional(modelSource),
     resolutionCanonical: v.string(), snapshotCanonical: v.string(), identityCanonical: v.string(), identityHash: v.string(),
-    reservedUnits: v.number(), settledUnits: v.number(), uncertainUnits: v.number(), overrun: v.boolean(), cancelled: v.boolean(), createdAt: v.number(),
-  }).index("by_identity", ["tenantId", "memorySpaceId", "principalId", "semanticId", "operationKey"]),
+    reservedUnits: v.number(), settledUnits: v.number(), uncertainUnits: v.number(), overrun: v.boolean(), cancelled: v.boolean(), createdAt: v.number(), sourceErasedAt: v.optional(v.number()),
+  }).index("by_identity", ["tenantId", "memorySpaceId", "principalId", "semanticId", "operationKey"])
+    .index("by_source_erasure", ["tenantId", "memorySpaceId", "source.sourceId", "sourceErasedAt"]),
   runtimeModelAttempts: defineTable({ operationDocumentId: v.id("runtimeModelOperations"), childCallId: v.string(), ordinal: v.number(),
     attemptNumber: v.number(), fallbackModelId: v.optional(v.string()), priorAttemptId: v.optional(v.id("runtimeModelAttempts")), canonical: v.string(), hash: v.string(), resolutionCanonical: v.string(), snapshotCanonical: v.string(), inputProofCanonical: v.string(), measuredInputTokens: v.number(), maximumOutputTokens: v.number(),
     tenantAccountId: v.id("runtimeBudgetAccounts"), runAccountId: v.id("runtimeBudgetAccounts"), reservationUnits: v.number(),
@@ -66,7 +67,7 @@ export const runtimePolicyTables = {
     ...visibilityFields, receiptCanonical: v.optional(v.string()), receiptHash: v.optional(v.string()),
     settledCostUnits: v.optional(v.number()), costProvenance: v.optional(v.string()), actualModel: v.optional(v.string()),
     privateResultCanonical: v.optional(v.string()), resultWithheld: v.boolean(), terminalEvidenceCanonical: v.optional(v.string()), terminalEvidenceHash: v.optional(v.string()),
-    resultAttachmentState: v.optional(v.union(v.literal("pending"), v.literal("attached"), v.literal("closed"))), createdAt: v.number(),
+    resultAttachmentState: v.optional(v.union(v.literal("pending"), v.literal("attached"), v.literal("closed"))), createdAt: v.number(), sourceErasedAt: v.optional(v.number()),
   }).index("by_child_attempt", ["operationDocumentId", "childCallId", "attemptNumber"])
-    .index("by_operation", ["operationDocumentId"]).index("by_state_checkpoint", ["state", "checkpointAt"]),
+    .index("by_operation", ["operationDocumentId"]).index("by_operation_erasure", ["operationDocumentId", "sourceErasedAt"]).index("by_state_checkpoint", ["state", "checkpointAt"]),
 };

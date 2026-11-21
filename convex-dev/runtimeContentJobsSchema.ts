@@ -8,7 +8,7 @@ export const runtimeContentTables = {
   runtimeContentJobs: defineTable({ tenantId: v.string(), memorySpaceId: v.string(), ownerPrincipalId: v.string(), jobId: v.string(), requestId: v.string(), requestCanonical: v.string(), reference: runtimeAuthorityReference,
     intent: contentIntent, prompt: v.string(), conversationId: v.optional(v.string()), sourceMessageId: v.optional(v.string()), sourceMessagePin: v.optional(v.object({ revision: v.number(), contentHash: v.string() })), conversationEpoch: v.optional(v.number()), conversationRevision: v.optional(v.number()),
     parentRunId: v.optional(v.string()), completedParentTitle: v.optional(v.object({ attemptNumber: v.number(), leaseVersion: v.number() })), artifactId: v.optional(v.string()), artifactVersion: v.optional(v.number()), artifactHash: v.optional(v.string()), sourceArtifactId: v.optional(v.string()),
-    sourceWitnesses: v.array(contextSourceWitness), artifactWitnesses: v.array(artifactContextWitness), deliveryArtifactWitnesses: v.array(artifactContextWitness),
+    sourceWitnesses: v.array(contextSourceWitness), artifactWitnesses: v.array(artifactContextWitness), deliveryArtifactWitnesses: v.array(artifactContextWitness), sourceErasedAt: v.optional(v.number()),
     runBudgetId: v.string(), runAccountId: v.id("runtimeBudgetAccounts"), parentOperationId: v.optional(v.id("runtimeModelOperations")),
     state: v.union(v.literal("pending"), v.literal("running"), v.literal("ready"), v.literal("failed"), v.literal("unknown"), v.literal("cancelled"), v.literal("expired")), revision: v.number(),
     workflowId: v.optional(v.string()), leaseToken: v.optional(v.string()), leaseExpiresAt: v.optional(v.number()), expiresAt: v.number(),

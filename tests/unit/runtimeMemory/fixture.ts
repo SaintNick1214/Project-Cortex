@@ -59,6 +59,7 @@ export class MemoryTestDb {
           gt: (name, value) => row => (field(row, name) as number) > value }); return builder;
       },
       unique: async () => { const rows = selected(); if (rows.length > 1) throw new Error("Nonunique canonical index"); return rows[0] ?? null; },
+      first: async () => selected()[0] ?? null,
       order: (direction: "asc" | "desc") => { descending = direction === "desc"; return builder; },
       collect: async () => [...selected()], take: async (limit: number) => {this.reads.push({table,index:indexName,limit});return selected().slice(0, limit);},
       paginate: async (opts: { cursor: string | null; numItems: number }) => {

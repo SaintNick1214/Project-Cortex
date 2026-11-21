@@ -1,3 +1,4 @@
+import { isFactExtractionEligible } from "../src/domain/sources";
 import type { MemoryEffortRequest, MemoryEffortTrace } from "../src/domain/memory-effort";
 import { normalizeMemoryEffortRequest } from "../src/domain/memory-effort";
 /** Modern memory operations share pure domain logic and required backend adapters. */
@@ -49,7 +50,7 @@ export async function rememberMemory(
   };
   // Rechecks immediately precede each internal dispatch; an injected model never grants access.
   await recheckSource();
-  const extracted = source.lineage.role === "assistant" ? [] : await extractSourceFacts(source, model, {
+  const extracted = !isFactExtractionEligible(source.lineage) ? [] : await extractSourceFacts(source, model, {
     operationId: `memory.extract:${receiptId}`, policyVersion: SOURCE_EXTRACTION_POLICY_VERSION, attempt: 1, source: reference,
   });
   await recheckSource();
@@ -139,9 +140,10 @@ export function vectorRecallItems(vectors: readonly VectorMatch[]): RecallItem[]
   return vectors.map((match) => ({ type: "memory", id: match.chunk.chunkId,
     content: match.chunk.text, score: match.score, source: "vector", memory: {
       _id: match.vector.vectorId, memoryId: match.chunk.chunkId, tenantId: match.source.tenantId,
-      memorySpaceId: match.source.memorySpaceId, userId: match.source.ownerPrincipalId, content: match.chunk.text,
+      memorySpaceId: match.source.memorySpaceId, ...(match.source.lineage.role === "external" ? {} : { userId: match.source.ownerPrincipalId }), content: match.chunk.text,
       contentType: "raw", sourceType: match.source.lineage.role === "tool" ? "tool" : "conversation",
-      sourceTimestamp: match.source.createdAt, messageRole: match.source.lineage.role === "user" ? "user" : "agent",
+      sourceTimestamp: match.source.createdAt,
+      ...(match.source.lineage.role === "external" ? { sourceLineage: match.source.lineage, attribution: "unverified_external" } : { messageRole: match.source.lineage.role === "user" ? "user" as const : "agent" as const }),
       importance: 50, tags: [], version: match.source.lineage.sourceRevision, previousVersions: [],
       createdAt: match.source.createdAt, updatedAt: match.source.createdAt, accessCount: 0,
     }, graphContext: { connectedEntities: [] } }));

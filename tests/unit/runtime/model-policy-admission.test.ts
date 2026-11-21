@@ -569,17 +569,26 @@ describe("native private policy ledger — offline logic only", () => {
     const assets = ["runtimeAssets", "runtimeAssetVersions", "runtimeAssetReferences", "runtimeAssetJobs"];
     const media = ["runtimeMediaJobs", "runtimeMediaCallbacks"];
     const graph = ["runtimeGraphConnectors", "runtimeGraphScopes", "runtimeGraphRevisions", "runtimeGraphSources", "runtimeGraphPayloads", "runtimeGraphOutbox", "runtimeGraphReceipts", "runtimeGraphReads", "runtimeGraphDependencies"];
-    expect(Object.keys(schema.tables).sort()).toEqual([...original, ...added, ...execution, ...ingestion, ...capture, "runtimeMemoryVectorGenerations", "runtimeMemoryFactEntities", ...graph, ...assets, ...media, "runtimeContentJobs"].sort());
-    const required = { runtimeContentJobs: ["by_job", "by_request", "by_account", "by_owner", "by_conversation"], runtimeMediaJobs: ["by_job", "by_request", "by_scope", "by_owner", "by_account", "by_operation"], runtimeMediaCallbacks: ["by_identity"], runtimeAssets: ["by_asset", "by_owner"], runtimeAssetVersions: ["by_version", "by_version_id", "by_storage", "by_cleanup"], runtimeAssetReferences: ["by_version", "by_owner", "by_principal", "by_scope", "by_conversation"], runtimeAssetJobs: ["by_request", "by_job", "by_owner", "by_scope"], runtimeMemoryVectorGenerations: ["by_scope", "by_owner", "by_scope_profile_source"], runtimeAgentExecutions: ["by_attempt"], runtimeAgentOutput: ["by_sequence", "by_delivery"], runtimeAgentOperations: ["by_operation", "by_attempt"], runtimeAgentIngestion: ["by_run"],
+    const external = ["runtimeExternalSources", "runtimeExternalVersions", "runtimeExternalObservations", "runtimeExternalCounters", "runtimeExternalReadCursors", "runtimeExternalErasureFences",
+      "runtimeChangeHeads", "runtimeChangeEvents", "runtimeChangeCursors", "runtimeExternalErasureJobs", "runtimeExternalAuthorityErasureJobs",
+      "runtimeSourceDependencies", "runtimeSourceConsumerErasureJobs", "runtimeSourceRevisionErasureFences"];
+    expect(Object.keys(schema.tables).sort()).toEqual([...original, ...added, ...execution, ...ingestion, ...capture, "runtimeMemoryVectorGenerations", "runtimeMemoryFactEntities", ...graph, ...assets, ...media, "runtimeContentJobs", ...external].sort());
+    const required = { runtimeContentJobs: ["by_job", "by_request", "by_account", "by_owner", "by_conversation"], runtimeMediaJobs: ["by_job", "by_request", "by_scope", "by_owner", "by_account", "by_operation"], runtimeMediaCallbacks: ["by_identity"], runtimeAssets: ["by_asset", "by_owner"], runtimeAssetVersions: ["by_version", "by_version_id", "by_storage", "by_cleanup"], runtimeAssetReferences: ["by_version", "by_owner", "by_principal", "by_scope", "by_conversation"], runtimeAssetJobs: ["by_request", "by_job", "by_owner", "by_scope", "by_generated_erasure"], runtimeMemoryVectorGenerations: ["by_scope", "by_owner", "by_scope_profile_source", "by_source", "by_source_revision"], runtimeAgentExecutions: ["by_attempt"], runtimeAgentOutput: ["by_sequence", "by_delivery"], runtimeAgentOperations: ["by_operation", "by_attempt", "by_attempt_erasure"], runtimeAgentIngestion: ["by_run"],
       runtimeIngestionForegroundPriority: ["by_run", "by_scope_state"], runtimeRunMemoryProgress: ["by_run"], runtimeMemoryCaptureConversations: ["by_conversation"], runtimeMemoryCaptures: ["by_request", "by_receipt"], runtimeMemoryCaptureMessages: ["by_message", "by_receipt"],
       runtimeMemoryFactEntities: ["by_scope_entity", "by_owner_entity", "by_scope_fact"],
       runtimeIngestionSequenceHeads: ["by_scope"], runtimeIngestionScopes: ["by_scope"], runtimeIngestionEvents: ["by_event", "by_scope_sequence", "by_owner_sequence", "by_source", "by_source_eligibility", "by_run_message_eligibility", "by_conversation_sequence"],
       runtimeIngestionStages: ["by_event_stage"], runtimeIngestionJobs: ["by_event", "by_budget", "by_account"],
-      runtimeBeliefHeads: ["by_slot"], runtimeBeliefHistory: ["by_fact", "by_event"], runtimeBeliefOutbox: ["by_event"],
-      runtimeGraphConnectors: ["by_connector", "by_scope"], runtimeGraphScopes: ["by_scope"], runtimeGraphRevisions: ["by_scope_revision"],
+      runtimeBeliefHeads: ["by_slot", "by_event"], runtimeBeliefHistory: ["by_fact", "by_event"], runtimeBeliefOutbox: ["by_event"],
+      runtimeGraphConnectors: ["by_connector", "by_scope"], runtimeGraphScopes: ["by_scope"], runtimeGraphRevisions: ["by_scope_revision", "by_source"],
       runtimeGraphSources: ["by_source", "by_scope", "by_tenant_source", "by_conversation", "by_grant", "by_principal", "by_membership"], runtimeGraphPayloads: ["by_revision"],
       runtimeGraphDependencies: ["by_upstream", "by_dependent"],
-      runtimeGraphOutbox: ["by_job", "by_queue", "by_source"], runtimeGraphReceipts: ["by_job"], runtimeGraphReads: ["by_request", "by_queue"] } as const;
+      runtimeGraphOutbox: ["by_job", "by_queue", "by_source"], runtimeGraphReceipts: ["by_job"], runtimeGraphReads: ["by_request", "by_queue"],
+      runtimeChangeHeads: ["by_stream"], runtimeChangeEvents: ["by_event", "by_scope_sequence", "by_owner_sequence", "by_source"], runtimeChangeCursors: ["by_token"],
+      runtimeExternalErasureJobs: ["by_source"], runtimeExternalAuthorityErasureJobs: ["by_job"],
+      runtimeSourceDependencies: ["by_identity", "by_upstream", "by_upstream_erasure", "by_target"], runtimeSourceConsumerErasureJobs: ["by_identity"], runtimeSourceRevisionErasureFences: ["by_revision"],
+      runtimeExternalSources: ["by_source", "by_owner", "by_principal", "by_tenant_source", "by_principal_erasure", "by_scope_erasure", "by_tenant_erasure"],
+      runtimeExternalVersions: ["by_version", "by_revision", "by_source", "by_scope_sequence", "by_owner_sequence"], runtimeExternalObservations: ["by_event", "by_receipt", "by_source_sequence", "by_source_owner_sequence"],
+      runtimeExternalCounters: ["by_stream"], runtimeExternalReadCursors: ["by_token", "by_scope", "by_visibility"], runtimeExternalErasureFences: ["by_source"] } as const;
     for (const [name, indexes] of Object.entries(required)) {
       expect(schema.tables[name as keyof typeof required][" indexes"]().map(index => index.indexDescriptor).sort()).toEqual([...indexes].sort());
     }
@@ -983,14 +992,14 @@ describe("trusted terminal capture and current private attachment", () => {
     await unchanged(f, () => capture(f, a, conflicting)); expect(forced).toBe(1);
     expect(await capture(f, a, charge(f, a))).toMatchObject({ evidenceId: first.evidenceId, settledCostUnits: 150 });
   });
-  it("only two new registrations are internal and the ledger still has exactly five tables/eleven indexes", () => {
+  it("terminal registrations stay internal and five ledger tables retain thirteen indexes including bounded source erasure", () => {
     for (const name of ["captureTerminalEvidence", "attachTerminalResult"] as const) {
       const registration = ledger[name] as unknown as Registration;
       expect(registration.isInternal).toBe(true); expect(registration.isPublic).not.toBe(true);
     }
     const tables = JSON.parse(schema.export()) as { tables: { tableName: string; indexes: unknown[] }[] };
     const policy = tables.tables.filter((table) => ["runtimeModelPolicies", "runtimeModelQualifications", "runtimeBudgetAccounts", "runtimeModelOperations", "runtimeModelAttempts"].includes(table.tableName));
-    expect(policy).toHaveLength(5); expect(policy.reduce((sum, table) => sum + table.indexes.length, 0)).toBe(11);
+    expect(policy).toHaveLength(5); expect(policy.reduce((sum, table) => sum + table.indexes.length, 0)).toBe(13);
   });
 });
 

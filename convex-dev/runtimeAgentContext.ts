@@ -21,7 +21,7 @@ function sourceLineage(value: unknown): value is SourceLineage {
     || typeof value.sourceId !== "string" || !value.sourceId || typeof value.sourceEventId !== "string" || !value.sourceEventId
     || !Number.isSafeInteger(value.sourceRevision) || (value.sourceRevision as number) < 1) return false;
   return value.role === "tool" ? value.trust === "verified_tool_evidence" && typeof value.operationId === "string" && !!value.operationId
-    : value.operationId === undefined && (value.role === "user" && value.trust === "user_assertion" || value.role === "assistant" && value.trust === "assistant_claim");
+    : value.operationId === undefined && (value.role === "user" && value.trust === "user_assertion" || value.role === "assistant" && value.trust === "assistant_claim" || value.role === "external" && value.trust === "unverified_external");
 }
 
 /** A model-only projection. Original entry text, keys, bindings and witnesses are

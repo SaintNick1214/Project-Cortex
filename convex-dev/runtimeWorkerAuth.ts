@@ -1,3 +1,4 @@
+import { isFactExtractionEligible } from "../src/domain/sources";
 /** Independent worker/operator boundary derived only from reviewed runtimeAuth/02B. */
 import { ConvexError, v, type GenericValidator } from "convex/values";
 import type { MutationCtx, QueryCtx } from "./_generated/server";
@@ -76,7 +77,7 @@ function validateFact(fact: Doc<"facts"> | null, expected: FactExpectation): ass
     || (fact.validUntil !== undefined && (!validStoredTime(fact.validUntil) || fact.validUntil <= now))
     || (fact.validFrom !== undefined && fact.validUntil !== undefined && fact.validUntil <= fact.validFrom)
     || fact.lineage.sourceId !== expected.sourceId || fact.lineage.sourceEventId !== expected.sourceEventId
-    || fact.lineage.sourceRevision !== expected.sourceRevision || fact.lineage.role === "assistant"
+    || fact.lineage.sourceRevision !== expected.sourceRevision || !isFactExtractionEligible(fact.lineage)
     || (fact.sourceType !== "manual" && fact.sourceType !== "tool")
     || (fact.sourceType === "tool") !== (fact.lineage.role === "tool")) workerDeny();
   assertSourceLineage(fact.lineage);

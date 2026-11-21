@@ -53,7 +53,8 @@ export const runtimeIngestionTables = {
     runAccountId: v.id("runtimeBudgetAccounts"), requestCanonical: v.string(), createdAt: v.number() })
     .index("by_event", ["tenantId", "memorySpaceId", "eventId"]).index("by_budget", ["runBudgetId"]).index("by_account", ["runAccountId"]),
   runtimeBeliefHeads: defineTable({ ...scope, slotKey: v.string(), factId: v.string(), sequence: v.number(),
-    eventId: v.string(), version: v.number(), updatedAt: v.number() }).index("by_slot", ["tenantId", "memorySpaceId", "slotKey"]),
+    eventId: v.string(), version: v.number(), updatedAt: v.number() }).index("by_slot", ["tenantId", "memorySpaceId", "slotKey"])
+    .index("by_event", ["tenantId", "memorySpaceId", "eventId"]),
   runtimeBeliefHistory: defineTable({ ...scope, historyId: v.string(), eventId: v.string(), sequence: v.number(),
     factId: v.string(), action: v.union(v.literal("ADD"), v.literal("UPDATE"), v.literal("SUPERSEDE"), v.literal("NONE")),
     beforeCanonical: v.optional(v.string()), afterCanonical: v.optional(v.string()), planCanonical: v.string(),

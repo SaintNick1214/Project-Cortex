@@ -24,6 +24,7 @@ import type { ScopedDataAuthority } from "./runtimeDataAuth";
 import { readNativeTranscriptMessages, recheckAuthority, readManagedTranscriptBridgeRows, readV8AgentExecutionRows, readV8ConversationRows, hashV8CanonicalBytes } from "./runtimeAuth";
 import { runtimeAuthorityReference } from "./runtimeAuthSchema";
 import { checkContextSourceWitnesses } from "./runtimeContextWitness";
+import { assertSourceWitnessesNotErased, registerSourceDependencies, sourceDependencyWitnesses } from "./runtimeSourceDependencies";
 import type { ContextSourceWitness } from "../src/domain/context-witness";
 import { enqueueSourceEvent, retireSourceEvents, readScopeSequence } from "./runtimeIngestion";
 
@@ -120,6 +121,11 @@ export function privateModelMessage(message: MessageDoc): ModelMessage {
 }
 export async function verifyMessage(ctx: ReadCtx, conversation: ManagedConversation, bridge: Doc<"runtimeTranscriptMessages">,
   native: MessageDoc | null): Promise<MessageDoc> {
+  if (bridge.sourceErasedAt !== undefined) transcriptDenied("STALE_CONTEXT");
+  // Use the bridge scope solely for the erasure fence. Each caller retains its
+  // current viewer's existing source/conversation authority checks.
+  await assertSourceWitnessesNotErased(ctx, bridge, await sourceDependencyWitnesses(ctx, bridge,
+    { kind: "transcript", id: bridge._id, revision: bridge.revision }));
   if (!native || bridge.tombstonedAt !== undefined || bridge.conversationId !== conversation.conversationId
     || bridge.tenantId !== conversation.tenantId || bridge.memorySpaceId !== conversation.memorySpaceId
     || native.threadId !== conversation.threadId || native._id !== bridge.nativeMessageId
@@ -189,17 +195,18 @@ export async function registerMessages(ctx: MutationCtx, conversation: ManagedCo
     const text = typed.parts.map(part => part.text).join("\n");
     const hash = await contentHash(message, ctx); const sourceHash = await semanticHash(text.trim() ? normalizeSourceText(text) : "");
     const mediaJobReferences = await checkNativeMediaReferences(ctx, reference, message);
-    const artifactContextWitnesses = [...new Map([...(options.artifactContextWitnesses ?? []), ...await nativeArtifactWitnesses(ctx, reference, message)].map(witness => [canonicalModelJson(witness), witness])).values()];
+    const artifactContextWitnesses = [...new Map([...(typed.role === "user" ? [] : options.artifactContextWitnesses ?? []), ...await nativeArtifactWitnesses(ctx, reference, message)].map(witness => [canonicalModelJson(witness), witness])).values()];
     await checkArtifactContextWitnesses(ctx, reference, artifactContextWitnesses);
     const bridge = { tenantId: conversation.tenantId, memorySpaceId: conversation.memorySpaceId, ownerPrincipalId: reference.principalId,
       conversationId: conversation.conversationId, nativeMessageId: message._id, order: message.order, stepOrder: message.stepOrder,
       role: typed.role, revision: 1, contentHash: hash, sourceEventId: event, sourceId: event, sourceContentHash: sourceHash,
       actorReference: reference, approved: options.approved ?? true,
-      ...(options.contextSourceWitnesses?.length ? { contextSourceWitnesses: options.contextSourceWitnesses } : {}),
+      ...(typed.role !== "user" && options.contextSourceWitnesses?.length ? { contextSourceWitnesses: options.contextSourceWitnesses } : {}),
       ...(mediaJobReferences.length ? { mediaJobReferences } : {}),
       ...(artifactContextWitnesses.length ? { artifactContextWitnesses } : {}),
       ...(options.runId === undefined ? {} : { runId: options.runId }), ...(options.attemptNumber === undefined ? {} : { attemptNumber: options.attemptNumber }), createdAt: now, updatedAt: now };
     const bridgeId = await ctx.db.insert("runtimeTranscriptMessages", bridge);
+    await registerMessageDependencies(ctx, { ...bridge, _id: bridgeId });
     await bindNativeAssetReferences(ctx, reference, (await ctx.db.get("runtimeTranscriptMessages", bridgeId))!, message);
     await sourceWrite(ctx, conversation, bridge, text);
     await messageOutbox(ctx, conversation, bridge, bridge.approved ? "registered" : "pending", options.queueSequence);
@@ -209,6 +216,13 @@ export async function registerMessages(ctx: MutationCtx, conversation: ManagedCo
     executionRevision: executionRevision(conversation) + (options.invalidateExecution === false ? 0 : 1),
     messageCount: conversation.messageCount + messages.length, updatedAt: Date.now() });
   return pins;
+}
+/** Only declared generated ancestry is erasable; authored user text never inherits a turn's context. */
+async function registerMessageDependencies(ctx: MutationCtx, bridge: Pick<Doc<"runtimeTranscriptMessages">,
+  "_id" | "tenantId" | "memorySpaceId" | "role" | "revision" | "sourceId" | "contextSourceWitnesses" | "artifactContextWitnesses">) {
+  if (bridge.role === "user") return;
+  await registerSourceDependencies(ctx, bridge, { kind: "transcript", id: bridge._id, revision: bridge.revision }, bridge.contextSourceWitnesses ?? [], bridge.artifactContextWitnesses);
+  await registerSourceDependencies(ctx, bridge, { kind: "source", id: bridge.sourceId, revision: bridge.revision }, bridge.contextSourceWitnesses ?? [], bridge.artifactContextWitnesses);
 }
 async function nativeArtifactWitnesses(ctx: Pick<ReadCtx, "db">, reference: RuntimeAuthorityReference, message: MessageDoc): Promise<ArtifactContextWitness[]> {
   const parts = message.message?.content;
@@ -255,6 +269,7 @@ export async function approveRegisteredMessage(ctx: MutationCtx, conversation: M
   if (bridge.approved) return;
   const revision = bridge.revision + 1; const now = Date.now();
   const changed = { ...bridge, approved: true, revision, actorReference: actor, updatedAt: now };
+  await registerMessageDependencies(ctx, changed);
   await sourceWrite(ctx, conversation, changed, content(native).parts.map(part => part.text).join("\n"));
   await ctx.db.patch("runtimeTranscriptMessages", bridge._id, { approved: true, revision, actorReference: actor, updatedAt: now });
   await messageOutbox(ctx, conversation, bridge, "tombstoned");

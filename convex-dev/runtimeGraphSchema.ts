@@ -20,7 +20,8 @@ export const runtimeGraphTables = {
     .index("by_dependent", ["tenantId", "memorySpaceId", "dependentSourceId"]),
   runtimeGraphRevisions: defineTable({ ...scope, revision: v.number(), sourceId: v.string(), profileId: v.string(),
     state: v.union(v.literal("pending"), v.literal("complete"), v.literal("failed"), v.literal("skipped")) })
-    .index("by_scope_revision", ["tenantId", "memorySpaceId", "revision"]),
+    .index("by_scope_revision", ["tenantId", "memorySpaceId", "revision"])
+    .index("by_source", ["tenantId", "memorySpaceId", "sourceId", "revision"]),
   runtimeGraphSources: defineTable({ ...scope, sourceId: v.string(), sourceEventId: v.string(), sourceRevision: v.number(),
     ownerPrincipalId: v.string(), conversationId: v.optional(v.string()), contentHash: v.string(), revision: v.number(), payloadHash: v.string(), profile: embeddingProfile,
     operation: v.union(v.literal("replace"), v.literal("tombstone")), authorityReference: v.optional(runtimeAuthorityReference),

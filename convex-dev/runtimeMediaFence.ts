@@ -9,6 +9,7 @@ import { managedConversationAccess } from "./runtimeDataAuth";
 import { checkContextSourceWitnesses } from "./runtimeContextWitness";
 import { assetVersion, authorizeAsset } from "./runtimeAssetCatalog";
 import { readCurrentExecutableDefinition } from "./agentDefinitions";
+import { assertSourceWitnessesNotErased, checkSourceDependencies } from "./runtimeSourceDependencies";
 type Ctx = Pick<QueryCtx, "db">;
 export function mediaDenied(code = "FORBIDDEN"): never { throw new ConvexError({ version: 1, code, message: "Media operation denied.", retryable: false, outcome: "not_dispatched" }); }
 export async function checkMediaJob(ctx: Ctx, job: Doc<"runtimeMediaJobs">, reference = job.reference, write = false, deadlines?: number[]) {
@@ -16,6 +17,7 @@ export async function checkMediaJob(ctx: Ctx, job: Doc<"runtimeMediaJobs">, refe
   if (reference.tenantId !== s.tenantId || reference.memorySpaceId !== s.memorySpaceId) mediaDenied();
   await recheckAuthority(ctx, reference, { ...s, capability: write ? "write" : "read", resource: { ...s, resourceType: "artifact", resourceId: job.artifactId, ownerPrincipalId: job.ownerPrincipalId } });
   await recheckAuthority(ctx, reference, { ...s, capability: write ? "storage:write" : "storage:read" });
+  if (job.sourceErasedAt !== undefined) mediaDenied("STALE_CONTEXT");
   const artifact = await ctx.db.query("artifacts").withIndex("by_runtime_key", q => q.eq("tenantId", s.tenantId).eq("memorySpaceId", s.memorySpaceId).eq("artifactId", job.artifactId)).unique();
   if (!artifact || artifact.isDeleted || artifact.tombstonedAt !== undefined || artifact.ownerPrincipalId !== job.ownerPrincipalId) mediaDenied();
   if (job.conversationId) {
@@ -23,11 +25,16 @@ export async function checkMediaJob(ctx: Ctx, job: Doc<"runtimeMediaJobs">, refe
     if (!conversation) mediaDenied();
     await managedConversationAccess(ctx, reference, conversation, write ? "write" : "read", undefined, deadlines);
   }
+  await assertSourceWitnessesNotErased(ctx, s, job.contextSourceWitnesses);
+  await checkSourceDependencies(ctx, reference, { kind: "media", id: job.jobId }, deadlines);
+  if (job.parentOperationId) await checkSourceDependencies(ctx, reference, { kind: "model", id: job.parentOperationId }, deadlines);
+  await checkSourceDependencies(ctx, reference, { kind: "artifact", id: job.artifactId, revision: artifact.versionPointer }, deadlines);
   await checkContextSourceWitnesses(ctx, reference, job.contextSourceWitnesses, deadlines);
   if (job.input) {
     const asset = await assetVersion(ctx, s, job.input.assetId, job.input.assetVersion);
     if (!asset || asset.versionId !== job.input.versionId || asset.contentHash !== job.input.contentHash || asset.mimeType !== job.input.mimeType || asset.sizeBytes !== job.input.sizeBytes) mediaDenied("STALE_MEDIA_INPUT");
     await authorizeAsset(ctx, reference, asset, "storage:read", new Set(), deadlines);
+    if (asset.lineage.kind === "generated") await checkSourceDependencies(ctx, reference, { kind: "model", id: asset.lineage.operationId }, deadlines);
   }
   return artifact;
 }

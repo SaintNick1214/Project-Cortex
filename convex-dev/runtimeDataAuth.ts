@@ -1,3 +1,6 @@
+import { assetVersion, authorizeAsset } from "./runtimeAssetCatalog";
+import { isFactExtractionEligible } from "../src/domain/sources";
+import { hasExternalEvidenceAncestry } from "./runtimeSourceDependencies";
 import { checkArtifactContextWitnesses } from "./runtimeArtifactContext";
 import { deliveryExpiresAt } from "./runtimeDelivery";
 /** Scoped data selections for alternate public endpoints. Caller labels are never grants. */
@@ -210,6 +213,20 @@ async function checkManagedSource(ctx: ReadCtx, reference: RuntimeAuthorityRefer
   source: Doc<"runtimeMemorySources">, capability: "read" | "write", permission: ConversationPermission | undefined,
   traversal: ManagedSourceTraversal): Promise<boolean> {
   if (!await artifactDependenciesAreCurrent(ctx, reference, source.artifactContextWitnesses ?? [], traversal)) return false;
+  if (source.lineage.role === "external") {
+    const head = await ctx.db.query("runtimeExternalSources").withIndex("by_source", q => q.eq("tenantId", source.tenantId).eq("memorySpaceId", source.memorySpaceId).eq("sourceId", source.lineage.sourceId)).unique();
+    if (!head || head.ownerPrincipalId !== source.ownerPrincipalId || head.erasedAt !== undefined || head.tombstonedAt !== undefined || head.currentSourceRevision !== source.lineage.sourceRevision) return false;
+    if (await ctx.db.query("runtimeExternalErasureFences").withIndex("by_source", q => q.eq("tenantId", source.tenantId).eq("memorySpaceId", source.memorySpaceId).eq("sourceId", head.sourceId)).first()) return false;
+    const owner = await createAuthorityReader(ctx).getPrincipal(head.ownerPrincipalId);
+    if (!owner || owner.deletedAt !== undefined || owner.revokedAt !== undefined) return false;
+    const version = await ctx.db.query("runtimeExternalVersions").withIndex("by_version", q => q.eq("tenantId", source.tenantId).eq("memorySpaceId", source.memorySpaceId).eq("sourceId", head.sourceId).eq("versionId", head.currentVersionId)).unique();
+    if (!version || version.kind !== "content" || version.normalizedContentHash !== source.contentHash || version.sourceRevision !== source.lineage.sourceRevision) return false;
+    const details = JSON.parse(version.detailsCanonical) as { assetReferences: { assetId: string; version: number }[] };
+    for (const asset of details.assetReferences) {
+      const value = await assetVersion(ctx, source, asset.assetId, asset.version); if (!value) return false;
+      await authorizeAsset(ctx, reference, value, "storage:read", new Set(), traversal.deadlines);
+    }
+  }
   if (source.lineage.role === "tool") {
     const operations = await ctx.db.query("runtimeAgentOperations").withIndex("by_operation", q => q.eq("tenantId", source.tenantId)
       .eq("memorySpaceId", source.memorySpaceId).eq("operationId", source.lineage.role === "tool" ? source.lineage.operationId : "")).take(2);
@@ -380,12 +397,13 @@ async function canonicalSource(source: Doc<"runtimeMemorySources">): Promise<boo
 async function sourceIsCurrent(ctx: ReadCtx, authority: ScopedDataAuthority, capability: Capability, row: DataRow): Promise<CanonicalSourceWitness | undefined> {
   if (!row.lineage || !row.ownerPrincipalId || row.tombstonedAt !== undefined
     || !row.lineage.sourceEventId || !Number.isSafeInteger(row.lineage.sourceRevision) || row.lineage.sourceRevision < 1) return undefined;
-  if ("factId" in row && (!row.extractionPolicyVersion || row.lineage.role === "assistant")) return undefined;
+  if ("factId" in row && (!row.extractionPolicyVersion || !isFactExtractionEligible(row.lineage))) return undefined;
   const source = await ctx.db.query("runtimeMemorySources").withIndex("by_scope_source", q => q.eq("tenantId", authority.tenantId)
     .eq("memorySpaceId", authority.memorySpaceId).eq("lineage.sourceId", row.lineage!.sourceId))
     .filter(q => q.eq(q.field("ownerPrincipalId"), row.ownerPrincipalId)).unique();
   if (!source || source.tombstonedAt !== undefined || source.ownerPrincipalId !== row.ownerPrincipalId
     || !sameLineage(source.lineage, row.lineage)) return undefined;
+  if ("factId" in row && source.lineage.role !== "user" && await hasExternalEvidenceAncestry(ctx, source, source.lineage)) return undefined;
   const witness = sourceWitness(source);
   sourcePermissions.set(witness, "factId" in row ? "canViewFacts" : "canViewMemories");
   await assertOwnedResource(ctx, authority, capability, sourceResource(witness));

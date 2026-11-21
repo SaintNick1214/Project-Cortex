@@ -56,6 +56,7 @@ export function assertSourceLineage(source: unknown): asserts source is SourceLi
   }
   const eligible = (source.role === "user" && source.trust === "user_assertion") ||
     (source.role === "assistant" && source.trust === "assistant_claim") ||
+    (source.role === "external" && source.trust === "unverified_external") ||
     (source.role === "tool" && source.trust === "verified_tool_evidence" && nonempty(source.operationId));
   if (!eligible) throw new Error("INVALID_INPUT: invalid source role/trust attribution");
 }
@@ -124,7 +125,7 @@ export async function processingIdentityKey(identity: ProcessingIdentity): Promi
 
 export function isFactExtractionEligible(lineage: SourceLineage): boolean {
   assertSourceLineage(lineage);
-  return lineage.role !== "assistant";
+  return lineage.role === "user" || lineage.role === "tool";
 }
 
 export function buildSourceExtractionPrompt(source: SourceContent): { system: string; prompt: string } {
