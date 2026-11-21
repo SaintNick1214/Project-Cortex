@@ -10,13 +10,14 @@ import { promisify } from "node:util";
 import { pathToFileURL, fileURLToPath } from "node:url";
 import { ConvexHttpClient } from "convex/browser";
 import { publishedControls, runBackendInstall, seedHost } from "./installer-controls.mjs";
+import { LOCAL_BACKEND_URL, LOCAL_SITE_URL } from "./local-target.mjs";
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "../..");
 const sdk = path.resolve(process.argv[2] ?? ""), receiptPath = path.resolve(process.argv[3] ?? "");
 if (process.argv.length !== 4 || sdk === root || !receiptPath.endsWith(".json")) throw new Error("Explicit extracted candidate SDK and receipt path required");
 const pointer = "/tmp/cortex-external-native-target-path", targetPath = (await fs.readFile(pointer, "utf8")).trim();
 const target = JSON.parse(await fs.readFile(targetPath, "utf8"));
-assert.equal(target.url, "http://127.0.0.1:3486"); assert.equal(target.site, "http://127.0.0.1:3487");
+assert.equal(target.url, LOCAL_BACKEND_URL); assert.equal(target.site, LOCAL_SITE_URL);
 assert.equal(target.fresh, true); assert.equal(target.production, false);
 assert.ok(target.state.startsWith(tmpdir()) && path.basename(target.state).startsWith("cortex-external-native-"));
 assert.ok(target.binary.endsWith("/convex-local-backend"));
@@ -56,13 +57,13 @@ async function restartOwned() {
   finally { closeSync(log); }
   await fs.writeFile(path.join(target.state, "qualification.pid"), String(backendPid), { mode: 0o600 });
   for (let attempt = 0; attempt < 100; attempt++) {
-    try { const response = await fetch(target.url + "/version"); if (response.ok) { ownedCommand(backendPid); return; } } catch { /* Wait for this owned service only. */ }
+    try { const response = await fetch(LOCAL_BACKEND_URL + "/version", { redirect: "error" }); if (response.ok) { ownedCommand(backendPid); return; } } catch { /* Wait for this owned service only. */ }
     await pause(100);
   }
   throw new Error("Restarted owned backend did not become ready");
 }
 function http(identity) {
-  const client = new ConvexHttpClient(target.url); client.setDebug(false); client.setAdminAuth(target.key, identity); return client;
+  const client = new ConvexHttpClient(LOCAL_BACKEND_URL); client.setDebug(false); client.setAdminAuth(target.key, identity); return client;
 }
 const admin = http();
 const internal = (name, args) => admin.function(name, undefined, args);
@@ -73,7 +74,7 @@ function runtime(identity, scope) {
   const port = { setAuth: (_fetchToken, changed) => queueMicrotask(() => changed(true)),
     query: (...args) => connection.query(...args), mutation: (...args) => connection.mutation(...args), action: (...args) => connection.action(...args),
     onUpdate: () => { throw new Error("Observers are outside this replay probe"); }, close: async () => {} };
-  const client = new CortexRuntimeClient({ deploymentUrl: target.url, scope, fetchToken: async () => "controlled-not-a-jwt", client: port });
+  const client = new CortexRuntimeClient({ deploymentUrl: LOCAL_BACKEND_URL, scope, fetchToken: async () => "controlled-not-a-jwt", client: port });
   clients.push(client); return { client, connection };
 }
 async function denied(action, codes) {
@@ -114,7 +115,7 @@ try {
   await fs.writeFile(path.join(stage, "package.json"), JSON.stringify({ name: "cortex-external-native-owned-host", private: true, type: "module", dependencies: { ...manifest.peerDependencies, ...manifest.dependencies } }));
   await fs.writeFile(path.join(stage, "backend/externalEvidenceFixture.ts"), (await fs.readFile(path.join(root, "tests/fixtures/native/externalEvidenceFixture.ts"), "utf8")).replaceAll("../../../convex-dev/", "./"));
   const envFile = path.join(stage, ".env.external-native");
-  await fs.writeFile(envFile, `CONVEX_SELF_HOSTED_URL=${target.url}\nCONVEX_SELF_HOSTED_ADMIN_KEY=${target.key}\n`, { mode: 0o600 });
+  await fs.writeFile(envFile, `CONVEX_SELF_HOSTED_URL=${LOCAL_BACKEND_URL}\nCONVEX_SELF_HOSTED_ADMIN_KEY=${target.key}\n`, { mode: 0o600 });
   try {
     const deployed = await promisify(execFile)(process.execPath, [path.join(root, "node_modules/convex/bin/main.js"), "dev", "--once", "--typecheck", "enable", "--codegen", "enable", "--tail-logs", "disable", "--env-file", envFile], { cwd: stage, env: environment, timeout: 600000, maxBuffer: 8 * 1024 * 1024 });
     await fs.writeFile(receiptPath.replace(/\.json$/, ".deploy.log"), redact(deployed.stdout + deployed.stderr));
@@ -124,15 +125,15 @@ try {
     throw new Error(redact(String(error.stdout ?? "") + String(error.stderr ?? error.message)));
   }
   record("exact-package additive host install, official codegen/typecheck and local-only deploy");
-  assert.equal(await new ConvexHttpClient(target.url).query("huntFunctions:list", {}), "host-owned");
-  assert.equal(await (await fetch(target.site + "/hunt/ping")).text(), "host-owned"); record("host function and HTTP route survive actual deployment");
+  assert.equal(await new ConvexHttpClient(LOCAL_BACKEND_URL).query("huntFunctions:list", {}), "host-owned");
+  assert.equal(await (await fetch(LOCAL_SITE_URL + "/hunt/ping", { redirect: "error" })).text(), "host-owned"); record("host function and HTTP route survive actual deployment");
   const scope = { tenantId: "external-native-" + randomUUID() }; scope.memorySpaceId = scope.tenantId + "/evidence";
   const otherScope = { tenantId: "external-native-" + randomUUID() }; otherScope.memorySpaceId = otherScope.tenantId + "/evidence";
   const issuer = "https://native-fixture.invalid", identityA = { issuer, subject: randomUUID() }, identityB = { issuer, subject: randomUUID() }, identityC = { issuer, subject: randomUUID() };
   const provision = (identity, selected = scope, access = "own") => internal("runtimeAuth:provision", { ...selected, ...identity, actorKind: "service", capabilities: ["read", "write"], resourceAccess: access });
   const authorityA = await provision(identityA), authorityB = await provision(identityB); await provision(identityC, otherScope);
   let { client: a, connection: aHttp } = runtime(identityA, scope); const { client: b } = runtime(identityB, scope), { client: c } = runtime(identityC, otherScope);
-  await denied(() => new ConvexHttpClient(target.url).mutation("runtimeExternalSources:capabilities", scope), ["UNAUTHENTICATED"]);
+  await denied(() => new ConvexHttpClient(LOCAL_BACKEND_URL).mutation("runtimeExternalSources:capabilities", scope), ["UNAUTHENTICATED"]);
   const capabilities = await a.capabilities(); assert.equal(capabilities.externalSources.version, 1); assert.equal(capabilities.changes.durable, true); assert.equal(capabilities.largeAssets.resumableUpload, false); assert.equal(capabilities.largeAssets.rangeRetrieval, false);
   record("real server grants and authenticated capabilities; anonymous refusal; P2 false");
   const archive = JSON.parse(await fs.readFile(path.join(root, "tests/fixtures/external-evidence/archive.json"), "utf8"));
@@ -254,7 +255,7 @@ try {
   assert.equal(authorityA.principalId, originals[0].receipt.principalId);
   succeeded = true;
   receipt = { version: 1, coverage: "actual-local-convex-http-with-admin-identity", sdkVersion: manifest.version,
-    target: { url: target.url, fresh: true, production: false }, results,
+    target: { url: LOCAL_BACKEND_URL, fresh: true, production: false }, results,
     testedFileHashes: { "dist/backend/v1/manifest.json": digest(await fs.readFile(path.join(sdk, "dist/backend/v1/manifest.json"))),
       "dist/client-runtime/index.js": digest(await fs.readFile(path.join(sdk, "dist/client-runtime/index.js"))),
       privateNativeFixture: digest(await fs.readFile(path.join(root, "tests/fixtures/native/externalEvidenceFixture.ts"))) },

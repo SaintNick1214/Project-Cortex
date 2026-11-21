@@ -7,10 +7,12 @@ import { openSync, closeSync } from "node:fs";
 import net from "node:net";
 import os from "node:os";
 import path from "node:path";
+import { claimTargetPointer, LOCAL_BACKEND_URL, LOCAL_SITE_URL } from "./local-target.mjs";
 
 if (process.argv.length !== 2) throw new Error("This fixed local qualification target accepts no deployment selectors");
 const pointer = "/tmp/cortex-external-native-target-path";
-assert.equal(await fs.access(pointer).then(() => true, error => { if (error.code === "ENOENT") return false; throw error; }), false, "Existing owned-target pointer must be reconciled first");
+// Claim before any service work. A failed startup retains the claim for reconciliation.
+const pointerFile = await claimTargetPointer(pointer);
 const reservations = [];
 try {
   for (const port of [3486, 3487]) {
@@ -26,9 +28,10 @@ try {
   try { key = execFileSync(binary, ["keygen", "admin-key", "--instance-name", name, "--instance-secret", secret], { encoding: "utf8", stdio: ["ignore", "pipe", "pipe"] }).trim(); }
   catch { await fs.rm(state, { recursive: true, force: true }); throw new Error("Local ephemeral key generation failed; arguments withheld"); }
   assert.ok(key.length > 20 && !/[\r\n]/.test(key));
-  const config = { binary, state, name, secret, key, url: "http://127.0.0.1:3486", site: "http://127.0.0.1:3487", fresh: true, production: false };
+  const config = { binary, state, name, secret, key, url: LOCAL_BACKEND_URL, site: LOCAL_SITE_URL, fresh: true, production: false };
   const targetPath = path.join(state, "target.json");
   await fs.writeFile(targetPath, JSON.stringify(config), { mode: 0o600, flag: "wx" });
+  await pointerFile.writeFile(targetPath);
   const environment = { ...process.env };
   for (const field of Object.keys(environment)) if (/^(?:CONVEX|CORTEX|OPENAI|ANTHROPIC|GOOGLE|GEMINI|NEO4J|MEMGRAPH)_/.test(field)) delete environment[field];
   environment.CONVEX_BEACON_DISABLED = "true";
@@ -40,10 +43,12 @@ try {
   finally { closeSync(log); }
   assert.ok(Number.isSafeInteger(child.pid)); child.unref();
   await fs.writeFile(path.join(state, "qualification.pid"), String(child.pid), { mode: 0o600 });
-  await fs.writeFile(pointer, targetPath, { mode: 0o600, flag: "wx" });
   for (let attempt = 0; attempt < 100; attempt++) {
-    try { const response = await fetch(config.url + "/version"); if (response.ok) { console.log(JSON.stringify({ url: config.url, site: config.site, pid: child.pid, fresh: true, production: false })); process.exit(0); } } catch { /* Wait only for this fixed loopback service. */ }
+    try { const response = await fetch(LOCAL_BACKEND_URL + "/version", { redirect: "error" }); if (response.ok) { console.log(JSON.stringify({ url: config.url, site: config.site, pid: child.pid, fresh: true, production: false })); process.exit(0); } } catch { /* Wait only for this fixed loopback service. */ }
     await new Promise(resolve => setTimeout(resolve, 100));
   }
   throw new Error("Fresh local backend readiness failed; reconcile the private target pointer before retry");
-} finally { for (const server of reservations) await new Promise(resolve => server.close(resolve)); }
+} finally {
+  try { for (const server of reservations) await new Promise(resolve => server.close(resolve)); }
+  finally { await pointerFile.close(); }
+}
